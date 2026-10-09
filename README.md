@@ -58,6 +58,10 @@ Cara EA memeriksa lisensi dijelaskan di [docs/api-lisensi.md](docs/api-lisensi.m
 - Kalimat penyebutan toko EA di akhir materi dan berita: `apps/edukasi/src/components/store-mention.tsx`.
   Sesi awal yang menampilkannya diatur lewat `STORE_CTA_FROM_SESSION` di `apps/edukasi/src/lib/lessons.ts`.
 - Produk: ubah `apps/toko/src/lib/products.ts`. Data yang ada sekarang hanya contoh.
+  `access: "free_with_referral"` menjadikan produk gratis dengan syarat program referral broker.
+- Program referral broker: `apps/toko/src/lib/referral-program.ts`. Broker mitra bisa lebih dari satu dan hanya
+  tampil setelah `referralUrl`-nya diisi. Syarat EA gratis di file itu masih contoh; setelah diganti dengan
+  syarat yang sebenarnya, ubah `isFinal` menjadi `true` supaya tanda "Syarat masih contoh" hilang.
 - Nama situs: ubah `packages/ui/src/sites.ts`.
 - Warna dan huruf: ubah `packages/ui/src/tokens.css`.
 
@@ -88,3 +92,4 @@ pnpm build
 - Bukti kepemilikan akun MT5. Saat ini siapa pun yang login bisa mendaftarkan nomor akun mana pun,
   sehingga aktivasi oleh admin menjadi satu-satunya pemeriksaan.
 - Materi sesi 2 sampai 10.
+- Tautan referral broker dan syarat EA gratis yang final. Pemeriksaan syarat masih manual sebelum lisensi diaktifkan.
