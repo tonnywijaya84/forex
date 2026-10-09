@@ -12,10 +12,12 @@ const LABEL_WIDTH = 74;
 
 type Level = { price: number; from: number; label: string };
 type Zone = { top: number; bottom: number; from: number; label: string };
+/** Tulisan kecil di bawah sebuah candle, misalnya nomor urut. */
+type Mark = { index: number; text: string };
 
-/** Grafik candlestick kecil. Bisa diberi garis level putus-putus, zona berwarna, atau keduanya. */
-function candleChart(options: { candles: Candle[]; label: string; level?: Level; zone?: Zone }): string {
-  const { candles, label, level, zone } = options;
+/** Grafik candlestick kecil. Bisa diberi garis level putus-putus, zona berwarna, dan tulisan di bawah candle. */
+function candleChart(options: { candles: Candle[]; label: string; level?: Level; zone?: Zone; marks?: Mark[] }): string {
+  const { candles, label, level, zone, marks = [] } = options;
   const top = Math.max(...candles.map((candle) => candle[1])) + 6;
   const bottom = Math.min(...candles.map((candle) => candle[2])) - 6;
   const step = (W - PAD * 2 - LABEL_WIDTH) / candles.length;
@@ -45,11 +47,19 @@ function candleChart(options: { candles: Candle[]; label: string; level?: Level;
       caption(level.label, level.price)
     : "";
 
+  const markShapes = marks
+    .map(
+      (mark) =>
+        `<text x="${x(mark.index)}" y="${y(candles[mark.index][2]) + 17}" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-ink-soft)">${mark.text}</text>`,
+    )
+    .join("");
+
   return (
     `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" class="h-auto w-full bg-surface">` +
     zoneShape +
     levelShape +
     bars +
+    markShapes +
     `</svg>`
   );
 }
@@ -200,7 +210,52 @@ const orderBlock =
   `</div>` +
   `</figure>`;
 
+const threeCandles: Mark[] = [
+  { index: 1, text: "1" },
+  { index: 2, text: "2" },
+  { index: 3, text: "3" },
+];
+
+const imbalance =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [
+        [30, 36, 28, 34],
+        [34, 40, 33, 38],
+        [38, 58, 37, 56],
+        [56, 64, 49, 62],
+        [62, 66, 60, 65],
+      ],
+      zone: { top: 49, bottom: 40, from: 1, label: "imbalance" },
+      marks: threeCandles,
+      label: "Tiga candle naik. Low candle ketiga berada di atas high candle pertama, sehingga ada celah di antara keduanya.",
+    }),
+    "Ada imbalance",
+    "Low candle 3 berada di atas high candle 1. Rentang di antaranya hanya dilewati candle 2.",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        [30, 36, 28, 34],
+        [34, 40, 33, 38],
+        [38, 58, 37, 56],
+        [56, 64, 39, 62],
+        [62, 66, 60, 65],
+      ],
+      level: { price: 40, from: 1, label: "high 1" },
+      marks: threeCandles,
+      label: "Tiga candle naik. Wick bawah candle ketiga turun sampai high candle pertama, sehingga tidak ada celah.",
+    }),
+    "Tidak ada imbalance",
+    "Wick candle 3 turun sampai high candle 1. Celahnya sudah tertutup.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  imbalance,
   "order-block": orderBlock,
   "bos-close": bosClose,
   "bos-vs-choch": bosVsChoch,
