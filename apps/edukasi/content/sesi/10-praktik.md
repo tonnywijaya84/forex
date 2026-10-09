@@ -2,6 +2,7 @@
 session: 10
 title: Praktik di market nyata
 summary: Rencana latihan, jurnal trading, dan cara mengevaluasi hasil.
+icon: journal
 ---
 
 Sembilan sesi sebelumnya berisi aturan. Sesi terakhir ini berisi cara melatih aturan itu sampai menjadi kebiasaan, dan cara menilai hasilnya dengan data.

@@ -2,6 +2,7 @@
 session: 6
 title: Order block
 summary: Jejak order besar dan lima syarat order block yang layak dipakai.
+icon: order-block
 ---
 
 Struktur menjawab pertanyaan tentang arah. Order block menjawab pertanyaan berikutnya: di area mana harga ditunggu.

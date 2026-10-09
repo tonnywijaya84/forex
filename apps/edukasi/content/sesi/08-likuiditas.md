@@ -2,6 +2,7 @@
 session: 8
 title: Likuiditas
 summary: Di mana order berkumpul, dan mengapa harga sering menyapunya lebih dulu.
+icon: liquidity
 ---
 
 Sesi 3 dan 5 menunda satu pertanyaan: mengapa harga sering menembus sebuah level sebentar, lalu berbalik. Jawabannya ada pada order yang menunggu di balik level itu.

@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import matter from "gray-matter";
 import { marked } from "marked";
+import { isSessionIconName, type SessionIconName } from "@/components/session-icon";
 import { figures } from "./figures";
 
 /**
@@ -13,6 +14,8 @@ export type Lesson = {
   session: number;
   title: string;
   summary: string;
+  /** Nama ikon dari `src/components/session-icon.tsx`. null = tanpa ikon. */
+  icon: SessionIconName | null;
   /** false berarti judul sudah diumumkan tetapi isinya belum ditulis. */
   published: boolean;
   html: string;
@@ -37,9 +40,13 @@ function load(): Lesson[] {
       if (typeof data.title !== "string" || typeof data.session !== "number" || typeof data.summary !== "string") {
         throw new Error(`Frontmatter ${file} harus punya title, session, dan summary.`);
       }
+      if (data.icon !== undefined && !isSessionIconName(data.icon)) {
+        throw new Error(`Ikon "${data.icon}" di ${file} tidak ada di src/components/session-icon.tsx.`);
+      }
       return {
         slug: file.replace(/\.md$/, ""),
         session: data.session,
+        icon: data.icon ?? null,
         title: data.title,
         summary: data.summary,
         published: data.published !== false && content.trim().length > 0,

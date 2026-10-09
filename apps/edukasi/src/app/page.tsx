@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ButtonLink, Container, sites } from "@forex/ui";
+import { SessionIcon } from "@/components/session-icon";
 import { StructureChart } from "@/components/structure-chart";
 import { getLessons } from "@/lib/lessons";
 import { formatDate, getArticles } from "@/lib/news";
@@ -40,17 +41,16 @@ export default function Home() {
           </p>
           <ol className="mt-8 border-t border-ink">
             {lessons.map((lesson) => (
-              <li key={lesson.slug} className="grid grid-cols-[3rem_1fr] gap-x-4 border-b border-rule py-5 sm:grid-cols-[4rem_1fr_auto] sm:items-baseline">
+              <li key={lesson.slug} className="grid grid-cols-[2.25rem_1fr_auto] items-start gap-x-4 border-b border-rule py-5 sm:grid-cols-[4rem_1fr_auto] sm:items-center sm:gap-x-6">
                 <span className="font-display text-2xl font-bold text-ink-soft [font-variation-settings:'wdth'_80]">{lesson.session}</span>
                 <div>
                   <h3 className="text-xl font-semibold">
                     {lesson.published ? <Link href={`/belajar/${lesson.slug}`}>{lesson.title}</Link> : lesson.title}
                   </h3>
                   <p className="mt-1 max-w-[62ch] text-ink-soft">{lesson.summary}</p>
+                  {!lesson.published && <p className="mt-2 text-sm text-ink-soft">Sedang ditulis</p>}
                 </div>
-                {!lesson.published && (
-                  <span className="col-start-2 mt-2 text-sm text-ink-soft sm:col-start-3 sm:mt-0">Sedang ditulis</span>
-                )}
+                {lesson.icon && <SessionIcon name={lesson.icon} />}
               </li>
             ))}
           </ol>

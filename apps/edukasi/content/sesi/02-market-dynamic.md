@@ -2,6 +2,7 @@
 session: 2
 title: Market dynamic
 summary: Kekuatan yang menggerakkan harga dan cara memetakannya sebelum order.
+icon: market-dynamic
 ---
 
 Sesi 1 mengajarkan cara membaca jejak harga. Sesi ini menjelaskan apa yang membuat jejak itu terbentuk, lalu merangkainya menjadi peta yang dibuat sebelum order.
