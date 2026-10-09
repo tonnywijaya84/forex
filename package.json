@@ -1,0 +1,17 @@
+{
+  "name": "forex",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev:edukasi": "pnpm --filter edukasi dev",
+    "dev:toko": "pnpm --filter toko dev",
+    "dev:portal": "pnpm --filter portal dev",
+    "build": "pnpm -r --filter \"./apps/*\" build",
+    "lint": "pnpm -r --filter \"./apps/*\" lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r --if-present test"
+  }
+}
