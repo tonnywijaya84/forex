@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque/wdth.css";
+@import "@fontsource-variable/ibm-plex-sans/wght.css";
+@import "@forex/ui/tokens.css";
+
+/* Komponen bersama ada di luar folder aplikasi, jadi Tailwind perlu diberi tahu letaknya. */
+@source "../../../../packages/ui/src";

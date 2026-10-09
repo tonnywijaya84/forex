@@ -1,0 +1,77 @@
+/*
+ * Token desain bersama untuk ketiga situs.
+ * Ubah warna dan huruf di sini; semua aplikasi ikut berubah.
+ */
+@theme {
+  /* Kertas grafik yang sejuk, tinta biru tua, dan sepasang warna arah harga. */
+  --color-paper: #f3f5f2;
+  --color-surface: #ffffff;
+  --color-ink: #14213a;
+  --color-ink-soft: #4a5670;
+  --color-rule: #cfd7d2;
+  --color-bull: #0b8a6a;
+  --color-bull-deep: #076a52;
+  --color-bear: #c9423a;
+  --color-bear-deep: #a8322b;
+  --color-mark: #f2b33d;
+  --color-mark-deep: #7a5200;
+
+  --font-display: "Bricolage Grotesque Variable", "Arial Narrow", Arial, sans-serif;
+  --font-sans: "IBM Plex Sans Variable", "Helvetica Neue", Arial, sans-serif;
+
+  /* Skala huruf: rasio 1,25 dari dasar 17px. */
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.3125rem;
+  --text-xl: 1.625rem;
+  --text-2xl: 2.0625rem;
+  --text-3xl: 2.5625rem;
+  --text-4xl: 3.25rem;
+  --text-5xl: 4.0625rem;
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-size: var(--text-base);
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 88;
+    letter-spacing: -0.015em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  a {
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.2em;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-mark);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-mark);
+    color: var(--color-ink);
+  }
+}
