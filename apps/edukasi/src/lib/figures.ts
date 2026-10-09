@@ -7,14 +7,16 @@ type Candle = [open: number, high: number, low: number, close: number];
 const W = 320;
 const H = 220;
 const PAD = 16;
+/** Lebar kolom di kiri untuk tulisan level, supaya tidak menimpa candle. */
+const LABEL_WIDTH = 74;
 
 /** Grafik candlestick kecil dengan satu garis level putus-putus. */
 function candleChart(options: { candles: Candle[]; level: number; levelFrom: number; levelLabel: string; label: string }): string {
   const { candles, level, levelFrom, levelLabel, label } = options;
   const top = Math.max(...candles.map((candle) => candle[1])) + 6;
   const bottom = Math.min(...candles.map((candle) => candle[2])) - 6;
-  const step = (W - PAD * 2) / candles.length;
-  const x = (index: number) => PAD + step * (index + 0.5);
+  const step = (W - PAD * 2 - LABEL_WIDTH) / candles.length;
+  const x = (index: number) => PAD + LABEL_WIDTH + step * (index + 0.5);
   const y = (price: number) => PAD + ((top - price) / (top - bottom)) * (H - PAD * 2);
 
   const bars = candles
@@ -80,6 +82,44 @@ const bosClose =
   `</div>` +
   `</figure>`;
 
+// Uptrend: higher low di 30, higher high di 54.
+const uptrend: Candle[] = [
+  [20, 30, 18, 28],
+  [28, 40, 27, 38],
+  [38, 39, 30, 32],
+  [32, 46, 31, 44],
+  [44, 54, 43, 52],
+];
+
+const bosVsChoch =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [...uptrend, [52, 53, 41, 44], [44, 50, 43, 49], [49, 62, 48, 60]],
+      level: 54,
+      levelFrom: 4,
+      levelLabel: "swing high",
+      label: "Pada uptrend, candle terakhir ditutup di atas swing high terakhir.",
+    }),
+    "BOS",
+    "Swing high ditembus searah tren. Uptrend berlanjut.",
+  ) +
+  panel(
+    candleChart({
+      candles: [...uptrend, [52, 53, 44, 46], [46, 47, 36, 38], [38, 39, 24, 26]],
+      level: 30,
+      levelFrom: 2,
+      levelLabel: "higher low",
+      label: "Pada uptrend, candle terakhir ditutup di bawah higher low terakhir.",
+    }),
+    "ChoCh",
+    "Higher low ditembus melawan tren. Uptrend mungkin berakhir.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
   "bos-close": bosClose,
+  "bos-vs-choch": bosVsChoch,
 };
