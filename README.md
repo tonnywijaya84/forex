@@ -56,7 +56,7 @@ Cara EA memeriksa lisensi dijelaskan di [docs/api-lisensi.md](docs/api-lisensi.m
   `apps/edukasi/src/lib/figures.ts`.
 - Berita: tambah satu file per artikel di `apps/edukasi/content/berita`, dengan nama `TTTT-BB-HH-judul-singkat.md`
   (nama file menjadi alamat artikel). Bagian atas file berisi `title`, `date` (TTTT-BB-HH), `summary`, dan
-  `category` bila perlu. Tambahkan `published: false` selama masih draf. Contoh: `2026-10-09-kelas-forex-dibuka.md`.
+  `category` bila perlu. Tambahkan `published: false` selama masih draf. Contoh: `2026-10-09-fxspot-dibuka.md`.
 - Kalimat penyebutan toko EA di akhir materi dan berita: `apps/edukasi/src/components/store-mention.tsx`.
   Sesi awal yang menampilkannya diatur lewat `STORE_CTA_FROM_SESSION` di `apps/edukasi/src/lib/lessons.ts`.
 - Produk: ubah `apps/toko/src/lib/products.ts`. Data yang ada sekarang hanya contoh.

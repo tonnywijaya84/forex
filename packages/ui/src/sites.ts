@@ -15,12 +15,12 @@ function siteUrl(configured: string | undefined, localUrl: string): string | nul
 
 export const sites: Record<SiteKey, { name: string; tagline: string; url: string | null }> = {
   edukasi: {
-    name: "Kelas Forex",
+    name: "FxSpot",
     tagline: "Materi belajar membaca struktur pasar",
     url: siteUrl(process.env.NEXT_PUBLIC_URL_EDUKASI, "http://localhost:3001"),
   },
   toko: {
-    name: "Toko EA",
+    name: "Dewa Pips",
     tagline: "Expert Advisor dan tautan referral",
     url: siteUrl(process.env.NEXT_PUBLIC_URL_TOKO, "http://localhost:3002"),
   },

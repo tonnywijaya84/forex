@@ -1,11 +1,11 @@
 ---
-title: "Kelas Forex dibuka dengan Sesi 1: Market structure"
+title: "FxSpot dibuka dengan Sesi 1: Market structure"
 date: 2026-10-09
 category: Pengumuman
 summary: Situs belajar ini mulai terbit. Sesi pertama sudah bisa dibaca, dan sembilan sesi berikutnya menyusul satu per satu.
 ---
 
-Kelas Forex mulai terbit hari ini. Isinya sepuluh sesi berurutan tentang cara membaca struktur pasar dan mengukur risiko, tanpa sinyal dan tanpa janji hasil.
+FxSpot mulai terbit hari ini. Isinya sepuluh sesi berurutan tentang cara membaca struktur pasar dan mengukur risiko, tanpa sinyal dan tanpa janji hasil.
 
 ## Yang sudah tersedia
 
