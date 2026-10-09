@@ -10,14 +10,19 @@ const PAD = 16;
 /** Lebar kolom di kiri untuk tulisan level, supaya tidak menimpa candle. */
 const LABEL_WIDTH = 74;
 
-/** Grafik candlestick kecil dengan satu garis level putus-putus. */
-function candleChart(options: { candles: Candle[]; level: number; levelFrom: number; levelLabel: string; label: string }): string {
-  const { candles, level, levelFrom, levelLabel, label } = options;
+type Level = { price: number; from: number; label: string };
+type Zone = { top: number; bottom: number; from: number; label: string };
+
+/** Grafik candlestick kecil. Bisa diberi garis level putus-putus, zona berwarna, atau keduanya. */
+function candleChart(options: { candles: Candle[]; label: string; level?: Level; zone?: Zone }): string {
+  const { candles, label, level, zone } = options;
   const top = Math.max(...candles.map((candle) => candle[1])) + 6;
   const bottom = Math.min(...candles.map((candle) => candle[2])) - 6;
   const step = (W - PAD * 2 - LABEL_WIDTH) / candles.length;
   const x = (index: number) => PAD + LABEL_WIDTH + step * (index + 0.5);
   const y = (price: number) => PAD + ((top - price) / (top - bottom)) * (H - PAD * 2);
+  const caption = (text: string, price: number) =>
+    `<text x="${PAD}" y="${y(price) + 4}" font-size="13" fill="var(--color-ink-soft)">${text}</text>`;
 
   const bars = candles
     .map(([open, high, low, close], index) => {
@@ -31,10 +36,19 @@ function candleChart(options: { candles: Candle[]; level: number; levelFrom: num
     })
     .join("");
 
+  const zoneShape = zone
+    ? `<rect x="${x(zone.from) - step * 0.5}" y="${y(zone.top)}" width="${W - PAD - (x(zone.from) - step * 0.5)}" height="${y(zone.bottom) - y(zone.top)}" fill="var(--color-mark)" fill-opacity="0.4"/>` +
+      caption(zone.label, (zone.top + zone.bottom) / 2)
+    : "";
+  const levelShape = level
+    ? `<line x1="${x(level.from)}" x2="${W - PAD}" y1="${y(level.price)}" y2="${y(level.price)}" stroke="var(--color-ink)" stroke-width="1.5" stroke-dasharray="5 4"/>` +
+      caption(level.label, level.price)
+    : "";
+
   return (
     `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" class="h-auto w-full bg-surface">` +
-    `<line x1="${x(levelFrom)}" x2="${W - PAD}" y1="${y(level)}" y2="${y(level)}" stroke="var(--color-ink)" stroke-width="1.5" stroke-dasharray="5 4"/>` +
-    `<text x="${PAD}" y="${y(level) + 4}" font-size="13" fill="var(--color-ink-soft)">${levelLabel}</text>` +
+    zoneShape +
+    levelShape +
     bars +
     `</svg>`
   );
@@ -60,9 +74,7 @@ const bosClose =
   panel(
     candleChart({
       candles: [...beforeBreak, [45, 60, 44, 58]],
-      level: 52,
-      levelFrom: 2,
-      levelLabel: "swing high",
+      level: { price: 52, from: 2, label: "swing high" },
       label: "Candle terakhir ditutup di atas garis swing high.",
     }),
     "Ditutup di atas level",
@@ -71,9 +83,7 @@ const bosClose =
   panel(
     candleChart({
       candles: [...beforeBreak, [45, 60, 44, 48]],
-      level: 52,
-      levelFrom: 2,
-      levelLabel: "swing high",
+      level: { price: 52, from: 2, label: "swing high" },
       label: "Wick candle terakhir menembus garis swing high, tetapi candle ditutup di bawahnya.",
     }),
     "Hanya wick yang menembus",
@@ -97,9 +107,7 @@ const bosVsChoch =
   panel(
     candleChart({
       candles: [...uptrend, [52, 53, 41, 44], [44, 50, 43, 49], [49, 62, 48, 60]],
-      level: 54,
-      levelFrom: 4,
-      levelLabel: "swing high",
+      level: { price: 54, from: 4, label: "swing high" },
       label: "Pada uptrend, candle terakhir ditutup di atas swing high terakhir.",
     }),
     "BOS",
@@ -108,9 +116,7 @@ const bosVsChoch =
   panel(
     candleChart({
       candles: [...uptrend, [52, 53, 44, 46], [46, 47, 36, 38], [38, 39, 24, 26]],
-      level: 30,
-      levelFrom: 2,
-      levelLabel: "higher low",
+      level: { price: 30, from: 2, label: "higher low" },
       label: "Pada uptrend, candle terakhir ditutup di bawah higher low terakhir.",
     }),
     "ChoCh",
@@ -132,9 +138,7 @@ const retracementDepth =
   panel(
     candleChart({
       candles: [...legUp, [58, 59, 51, 53], [53, 56, 50, 55], [55, 68, 54, 66], [66, 74, 65, 72]],
-      level: 40,
-      levelFrom: 0,
-      levelLabel: "50% leg",
+      level: { price: 40, from: 0, label: "50% leg" },
       label: "Koreksi berhenti jauh di atas garis setengah leg, lalu harga naik lagi.",
     }),
     "Koreksi dangkal",
@@ -143,9 +147,7 @@ const retracementDepth =
   panel(
     candleChart({
       candles: [...legUp, [58, 59, 48, 50], [50, 51, 37, 39], [39, 50, 38, 48], [48, 64, 47, 62]],
-      level: 40,
-      levelFrom: 0,
-      levelLabel: "50% leg",
+      level: { price: 40, from: 0, label: "50% leg" },
       label: "Koreksi turun melewati garis setengah leg, lalu harga naik lagi.",
     }),
     "Koreksi yang sah",
@@ -154,7 +156,52 @@ const retracementDepth =
   `</div>` +
   `</figure>`;
 
+const orderBlock =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [
+        [60, 62, 52, 54],
+        [54, 55, 46, 48],
+        [48, 49, 40, 42],
+        [42, 58, 41, 57],
+        [57, 70, 56, 69],
+        [69, 74, 66, 68],
+        [68, 69, 56, 58],
+        [58, 59, 47, 50],
+        [50, 64, 48, 63],
+      ],
+      zone: { top: 49, bottom: 40, from: 2, label: "order block" },
+      label: "Candle turun terakhir sebelum harga naik kuat ditandai sebagai zona. Harga kemudian kembali ke zona itu dan naik lagi.",
+    }),
+    "Bullish order block",
+    "Candle turun terakhir sebelum gerakan naik yang kuat.",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        [40, 48, 38, 46],
+        [46, 54, 45, 52],
+        [52, 60, 51, 58],
+        [58, 59, 42, 43],
+        [43, 44, 30, 31],
+        [31, 34, 26, 32],
+        [32, 44, 31, 42],
+        [42, 53, 41, 50],
+        [50, 52, 36, 37],
+      ],
+      zone: { top: 60, bottom: 51, from: 2, label: "order block" },
+      label: "Candle naik terakhir sebelum harga turun kuat ditandai sebagai zona. Harga kemudian kembali ke zona itu dan turun lagi.",
+    }),
+    "Bearish order block",
+    "Candle naik terakhir sebelum gerakan turun yang kuat.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "order-block": orderBlock,
   "bos-close": bosClose,
   "bos-vs-choch": bosVsChoch,
   "retracement-depth": retracementDepth,
