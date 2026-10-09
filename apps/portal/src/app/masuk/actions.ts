@@ -10,6 +10,9 @@ export async function requestLoginLink(_previous: FormState, formData: FormData)
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { ok: false, message: "Masukkan alamat email yang benar, misalnya nama@contoh.com." };
   }
+  if (!sites.portal.url) {
+    return { ok: false, message: "Login belum bisa dipakai karena alamat portal belum diatur." };
+  }
   const supabase = await createClient();
   if (!supabase) {
     return { ok: false, message: "Login belum bisa dipakai karena portal belum tersambung ke database." };

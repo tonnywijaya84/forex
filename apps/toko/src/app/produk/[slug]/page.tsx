@@ -49,9 +49,11 @@ export default async function ProductPage({ params }: PageProps<"/produk/[slug]"
               Checkout akan tersedia di halaman ini setelah payment gateway dipasang.
             </Notice>
           </div>
-          <ButtonLink href={sites.portal.url} tone="quiet" className="mt-6 w-full">
-            Buka {sites.portal.name}
-          </ButtonLink>
+          {sites.portal.url && (
+            <ButtonLink href={sites.portal.url} tone="quiet" className="mt-6 w-full">
+              Buka {sites.portal.name}
+            </ButtonLink>
+          )}
         </aside>
       </div>
     </Container>

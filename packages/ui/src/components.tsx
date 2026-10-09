@@ -14,7 +14,10 @@ type NavItem = { href: string; label: string };
 
 /** Kepala halaman: nama situs, navigasi dalam situs, dan tautan ke dua situs lainnya. */
 export function SiteHeader({ site, nav = [] }: { site: SiteKey; nav?: NavItem[] }) {
-  const others = (Object.keys(sites) as SiteKey[]).filter((key) => key !== site);
+  const others = (Object.keys(sites) as SiteKey[]).flatMap((key) => {
+    const { name, url } = sites[key];
+    return key !== site && url ? [{ key, name, url }] : [];
+  });
   return (
     <header className="border-b border-rule bg-paper">
       <Container className="flex flex-wrap items-center gap-x-8 gap-y-2 py-4">
@@ -30,13 +33,15 @@ export function SiteHeader({ site, nav = [] }: { site: SiteKey; nav?: NavItem[] 
             ))}
           </nav>
         )}
-        <nav aria-label="Situs terkait" className="ml-auto flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-soft">
-          {others.map((key) => (
-            <a key={key} href={sites[key].url} className="py-1 no-underline hover:underline">
-              {sites[key].name}
-            </a>
-          ))}
-        </nav>
+        {others.length > 0 && (
+          <nav aria-label="Situs terkait" className="ml-auto flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-soft">
+            {others.map((other) => (
+              <a key={other.key} href={other.url} className="py-1 no-underline hover:underline">
+                {other.name}
+              </a>
+            ))}
+          </nav>
+        )}
       </Container>
     </header>
   );
