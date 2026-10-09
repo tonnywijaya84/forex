@@ -16,10 +16,19 @@ type Zone = { top: number; bottom: number; from: number; label: string };
 type Mark = { index: number; text: string };
 
 /** Grafik candlestick kecil. Bisa diberi garis level putus-putus, zona berwarna, dan tulisan di bawah candle. */
-function candleChart(options: { candles: Candle[]; label: string; level?: Level; zone?: Zone; marks?: Mark[] }): string {
-  const { candles, label, level, zone, marks = [] } = options;
-  const top = Math.max(...candles.map((candle) => candle[1])) + 6;
-  const bottom = Math.min(...candles.map((candle) => candle[2])) - 6;
+function candleChart(options: {
+  candles: Candle[];
+  label: string;
+  level?: Level;
+  levels?: Level[];
+  zone?: Zone;
+  marks?: Mark[];
+}): string {
+  const { candles, label, zone, marks = [] } = options;
+  const levels = [...(options.level ? [options.level] : []), ...(options.levels ?? [])];
+  // Garis level boleh berada di luar rentang candle, misalnya stop di balik zona.
+  const top = Math.max(...candles.map((candle) => candle[1]), ...levels.map((level) => level.price)) + 6;
+  const bottom = Math.min(...candles.map((candle) => candle[2]), ...levels.map((level) => level.price)) - 6;
   const step = (W - PAD * 2 - LABEL_WIDTH) / candles.length;
   const x = (index: number) => PAD + LABEL_WIDTH + step * (index + 0.5);
   const y = (price: number) => PAD + ((top - price) / (top - bottom)) * (H - PAD * 2);
@@ -42,10 +51,13 @@ function candleChart(options: { candles: Candle[]; label: string; level?: Level;
     ? `<rect x="${x(zone.from) - step * 0.5}" y="${y(zone.top)}" width="${W - PAD - (x(zone.from) - step * 0.5)}" height="${y(zone.bottom) - y(zone.top)}" fill="var(--color-mark)" fill-opacity="0.4"/>` +
       caption(zone.label, (zone.top + zone.bottom) / 2)
     : "";
-  const levelShape = level
-    ? `<line x1="${x(level.from)}" x2="${W - PAD}" y1="${y(level.price)}" y2="${y(level.price)}" stroke="var(--color-ink)" stroke-width="1.5" stroke-dasharray="5 4"/>` +
-      caption(level.label, level.price)
-    : "";
+  const levelShape = levels
+    .map(
+      (level) =>
+        `<line x1="${x(level.from)}" x2="${W - PAD}" y1="${y(level.price)}" y2="${y(level.price)}" stroke="var(--color-ink)" stroke-width="1.5" stroke-dasharray="5 4"/>` +
+        caption(level.label, level.price),
+    )
+    .join("");
 
   const markShapes = marks
     .map(
@@ -288,7 +300,64 @@ const liquiditySweep =
   `</div>` +
   `</figure>`;
 
+const entryPlan =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [
+        [60, 62, 52, 54],
+        [54, 55, 46, 48],
+        [48, 49, 40, 42],
+        [42, 58, 41, 57],
+        [57, 70, 56, 69],
+        [69, 74, 66, 68],
+        [68, 69, 56, 58],
+        [58, 59, 47, 50],
+        [50, 64, 48, 63],
+        [63, 76, 62, 75],
+      ],
+      zone: { top: 49, bottom: 40, from: 2, label: "order block" },
+      levels: [
+        { price: 74, from: 5, label: "target" },
+        { price: 49, from: 2, label: "entry" },
+        { price: 37, from: 2, label: "stop" },
+      ],
+      label: "Posisi beli: entry di batas atas order block, stop di bawah zona, target di swing high sebelumnya.",
+    }),
+    "Posisi beli",
+    "Entry di batas atas order block, stop di bawah zona, target di swing high.",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        [40, 48, 38, 46],
+        [46, 54, 45, 52],
+        [52, 60, 51, 58],
+        [58, 59, 42, 43],
+        [43, 44, 30, 31],
+        [31, 34, 26, 32],
+        [32, 44, 31, 42],
+        [42, 53, 41, 50],
+        [50, 52, 36, 37],
+        [37, 38, 24, 25],
+      ],
+      zone: { top: 60, bottom: 51, from: 2, label: "order block" },
+      levels: [
+        { price: 63, from: 2, label: "stop" },
+        { price: 51, from: 2, label: "entry" },
+        { price: 26, from: 5, label: "target" },
+      ],
+      label: "Posisi jual: entry di batas bawah order block, stop di atas zona, target di swing low sebelumnya.",
+    }),
+    "Posisi jual",
+    "Entry di batas bawah order block, stop di atas zona, target di swing low.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "entry-plan": entryPlan,
   "liquidity-sweep": liquiditySweep,
   imbalance,
   "order-block": orderBlock,
