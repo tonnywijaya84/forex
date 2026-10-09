@@ -2,10 +2,12 @@ import Link from "next/link";
 import { ButtonLink, Container, sites } from "@forex/ui";
 import { StructureChart } from "@/components/structure-chart";
 import { getLessons } from "@/lib/lessons";
+import { formatDate, getArticles } from "@/lib/news";
 
 export default function Home() {
   const lessons = getLessons();
   const first = lessons.find((lesson) => lesson.published);
+  const latest = getArticles().slice(0, 3);
 
   return (
     <>
@@ -54,6 +56,35 @@ export default function Home() {
           </ol>
         </Container>
       </section>
+
+      {latest.length > 0 && (
+        <section className="border-t border-rule">
+          <Container className="py-14">
+            <div className="flex flex-wrap items-baseline justify-between gap-4">
+              <h2 className="text-3xl font-bold">Berita terbaru</h2>
+              <Link href="/berita" className="underline">
+                Semua berita
+              </Link>
+            </div>
+            <ul className="mt-8 grid gap-x-10 gap-y-8 md:grid-cols-3">
+              {latest.map((article) => (
+                <li key={article.slug} className="border-t border-ink pt-4">
+                  <p className="text-sm text-ink-soft">
+                    <time dateTime={article.date}>{formatDate(article.date)}</time>
+                    {article.category && ` · ${article.category}`}
+                  </p>
+                  <h3 className="mt-2 text-xl font-semibold">
+                    <Link href={`/berita/${article.slug}`} className="hover:underline">
+                      {article.title}
+                    </Link>
+                  </h3>
+                  <p className="mt-2 text-ink-soft">{article.summary}</p>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </section>
+      )}
 
       {sites.portal.url && (
         <section className="border-t border-rule bg-surface">
