@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Container } from "@forex/ui";
+import { Container, sites } from "@forex/ui";
 import { formatDate, getArticles } from "@/lib/news";
 
 export const metadata: Metadata = {
   title: "Berita",
-  description: "Kabar terbaru dari Kelas Forex: materi baru, pengumuman, dan catatan pasar.",
+  description: `Kabar terbaru dari ${sites.edukasi.name}: materi baru, pengumuman, dan catatan pasar.`,
 };
 
 export default function NewsIndex() {
