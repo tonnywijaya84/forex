@@ -135,16 +135,13 @@ export function isSessionIconName(value: unknown): value is SessionIconName {
   return typeof value === "string" && value in icons;
 }
 
-/** Ikon di atas ubin putih. Hanya hiasan: judul sesi selalu tertulis di sebelahnya. */
+/** Ikon tanpa latar. Hanya hiasan: judul sesi selalu tertulis di sebelahnya. */
 export function SessionIcon({ name, size = "md" }: { name: SessionIconName; size?: "md" | "lg" }) {
-  const tile = size === "lg" ? "size-20 sm:size-24" : "size-14 sm:size-20";
-  const glyph = size === "lg" ? "size-16 sm:size-20" : "size-11 sm:size-16";
+  const box = size === "lg" ? "size-16 sm:size-20" : "size-12 sm:size-16";
   return (
-    <span className={`flex shrink-0 items-center justify-center bg-surface ${tile}`}>
-      {/* Gambar memakai kotak 48 satuan; tepi kosongnya dipotong supaya ikon mengisi ubin. */}
-      <svg viewBox="3 3 42 42" aria-hidden="true" className={glyph}>
-        {icons[name]}
-      </svg>
-    </span>
+    // Gambar memakai kotak 48 satuan; tepi kosongnya dipotong supaya ikon rata dengan tepi kolom.
+    <svg viewBox="3 3 42 42" aria-hidden="true" className={`shrink-0 ${box}`}>
+      {icons[name]}
+    </svg>
   );
 }
