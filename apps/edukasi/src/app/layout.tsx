@@ -11,7 +11,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="id" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
-        <SiteHeader site="edukasi" nav={[{ href: "/#silabus", label: "Silabus" }]} />
+        <SiteHeader
+          site="edukasi"
+          nav={[
+            { href: "/#silabus", label: "Silabus" },
+            { href: "/berita", label: "Berita" },
+          ]}
+        />
         <main>{children}</main>
         <SiteFooter site="edukasi" />
       </body>

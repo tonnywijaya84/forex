@@ -6,7 +6,7 @@
 /* Komponen bersama ada di luar folder aplikasi, jadi Tailwind perlu diberi tahu letaknya. */
 @source "../../../../packages/ui/src";
 
-/* Tipografi isi materi yang dihasilkan dari Markdown. */
+/* Tipografi isi materi dan berita yang dihasilkan dari Markdown. */
 .lesson {
   line-height: 1.65;
 }
@@ -35,6 +35,12 @@
 }
 .lesson li + li {
   margin-top: 0.4em;
+}
+.lesson a {
+  text-decoration: underline;
+}
+.lesson a:hover {
+  color: var(--color-bull-deep);
 }
 .lesson strong {
   font-weight: 600;

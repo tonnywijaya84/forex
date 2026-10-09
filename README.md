@@ -4,7 +4,7 @@ Tiga situs dalam satu repo, memakai Next.js, TypeScript, Tailwind, dan Supabase 
 
 | Folder | Situs | Isi saat ini |
 | --- | --- | --- |
-| `apps/edukasi` | Edukasi forex (domain 1) | Beranda, silabus 10 sesi, materi dari file Markdown |
+| `apps/edukasi` | Edukasi forex (domain 1) | Beranda, silabus 10 sesi, materi dan berita dari file Markdown |
 | `apps/toko` | Penjualan dan referral (domain 2) | Daftar produk, halaman produk, pencatatan kode referral |
 | `apps/portal` | Setup EA (subdomain domain 2) | Login email, pendaftaran akun MT5, API lisensi untuk EA |
 | `packages/ui` | Tampilan bersama | Warna, huruf, kepala dan kaki halaman |
@@ -52,6 +52,11 @@ Cara EA memeriksa lisensi dijelaskan di [docs/api-lisensi.md](docs/api-lisensi.m
 ## Mengubah isi
 
 - Materi edukasi: tambah atau ubah file di `apps/edukasi/content/sesi`. Hapus baris `published: false` saat isinya siap.
+- Berita: tambah satu file per artikel di `apps/edukasi/content/berita`, dengan nama `TTTT-BB-HH-judul-singkat.md`
+  (nama file menjadi alamat artikel). Bagian atas file berisi `title`, `date` (TTTT-BB-HH), `summary`, dan
+  `category` bila perlu. Tambahkan `published: false` selama masih draf. Contoh: `2026-10-09-kelas-forex-dibuka.md`.
+- Kalimat penyebutan toko EA di akhir materi dan berita: `apps/edukasi/src/components/store-mention.tsx`.
+  Sesi awal yang menampilkannya diatur lewat `STORE_CTA_FROM_SESSION` di `apps/edukasi/src/lib/lessons.ts`.
 - Produk: ubah `apps/toko/src/lib/products.ts`. Data yang ada sekarang hanya contoh.
 - Nama situs: ubah `packages/ui/src/sites.ts`.
 - Warna dan huruf: ubah `packages/ui/src/tokens.css`.
