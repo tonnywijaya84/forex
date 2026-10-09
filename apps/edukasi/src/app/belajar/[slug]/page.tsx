@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ButtonLink, Container, Notice, sites } from "@forex/ui";
+import { Container, sites } from "@forex/ui";
 import { getLesson, getLessons, showsStoreCta } from "@/lib/lessons";
 
 export function generateStaticParams() {
@@ -36,16 +36,12 @@ export default async function LessonPage({ params }: PageProps<"/belajar/[slug]"
       {/* Isi berasal dari file Markdown milik repo ini, bukan dari input pengguna. */}
       <article className="lesson mt-10 max-w-[68ch]" dangerouslySetInnerHTML={{ __html: lesson.html }} />
       {sites.toko.url && showsStoreCta(lesson) && (
-        <aside aria-label={sites.toko.name} className="mt-12 max-w-[68ch]">
-          <Notice title="Ingin menjalankan aturan trading secara otomatis?">
-            <p>
-              Expert Advisor kami tersedia di {sites.toko.name}. EA hanya alat bantu: risiko rugi tetap ada, dan
-              pemahaman dari materi ini tetap diperlukan untuk memakainya.
-            </p>
-            <ButtonLink href={sites.toko.url} className="mt-4">
-              Lihat {sites.toko.name}
-            </ButtonLink>
-          </Notice>
+        <aside aria-label={sites.toko.name} className="mt-12 max-w-[68ch] text-ink-soft">
+          <p>
+            Materi ini bisa dipraktikkan sepenuhnya secara manual. Kalau suatu saat Anda ingin mencoba
+            menjalankan aturan trading secara otomatis, Expert Advisor kami bisa dilihat di{" "}
+            <a href={sites.toko.url} className="text-ink underline hover:text-bull-deep">{sites.toko.name}</a>. EA tetap hanya alat bantu, dan risiko rugi tetap ada.
+          </p>
         </aside>
       )}
       <nav aria-label="Sesi lain" className="mt-14 flex flex-wrap justify-between gap-4 border-t border-rule pt-6">
