@@ -119,7 +119,43 @@ const bosVsChoch =
   `</div>` +
   `</figure>`;
 
+// Leg naik dari 20 ke 60; setengah leg berada di 40.
+const legUp: Candle[] = [
+  [20, 32, 20, 30],
+  [30, 44, 29, 42],
+  [42, 60, 41, 58],
+];
+
+const retracementDepth =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [...legUp, [58, 59, 51, 53], [53, 56, 50, 55], [55, 68, 54, 66], [66, 74, 65, 72]],
+      level: 40,
+      levelFrom: 0,
+      levelLabel: "50% leg",
+      label: "Koreksi berhenti jauh di atas garis setengah leg, lalu harga naik lagi.",
+    }),
+    "Koreksi dangkal",
+    "Harga belum menyentuh setengah leg. Lembah ini bukan swing low.",
+  ) +
+  panel(
+    candleChart({
+      candles: [...legUp, [58, 59, 48, 50], [50, 51, 37, 39], [39, 50, 38, 48], [48, 64, 47, 62]],
+      level: 40,
+      levelFrom: 0,
+      levelLabel: "50% leg",
+      label: "Koreksi turun melewati garis setengah leg, lalu harga naik lagi.",
+    }),
+    "Koreksi yang sah",
+    "Harga melewati setengah leg. Lembah ini swing low yang sah.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
   "bos-close": bosClose,
   "bos-vs-choch": bosVsChoch,
+  "retracement-depth": retracementDepth,
 };
