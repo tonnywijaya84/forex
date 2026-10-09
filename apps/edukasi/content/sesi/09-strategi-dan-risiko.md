@@ -2,6 +2,7 @@
 session: 9
 title: Strategi entry dan manajemen risiko
 summary: Checklist enam langkah, ukuran lot, dan win rate minimum.
+icon: risk-plan
 ---
 
 Sesi 1 sampai 8 membangun peta. Sesi ini mengubah peta itu menjadi prosedur yang bisa diulang: kapan masuk, di mana batalnya, dan berapa besar posisinya.

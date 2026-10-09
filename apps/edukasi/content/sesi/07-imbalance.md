@@ -2,6 +2,7 @@
 session: 7
 title: Imbalance
 summary: Celah yang ditinggalkan gerakan impulsif, sebagai area entry dan target.
+icon: imbalance
 ---
 
 Syarat kedua order block di Sesi 6 menyebut imbalance. Sesi ini menjelaskan apa itu, cara mengenalinya, dan dua kegunaannya di dalam peta.

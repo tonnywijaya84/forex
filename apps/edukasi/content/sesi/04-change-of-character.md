@@ -2,6 +2,7 @@
 session: 4
 title: Change of character
 summary: Tanda awal bahwa tren mungkin berbalik, dan bedanya dengan BOS.
+icon: change-of-character
 ---
 
 BOS memberi tahu bahwa tren berlanjut. Change of character (ChoCh) adalah kebalikannya: harga menembus swing yang selama ini menjaga tren, sehingga tren itu patut dipertanyakan.

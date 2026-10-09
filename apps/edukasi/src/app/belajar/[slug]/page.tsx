@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@forex/ui";
+import { SessionIcon } from "@/components/session-icon";
 import { StoreMention } from "@/components/store-mention";
 import { getLesson, getLessons, showsStoreCta } from "@/lib/lessons";
 
@@ -29,6 +30,11 @@ export default async function LessonPage({ params }: PageProps<"/belajar/[slug]"
 
   return (
     <Container className="py-12">
+      {lesson.icon && (
+        <div className="mb-6">
+          <SessionIcon name={lesson.icon} size="lg" />
+        </div>
+      )}
       <p className="text-ink-soft">
         <Link href="/#silabus">Silabus</Link> / Sesi {lesson.session}
       </p>

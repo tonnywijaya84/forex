@@ -54,6 +54,8 @@ Cara EA memeriksa lisensi dijelaskan di [docs/api-lisensi.md](docs/api-lisensi.m
 - Materi edukasi: tambah atau ubah file di `apps/edukasi/content/sesi`. Hapus baris `published: false` saat isinya siap.
   Gambar di dalam materi dipanggil dengan baris `<!-- gambar: nama -->`; gambarnya didefinisikan di
   `apps/edukasi/src/lib/figures.ts`.
+  Ikon sesi dipilih lewat baris `icon:` di bagian atas file materi; ikonnya digambar di
+  `apps/edukasi/src/components/session-icon.tsx`.
 - Berita: tambah satu file per artikel di `apps/edukasi/content/berita`, dengan nama `TTTT-BB-HH-judul-singkat.md`
   (nama file menjadi alamat artikel). Bagian atas file berisi `title`, `date` (TTTT-BB-HH), `summary`, dan
   `category` bila perlu. Tambahkan `published: false` selama masih draf. Contoh: `2026-10-09-fxspot-dibuka.md`.

@@ -2,6 +2,7 @@
 session: 3
 title: Break of structure
 summary: Tanda bahwa tren berlanjut, dan dua syarat agar sebuah BOS dianggap sah.
+icon: break-of-structure
 ---
 
 Di Sesi 1, tren dibaca sebagai rangkaian swing. Break of structure (BOS) adalah saat harga menembus swing terakhir ke arah tren. Selama BOS terus terjadi, tren masih berjalan.

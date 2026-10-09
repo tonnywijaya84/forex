@@ -2,6 +2,7 @@
 session: 1
 title: Market structure
 summary: Cara membaca arah pasar dari jejak swing di chart, sebagai fondasi semua sesi berikutnya.
+icon: market-structure
 ---
 
 Market structure adalah jejak yang ditinggalkan pergerakan harga di chart candlestick. Dari jejak itu kita membaca dua hal: ke mana tren sedang bergerak, dan di mana tren itu berpotensi berubah.

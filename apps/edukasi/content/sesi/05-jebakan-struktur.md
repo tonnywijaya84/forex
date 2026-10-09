@@ -2,6 +2,7 @@
 session: 5
 title: Jebakan struktur
 summary: Fake retracement, fake BOS, dan confusion structure.
+icon: structure-trap
 ---
 
 Sesi 3 dan 4 membahas penembusan yang sah. Sesi ini membahas kebalikannya: swing dan penembusan yang tampak sah, padahal tidak. Hampir semuanya berasal dari satu kesalahan, yaitu menandai swing terlalu cepat.
