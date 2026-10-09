@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { ButtonLink, Container, sites } from "@forex/ui";
 import { ReferralBanner } from "@/components/referral-banner";
-import { formatPrice, products } from "@/lib/products";
+import { formatPrice, hasPriceLabel, products } from "@/lib/products";
 
 export default function Home({ searchParams }: PageProps<"/">) {
   const incoming = searchParams.then((params) => (typeof params.ref === "string" ? params.ref : undefined));
@@ -17,8 +17,9 @@ export default function Home({ searchParams }: PageProps<"/">) {
         <Container className="py-14 lg:py-20">
           <h1 className="max-w-[18ch] text-4xl font-bold sm:text-5xl">Expert Advisor untuk MetaTrader 5</h1>
           <p className="mt-6 max-w-[58ch] text-lg text-ink-soft">
-            Setiap EA dilisensikan per nomor akun MT5. Setelah membeli, daftarkan nomor akun Anda di{" "}
-            {sites.portal.name} dan EA akan aktif di akun itu.
+            Setiap EA dilisensikan per nomor akun MT5. Sebagian bisa dipakai gratis lewat program referral broker,
+            sisanya dibeli. Setelah itu, daftarkan nomor akun Anda di {sites.portal.name} dan EA akan aktif di akun
+            itu.
           </p>
         </Container>
       </section>
@@ -38,7 +39,7 @@ export default function Home({ searchParams }: PageProps<"/">) {
                   <p className="mt-2 max-w-[62ch] text-ink-soft">{product.summary}</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-5 md:justify-end">
-                  <span className={product.priceIdr === null ? "text-ink-soft" : "text-xl font-semibold"}>{formatPrice(product.priceIdr)}</span>
+                  <span className={hasPriceLabel(product) ? "text-xl font-semibold" : "text-ink-soft"}>{formatPrice(product)}</span>
                   <ButtonLink href={`/produk/${product.slug}`} tone="quiet">
                     Lihat detail
                   </ButtonLink>
@@ -65,7 +66,7 @@ export default function Home({ searchParams }: PageProps<"/">) {
             )}
             {sites.portal.url && (
               <div>
-                <h2 className="text-2xl font-bold">Sudah membeli?</h2>
+                <h2 className="text-2xl font-bold">Siap mengaktifkan lisensi?</h2>
                 <p className="mt-3 max-w-[48ch] text-ink-soft">
                   Daftarkan nomor akun MT5 dan nama server broker Anda supaya lisensinya aktif.
                 </p>

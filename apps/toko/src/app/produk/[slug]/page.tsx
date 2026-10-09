@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ButtonLink, Container, Notice, sites } from "@forex/ui";
-import { formatPrice, getProduct, products } from "@/lib/products";
+import { FreeAccessPanel } from "@/components/free-access-panel";
+import { formatPrice, getProduct, hasPriceLabel, products } from "@/lib/products";
 
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));
@@ -18,6 +19,7 @@ export default async function ProductPage({ params }: PageProps<"/produk/[slug]"
   const { slug } = await params;
   const product = getProduct(slug);
   if (!product) notFound();
+  const isFree = product.access === "free_with_referral";
 
   return (
     <Container className="py-12">
@@ -34,21 +36,29 @@ export default async function ProductPage({ params }: PageProps<"/produk/[slug]"
               <li key={feature}>{feature}</li>
             ))}
           </ul>
-          <h2 className="mt-10 text-2xl font-bold">Setelah membeli</h2>
+          <h2 className="mt-10 text-2xl font-bold">{isFree ? "Cara mendapatkannya" : "Setelah membeli"}</h2>
           <ol className="mt-4 max-w-[60ch] list-decimal space-y-2 pl-5">
+            {isFree && <li>Buka akun trading di broker mitra lewat tautan referral di halaman ini.</li>}
             <li>Masuk ke {sites.portal.name} dengan email Anda.</li>
             <li>Daftarkan nomor akun MT5 dan nama server broker untuk EA ini.</li>
-            <li>Setelah lisensi diaktifkan, pasang EA di chart akun tersebut.</li>
+            <li>
+              {isFree ? "Setelah akun dicek memenuhi syarat dan lisensi diaktifkan" : "Setelah lisensi diaktifkan"}, pasang
+              EA di chart akun tersebut.
+            </li>
           </ol>
         </div>
         <aside className="self-start border-t-4 border-ink bg-surface p-6">
           <p className="text-sm text-ink-soft">Lisensi per akun MT5</p>
-          <p className={`mt-1 ${product.priceIdr === null ? "text-lg text-ink-soft" : "font-display text-3xl font-bold"}`}>{formatPrice(product.priceIdr)}</p>
-          <div className="mt-6">
-            <Notice title="Pembayaran belum tersambung">
-              Checkout akan tersedia di halaman ini setelah payment gateway dipasang.
-            </Notice>
-          </div>
+          <p className={`mt-1 ${hasPriceLabel(product) ? "font-display text-3xl font-bold" : "text-lg text-ink-soft"}`}>{formatPrice(product)}</p>
+          {isFree ? (
+            <FreeAccessPanel />
+          ) : (
+            <div className="mt-6">
+              <Notice title="Pembayaran belum tersambung">
+                Checkout akan tersedia di halaman ini setelah payment gateway dipasang.
+              </Notice>
+            </div>
+          )}
           {sites.portal.url && (
             <ButtonLink href={sites.portal.url} tone="quiet" className="mt-6 w-full">
               Buka {sites.portal.name}
