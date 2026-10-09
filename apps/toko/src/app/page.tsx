@@ -49,28 +49,34 @@ export default function Home({ searchParams }: PageProps<"/">) {
         </Container>
       </section>
 
-      <section className="border-t border-rule bg-surface">
-        <Container className="grid gap-8 py-12 md:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-bold">Belum paham cara kerjanya?</h2>
-            <p className="mt-3 max-w-[48ch] text-ink-soft">
-              EA hanya alat. Pelajari dulu struktur pasar dan manajemen risiko sebelum menjalankannya di akun riil.
-            </p>
-            <ButtonLink href={sites.edukasi.url} tone="quiet" className="mt-5">
-              Buka {sites.edukasi.name}
-            </ButtonLink>
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold">Sudah membeli?</h2>
-            <p className="mt-3 max-w-[48ch] text-ink-soft">
-              Daftarkan nomor akun MT5 dan nama server broker Anda supaya lisensinya aktif.
-            </p>
-            <ButtonLink href={sites.portal.url} className="mt-5">
-              Daftarkan akun MT5
-            </ButtonLink>
-          </div>
-        </Container>
-      </section>
+      {(sites.edukasi.url || sites.portal.url) && (
+        <section className="border-t border-rule bg-surface">
+          <Container className="grid gap-8 py-12 md:grid-cols-2">
+            {sites.edukasi.url && (
+              <div>
+                <h2 className="text-2xl font-bold">Belum paham cara kerjanya?</h2>
+                <p className="mt-3 max-w-[48ch] text-ink-soft">
+                  EA hanya alat. Pelajari dulu struktur pasar dan manajemen risiko sebelum menjalankannya di akun riil.
+                </p>
+                <ButtonLink href={sites.edukasi.url} tone="quiet" className="mt-5">
+                  Buka {sites.edukasi.name}
+                </ButtonLink>
+              </div>
+            )}
+            {sites.portal.url && (
+              <div>
+                <h2 className="text-2xl font-bold">Sudah membeli?</h2>
+                <p className="mt-3 max-w-[48ch] text-ink-soft">
+                  Daftarkan nomor akun MT5 dan nama server broker Anda supaya lisensinya aktif.
+                </p>
+                <ButtonLink href={sites.portal.url} className="mt-5">
+                  Daftarkan akun MT5
+                </ButtonLink>
+              </div>
+            )}
+          </Container>
+        </section>
+      )}
     </>
   );
 }

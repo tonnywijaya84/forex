@@ -55,16 +55,18 @@ export default function Home() {
         </Container>
       </section>
 
-      <section className="border-t border-rule bg-surface">
-        <Container className="flex flex-wrap items-center justify-between gap-6 py-10">
-          <p className="max-w-[52ch]">
-            Sudah memakai Expert Advisor kami? Daftarkan nomor akun MT5 Anda supaya lisensinya aktif.
-          </p>
-          <ButtonLink href={sites.portal.url} tone="quiet">
-            Buka {sites.portal.name}
-          </ButtonLink>
-        </Container>
-      </section>
+      {sites.portal.url && (
+        <section className="border-t border-rule bg-surface">
+          <Container className="flex flex-wrap items-center justify-between gap-6 py-10">
+            <p className="max-w-[52ch]">
+              Sudah memakai Expert Advisor kami? Daftarkan nomor akun MT5 Anda supaya lisensinya aktif.
+            </p>
+            <ButtonLink href={sites.portal.url} tone="quiet">
+              Buka {sites.portal.name}
+            </ButtonLink>
+          </Container>
+        </section>
+      )}
     </>
   );
 }

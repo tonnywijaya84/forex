@@ -4,20 +4,29 @@
  */
 export type SiteKey = "edukasi" | "toko" | "portal";
 
-export const sites: Record<SiteKey, { name: string; tagline: string; url: string }> = {
+/**
+ * Alamat sebuah situs. Di produksi, situs yang alamatnya belum diisi dianggap belum terbit (null)
+ * sehingga tautan ke sana tidak ditampilkan. Di komputer lokal dipakai alamat localhost.
+ */
+function siteUrl(configured: string | undefined, localUrl: string): string | null {
+  if (configured) return configured;
+  return process.env.NODE_ENV === "production" ? null : localUrl;
+}
+
+export const sites: Record<SiteKey, { name: string; tagline: string; url: string | null }> = {
   edukasi: {
     name: "Kelas Forex",
     tagline: "Materi belajar membaca struktur pasar",
-    url: process.env.NEXT_PUBLIC_URL_EDUKASI ?? "http://localhost:3001",
+    url: siteUrl(process.env.NEXT_PUBLIC_URL_EDUKASI, "http://localhost:3001"),
   },
   toko: {
     name: "Toko EA",
     tagline: "Expert Advisor dan tautan referral",
-    url: process.env.NEXT_PUBLIC_URL_TOKO ?? "http://localhost:3002",
+    url: siteUrl(process.env.NEXT_PUBLIC_URL_TOKO, "http://localhost:3002"),
   },
   portal: {
     name: "Portal EA",
     tagline: "Daftarkan akun MT5 untuk lisensi EA",
-    url: process.env.NEXT_PUBLIC_URL_PORTAL ?? "http://localhost:3003",
+    url: siteUrl(process.env.NEXT_PUBLIC_URL_PORTAL, "http://localhost:3003"),
   },
 };

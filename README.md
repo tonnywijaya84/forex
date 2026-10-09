@@ -62,6 +62,9 @@ Buat tiga proyek Vercel dari repo ini. Di tiap proyek, isi Root Directory dengan
 atau `apps/portal`, lalu pasang domainnya. Isi environment variable sesuai `.env.example` di folder masing-masing,
 termasuk `NEXT_PUBLIC_URL_*` dengan alamat domain yang sebenarnya.
 
+Situs yang `NEXT_PUBLIC_URL_*`-nya belum diisi dianggap belum terbit: di produksi, tautan ke situs itu
+tidak ditampilkan. Isi variabelnya di ketiga proyek setelah situs tersebut dipasang, lalu pasang ulang.
+
 ## Memeriksa sebelum mengirim perubahan
 
 ```bash
