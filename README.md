@@ -93,5 +93,5 @@ pnpm build
 - Pembatasan jumlah permintaan (rate limit) pada API lisensi.
 - Bukti kepemilikan akun MT5. Saat ini siapa pun yang login bisa mendaftarkan nomor akun mana pun,
   sehingga aktivasi oleh admin menjadi satu-satunya pemeriksaan.
-- Materi sesi 8 sampai 10.
+- Materi sesi 9 dan 10.
 - Tautan referral broker dan syarat EA gratis yang final. Pemeriksaan syarat masih manual sebelum lisensi diaktifkan.

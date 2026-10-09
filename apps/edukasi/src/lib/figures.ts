@@ -254,7 +254,42 @@ const imbalance =
   `</div>` +
   `</figure>`;
 
+// Dua lembah sejajar di 44 (equal low), lalu harga kembali mendekatinya.
+const equalLows: Candle[] = [
+  [60, 62, 50, 52],
+  [52, 54, 44, 46],
+  [46, 56, 45, 54],
+  [54, 58, 52, 53],
+  [53, 54, 44, 46],
+  [46, 52, 45, 50],
+];
+
+const liquiditySweep =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [...equalLows, [50, 51, 37, 48], [48, 62, 47, 60]],
+      level: { price: 44, from: 1, label: "equal low" },
+      label: "Wick sebuah candle turun melewati dua lembah sejajar, tetapi candle ditutup kembali di atasnya, lalu harga naik.",
+    }),
+    "Sapuan",
+    "Wick melewati level, candle ditutup kembali di atasnya. Order di bawah level sudah terambil.",
+  ) +
+  panel(
+    candleChart({
+      candles: [...equalLows, [50, 51, 36, 38], [38, 40, 29, 31]],
+      level: { price: 44, from: 1, label: "equal low" },
+      label: "Sebuah candle ditutup di bawah dua lembah sejajar, lalu harga terus turun.",
+    }),
+    "Penembusan",
+    "Candle ditutup di bawah level. Ini penembusan struktur, bukan sapuan.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "liquidity-sweep": liquiditySweep,
   imbalance,
   "order-block": orderBlock,
   "bos-close": bosClose,
