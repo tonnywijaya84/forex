@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import matter from "gray-matter";
 import { marked } from "marked";
+import { figures } from "./figures";
 
 /**
  * Materi disimpan sebagai file Markdown di `content/sesi`.
@@ -19,6 +20,15 @@ export type Lesson = {
 
 const dir = join(process.cwd(), "content", "sesi");
 
+/** Mengganti baris `<!-- gambar: nama -->` di Markdown dengan gambar dari `figures.ts`. */
+function withFigures(html: string, file: string): string {
+  return html.replace(/<!--\s*gambar:\s*([a-z0-9-]+)\s*-->/g, (_marker, name: string) => {
+    const figure = figures[name];
+    if (!figure) throw new Error(`Gambar "${name}" di ${file} tidak ada di src/lib/figures.ts.`);
+    return figure;
+  });
+}
+
 function load(): Lesson[] {
   return readdirSync(dir)
     .filter((file) => file.endsWith(".md"))
@@ -33,7 +43,7 @@ function load(): Lesson[] {
         title: data.title,
         summary: data.summary,
         published: data.published !== false && content.trim().length > 0,
-        html: marked.parse(content, { async: false }),
+        html: withFigures(marked.parse(content, { async: false }), file),
       };
     })
     .sort((a, b) => a.session - b.session);

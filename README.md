@@ -52,6 +52,8 @@ Cara EA memeriksa lisensi dijelaskan di [docs/api-lisensi.md](docs/api-lisensi.m
 ## Mengubah isi
 
 - Materi edukasi: tambah atau ubah file di `apps/edukasi/content/sesi`. Hapus baris `published: false` saat isinya siap.
+  Gambar di dalam materi dipanggil dengan baris `<!-- gambar: nama -->`; gambarnya didefinisikan di
+  `apps/edukasi/src/lib/figures.ts`.
 - Berita: tambah satu file per artikel di `apps/edukasi/content/berita`, dengan nama `TTTT-BB-HH-judul-singkat.md`
   (nama file menjadi alamat artikel). Bagian atas file berisi `title`, `date` (TTTT-BB-HH), `summary`, dan
   `category` bila perlu. Tambahkan `published: false` selama masih draf. Contoh: `2026-10-09-kelas-forex-dibuka.md`.
@@ -91,5 +93,5 @@ pnpm build
 - Pembatasan jumlah permintaan (rate limit) pada API lisensi.
 - Bukti kepemilikan akun MT5. Saat ini siapa pun yang login bisa mendaftarkan nomor akun mana pun,
   sehingga aktivasi oleh admin menjadi satu-satunya pemeriksaan.
-- Materi sesi 3 sampai 10.
+- Materi sesi 4 sampai 10.
 - Tautan referral broker dan syarat EA gratis yang final. Pemeriksaan syarat masih manual sebelum lisensi diaktifkan.
