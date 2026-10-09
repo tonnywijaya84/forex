@@ -38,9 +38,10 @@ export default async function LessonPage({ params }: PageProps<"/belajar/[slug]"
       {sites.toko.url && showsStoreCta(lesson) && (
         <aside aria-label={sites.toko.name} className="mt-12 max-w-[68ch] text-ink-soft">
           <p>
-            Materi ini bisa dipraktikkan sepenuhnya secara manual. Kalau suatu saat Anda ingin mencoba
-            menjalankan aturan trading secara otomatis, Expert Advisor kami bisa dilihat di{" "}
-            <a href={sites.toko.url} className="text-ink underline hover:text-bull-deep">{sites.toko.name}</a>. EA tetap hanya alat bantu, dan risiko rugi tetap ada.
+            Materi ini bisa dipraktikkan sepenuhnya secara manual. Kalau ingin melihat bagaimana aturan trading
+            dijalankan secara otomatis, ada contoh Expert Advisor gratis di{" "}
+            <a href={sites.toko.url} className="text-ink underline hover:text-bull-deep">{sites.toko.name}</a>{" "}
+            yang bisa dicoba, sebaiknya di akun demo lebih dulu. EA hanya alat bantu, dan risiko rugi tetap ada.
           </p>
         </aside>
       )}
