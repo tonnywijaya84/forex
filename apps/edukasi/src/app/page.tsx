@@ -48,9 +48,9 @@ export default function Home() {
                   </h3>
                   <p className="mt-1 max-w-[62ch] text-ink-soft">{lesson.summary}</p>
                 </div>
-                <span className={`col-start-2 mt-2 text-sm sm:col-start-3 sm:mt-0 ${lesson.published ? "text-bull-deep" : "text-ink-soft"}`}>
-                  {lesson.published ? "Tersedia" : "Sedang ditulis"}
-                </span>
+                {!lesson.published && (
+                  <span className="col-start-2 mt-2 text-sm text-ink-soft sm:col-start-3 sm:mt-0">Sedang ditulis</span>
+                )}
               </li>
             ))}
           </ol>
