@@ -42,6 +42,13 @@ function load(): Lesson[] {
 // Dibaca sekali saat modul dimuat: isi file sama untuk setiap permintaan.
 const lessons = load();
 
+/** Ajakan ke toko EA tampil di halaman materi mulai sesi ini. Sesi sebelumnya murni materi. */
+export const STORE_CTA_FROM_SESSION = 4;
+
+export function showsStoreCta(lesson: Pick<Lesson, "session">): boolean {
+  return lesson.session >= STORE_CTA_FROM_SESSION;
+}
+
 export function getLessons(): Lesson[] {
   return lessons;
 }
