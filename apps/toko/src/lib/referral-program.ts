@@ -22,11 +22,11 @@ export function getListedBrokers(): ListedBroker[] {
 }
 
 /**
- * Syarat EA gratis. Selama `isFinal` masih false, situs menampilkan tanda "masih contoh" di atas daftar ini;
- * ubah menjadi true saat syarat sudah berlaku.
+ * Syarat EA gratis, sudah ditetapkan pemilik situs. Bila `isFinal` diubah menjadi false, situs menampilkan
+ * tanda "masih contoh" di atas daftar ini.
  */
 export const freeAccessTerms: { isFinal: boolean; items: string[] } = {
-  isFinal: false,
+  isFinal: true,
   items: [
     "Akun trading dibuka lewat tautan referral broker mitra di halaman ini.",
     "Akun sudah terverifikasi dan sudah menerima deposit pertama.",
