@@ -35,6 +35,10 @@ export async function addAccount(_previous: FormState, formData: FormData): Prom
     if (error.code === "23505") {
       return { ok: false, message: "Akun ini sudah terdaftar untuk EA tersebut. Hubungi kami bila itu bukan Anda." };
     }
+    // 42501 = ditolak Row Level Security: data diri belum diisi.
+    if (error.code === "42501") {
+      return { ok: false, message: "Lengkapi data diri Anda lebih dulu di halaman Data diri, lalu daftarkan akun lagi." };
+    }
     return { ok: false, message: "Akun gagal disimpan. Coba lagi; bila tetap gagal, hubungi kami." };
   }
 

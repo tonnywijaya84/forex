@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { evaluateLicense, type StoredStatus } from "@forex/license";
-import { Container, Notice } from "@forex/ui";
+import { ButtonLink, Container, Notice } from "@forex/ui";
 import { AddAccountForm } from "@/components/add-account-form";
 import { dateFormat, stateLabel } from "@/lib/license-labels";
 import { supabaseEnv } from "@/lib/supabase/env";
@@ -25,11 +25,14 @@ async function Accounts() {
   const user = await getSessionUser();
   if (!user) redirect("/masuk");
 
-  const [eas, accounts, admin] = await Promise.all([
+  const [eas, accounts, admin, profile] = await Promise.all([
     user.supabase.from("eas").select("id, name").order("name"),
     user.supabase.from("mt5_accounts").select("id, account_number, broker_server, status, expires_at, eas(name)").order("created_at"),
     user.supabase.rpc("is_admin"),
+    user.supabase.from("profiles").select("user_id").maybeSingle(),
   ]);
+  // Database menolak pendaftaran akun dari pengguna tanpa data diri; di sini pengguna diarahkan lebih dulu.
+  const needsProfile = !profile.error && profile.data === null;
 
   if (eas.error || accounts.error) {
     return (
@@ -112,7 +115,16 @@ async function Accounts() {
         Nomor akun dan nama server terlihat di MetaTrader 5 pada menu File, lalu Login to Trade Account.
       </p>
       <div className="mt-6">
-        {eas.data.length === 0 ? (
+        {needsProfile ? (
+          <div className="max-w-xl">
+            <Notice title="Lengkapi data diri lebih dulu">
+              Nama, nomor telepon, dan data diri lainnya perlu diisi sebelum akun MT5 bisa didaftarkan.
+            </Notice>
+            <ButtonLink href="/profil" className="mt-5">
+              Isi data diri
+            </ButtonLink>
+          </div>
+        ) : eas.data.length === 0 ? (
           <Notice title="Belum ada EA yang bisa didaftarkan">Katalog EA masih kosong. Isi tabel eas di database lebih dulu.</Notice>
         ) : (
           <AddAccountForm eas={eas.data as { id: string; name: string }[]} />

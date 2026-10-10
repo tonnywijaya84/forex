@@ -2,7 +2,8 @@ import { ButtonLink, Container } from "@forex/ui";
 
 const steps = [
   { title: "Masuk dengan email", body: "Kami kirim tautan masuk ke email Anda. Tidak perlu kata sandi." },
-  { title: "Daftarkan akun MT5", body: "Isi nomor akun dan nama server broker, lalu pilih EA yang Anda beli." },
+  { title: "Lengkapi data diri", body: "Isi nama, nomor telepon, dan data diri lain yang dipakai untuk memeriksa syarat lisensi." },
+  { title: "Daftarkan akun MT5", body: "Isi nomor akun dan nama server broker, lalu pilih EA yang ingin diaktifkan." },
   { title: "Pasang EA setelah lisensi aktif", body: "EA memeriksa lisensi ke portal ini setiap kali dijalankan di akun tersebut." },
 ];
 
@@ -27,8 +28,8 @@ export default function Home() {
 
       <section>
         <Container className="py-14">
-          <h2 className="text-3xl font-bold">Tiga langkah</h2>
-          <ol className="mt-8 grid gap-8 md:grid-cols-3">
+          <h2 className="text-3xl font-bold">Empat langkah</h2>
+          <ol className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, index) => (
               <li key={step.title} className="border-t border-ink pt-4">
                 <span className="font-display text-2xl font-bold text-ink-soft [font-variation-settings:'wdth'_80]">{index + 1}</span>

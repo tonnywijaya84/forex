@@ -13,6 +13,10 @@ export const metadata: Metadata = { title: "Admin lisensi", robots: { index: fal
 type AdminRow = {
   id: string;
   owner_email: string | null;
+  owner_name: string | null;
+  owner_phone: string | null;
+  owner_city: string | null;
+  owner_telegram: string | null;
   account_number: number;
   broker_server: string;
   ea_name: string;
@@ -73,7 +77,17 @@ async function Licenses() {
                   {row.account_number} <span className="font-normal text-ink-soft">di {row.broker_server}</span>
                 </p>
                 <p className="mt-1">{row.ea_name}</p>
+                <p className="mt-3 font-medium">{row.owner_name ?? "Data diri belum diisi"}</p>
                 <p className="mt-1 break-all text-ink-soft">{row.owner_email ?? "Email tidak tersedia"}</p>
+                {row.owner_phone && (
+                  <p className="mt-1 text-ink-soft">
+                    <a href={`https://wa.me/${row.owner_phone.replace("+", "")}`} className="text-ink underline" rel="noreferrer" target="_blank">
+                      {row.owner_phone}
+                    </a>
+                    {row.owner_city ? `, ${row.owner_city}` : ""}
+                    {row.owner_telegram ? `, Telegram @${row.owner_telegram}` : ""}
+                  </p>
+                )}
                 <p className="mt-1 text-ink-soft">Didaftarkan {dateFormat.format(new Date(row.created_at))}</p>
                 <p className={`mt-2 font-medium ${stateLabel[state].className}`}>{summary[state]}</p>
               </div>

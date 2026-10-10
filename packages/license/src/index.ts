@@ -139,3 +139,5 @@ export function expiryInputValue(expiresAt: string | null): string {
   if (Number.isNaN(time)) return "";
   return new Date(time + WIB_OFFSET_MS).toISOString().slice(0, 10);
 }
+
+export { MINIMUM_AGE, normalizePhone, parseProfile, type Profile, type ProfileInput } from "./profile";
