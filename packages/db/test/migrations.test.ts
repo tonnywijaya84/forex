@@ -23,6 +23,7 @@ const migrationsDir = join(import.meta.dirname, "../../../supabase/migrations");
 const ALICE = "00000000-0000-0000-0000-00000000000a";
 const BOB = "00000000-0000-0000-0000-00000000000b";
 const CAROL = "00000000-0000-0000-0000-00000000000c";
+const DAVE = "00000000-0000-0000-0000-00000000000d";
 
 let db: PGlite;
 let eaId: string;
@@ -45,8 +46,14 @@ beforeAll(async () => {
   }
   await db.exec(readFileSync(join(migrationsDir, "../seed.sql"), "utf8"));
   await db.exec(
-    `insert into auth.users (id, email) values ('${ALICE}', 'alice@example.com'), ('${BOB}', 'bob@example.com'), ('${CAROL}', 'carol@example.com');`,
+    `insert into auth.users (id, email) values ('${ALICE}', 'alice@example.com'), ('${BOB}', 'bob@example.com'), ('${CAROL}', 'carol@example.com'), ('${DAVE}', 'dave@example.com');`,
   );
+  // Alice dan Bob sudah mengisi data diri; Dave belum (dipakai untuk menguji kewajiban mengisi).
+  await db.exec(`
+    insert into public.profiles (user_id, full_name, phone, city, telegram, birth_date) values
+      ('${ALICE}', 'Alice Wijaya', '+6281234567890', 'Jakarta', 'alice_w', '1990-05-17'),
+      ('${BOB}', 'Bob Santoso', '+6281398765432', 'Surabaya', null, '1985-11-02');
+  `);
   const ea = await db.query<{ id: string }>(`select id from public.eas where code = 'averaging-v1'`);
   eaId = ea.rows[0].id;
 });
@@ -198,6 +205,19 @@ describe("admin", () => {
     ]);
   });
 
+  it("daftar admin menyertakan data diri pemilik, tanpa tanggal lahir", async () => {
+    const result = await as("authenticated", CAROL, () =>
+      db.query<Record<string, unknown>>(`select * from public.admin_list_accounts() where account_number = 1001`),
+    );
+    expect(result.rows[0]).toMatchObject({
+      owner_name: "Alice Wijaya",
+      owner_phone: "+6281234567890",
+      owner_city: "Jakarta",
+      owner_telegram: "alice_w",
+    });
+    expect(Object.keys(result.rows[0])).not.toContain("birth_date");
+  });
+
   it("bukan admin mendapat daftar kosong", async () => {
     const result = await as("authenticated", ALICE, () => db.query(`select * from public.admin_list_accounts()`));
     expect(result.rows).toHaveLength(0);
@@ -249,5 +269,77 @@ describe("admin", () => {
     await expect(
       as("authenticated", BOB, () => db.query(`update public.mt5_accounts set status = 'active' where account_number = 2001`)),
     ).rejects.toThrow(/permission denied/);
+  });
+});
+
+describe("profiles", () => {
+  const insertProfile = (userId: string, ownerId: string) =>
+    as("authenticated", userId, () =>
+      db.query(
+        `insert into public.profiles (user_id, full_name, phone, city, birth_date) values ($1, 'Dave Pratama', '+6285511122233', 'Bandung', '1995-03-09')`,
+        [ownerId],
+      ),
+    );
+
+  it("pengguna tanpa data diri tidak bisa mendaftarkan akun MT5", async () => {
+    await expect(
+      as("authenticated", DAVE, () =>
+        db.query(`insert into public.mt5_accounts (ea_id, account_number, broker_server) values ($1, 3001, 'Demo-Server')`, [eaId]),
+      ),
+    ).rejects.toThrow(/row-level security/);
+  });
+
+  it("pengguna tidak bisa mengisi data diri atas nama orang lain", async () => {
+    await expect(insertProfile(DAVE, CAROL)).rejects.toThrow(/row-level security/);
+  });
+
+  it("setelah mengisi data diri, pengguna bisa mendaftarkan akun MT5", async () => {
+    await insertProfile(DAVE, DAVE);
+    const result = await as("authenticated", DAVE, () =>
+      db.query<{ status: string }>(
+        `insert into public.mt5_accounts (ea_id, account_number, broker_server) values ($1, 3001, 'Demo-Server') returning status`,
+        [eaId],
+      ),
+    );
+    expect(result.rows[0].status).toBe("pending");
+  });
+
+  it("pengguna hanya melihat data dirinya sendiri", async () => {
+    const dave = await as("authenticated", DAVE, () => db.query<{ full_name: string }>(`select full_name from public.profiles`));
+    expect(dave.rows).toEqual([{ full_name: "Dave Pratama" }]);
+  });
+
+  it("pengguna bisa mengubah data dirinya, dan waktu perubahan ikut diperbarui", async () => {
+    // Mundurkan waktu perubahan tanpa trigger, supaya terlihat bahwa trigger yang memajukannya lagi.
+    await db.exec(`alter table public.profiles disable trigger profiles_touch_updated_at`);
+    await db.exec(`update public.profiles set updated_at = '2026-01-01T00:00:00Z' where user_id = '${DAVE}'`);
+    await db.exec(`alter table public.profiles enable trigger profiles_touch_updated_at`);
+    await as("authenticated", DAVE, () => db.query(`update public.profiles set city = 'Yogyakarta', telegram = 'dave_p' where user_id = $1`, [DAVE]));
+    const row = await db.query<{ city: string; telegram: string; updated_at: Date }>(`select city, telegram, updated_at from public.profiles where user_id = $1`, [DAVE]);
+    expect(row.rows[0].city).toBe("Yogyakarta");
+    expect(row.rows[0].telegram).toBe("dave_p");
+    expect(new Date(row.rows[0].updated_at).getTime()).toBeGreaterThan(Date.parse("2026-01-01T00:00:00Z"));
+  });
+
+  it("pengguna tidak bisa mengubah data diri orang lain atau memindahkan miliknya", async () => {
+    const other = await as("authenticated", DAVE, () => db.query(`update public.profiles set city = 'Diubah' where user_id = $1`, [ALICE]));
+    expect(other.affectedRows).toBe(0);
+    await expect(
+      as("authenticated", DAVE, () => db.query(`update public.profiles set user_id = $1 where user_id = $2`, [CAROL, DAVE])),
+    ).rejects.toThrow(/row-level security/);
+  });
+
+  it("pengguna tidak bisa menghapus data diri, dan pengunjung tidak bisa membacanya", async () => {
+    await expect(as("authenticated", DAVE, () => db.query(`delete from public.profiles where user_id = $1`, [DAVE]))).rejects.toThrow(/permission denied/);
+    await expect(as("anon", null, () => db.query(`select * from public.profiles`))).rejects.toThrow(/permission denied/);
+  });
+
+  it("nomor telepon dan username Telegram yang salah bentuk ditolak", async () => {
+    await expect(
+      as("authenticated", DAVE, () => db.query(`update public.profiles set phone = '081234567890' where user_id = $1`, [DAVE])),
+    ).rejects.toThrow(/check constraint/);
+    await expect(
+      as("authenticated", DAVE, () => db.query(`update public.profiles set telegram = '@dave' where user_id = $1`, [DAVE])),
+    ).rejects.toThrow(/check constraint/);
   });
 });

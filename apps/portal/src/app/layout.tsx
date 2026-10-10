@@ -15,7 +15,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <SiteHeader
           site="portal"
-          nav={[{ href: "/akun", label: "Akun MT5 saya" }]}
+          nav={[
+            { href: "/akun", label: "Akun MT5 saya" },
+            { href: "/profil", label: "Data diri" },
+          ]}
           // Hiasan: nama situs tertulis tepat di sebelahnya.
           logo={<Image src={logo} alt="" width={40} height={40} className="size-10" />}
         />

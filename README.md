@@ -6,9 +6,9 @@ Tiga situs dalam satu repo, memakai Next.js, TypeScript, Tailwind, dan Supabase 
 | --- | --- | --- |
 | `apps/edukasi` | Edukasi forex (domain 1) | Beranda, silabus 10 sesi, materi dan berita dari file Markdown |
 | `apps/toko` | Penjualan dan referral (domain 2) | Daftar produk, halaman produk, pencatatan kode referral |
-| `apps/portal` | Setup EA (subdomain domain 2) | Login email, pendaftaran akun MT5, halaman admin lisensi, API lisensi untuk EA |
+| `apps/portal` | Setup EA (subdomain domain 2) | Login email, data diri member, pendaftaran akun MT5, halaman admin lisensi, API lisensi untuk EA |
 | `packages/ui` | Tampilan bersama | Warna, huruf, kepala dan kaki halaman |
-| `packages/license` | Logika lisensi | Penentuan status dan tanda tangan jawaban API |
+| `packages/license` | Logika lisensi | Penentuan status, tanda tangan jawaban API, validasi formulir admin dan data diri member |
 | `packages/db` | Uji database | Menjalankan migrasi dan menguji aturan aksesnya |
 | `supabase/` | Database | Migrasi SQL dan contoh isi katalog EA |
 
@@ -43,6 +43,16 @@ Untuk dipakai orang luar, dua hal lagi perlu diatur di Supabase:
   `supabase/templates/confirm-signup.html` dan `supabase/templates/magic-link.html`. Tautan di dalamnya menuju
   `/auth/confirm` di portal, sehingga alamat tautan sama dengan domain pengirim dan login bisa diselesaikan di
   perangkat mana pun.
+
+## Data diri member
+
+Sebelum bisa mendaftarkan akun MT5, member mengisi halaman `/profil`: nama lengkap, nomor telepon atau WhatsApp,
+kota domisili, tanggal lahir (minimal 18 tahun), dan username Telegram (boleh kosong). Kewajiban ini juga dijaga
+database, bukan hanya tampilan. Member hanya bisa melihat dan mengubah data dirinya sendiri; admin melihat nama,
+telepon, kota, dan Telegram di halaman `/admin`, tanpa tanggal lahir.
+
+Nomor KTP sengaja tidak dikumpulkan. Bila suatu saat diperlukan, tambahkan lewat migrasi baru dan pertimbangkan
+dulu kewajiban perlindungan data pribadi yang menyertainya.
 
 ## Mengaktifkan lisensi
 
@@ -111,6 +121,7 @@ pnpm build
 - Pembayaran. Halaman produk belum punya checkout.
 - Kode di sisi EA (MQL5) untuk memanggil API lisensi.
 - Catatan siapa mengaktifkan lisensi dan kapan (riwayat perubahan oleh admin).
+- Halaman kebijakan privasi yang menjelaskan data diri apa yang disimpan portal dan untuk apa.
 - Pembatasan jumlah permintaan (rate limit) pada API lisensi.
 - Bukti kepemilikan akun MT5. Saat ini siapa pun yang login bisa mendaftarkan nomor akun mana pun,
   sehingga aktivasi oleh admin menjadi satu-satunya pemeriksaan.
