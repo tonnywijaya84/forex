@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { evaluateLicense, type LicenseState, type StoredStatus } from "@forex/license";
+import { evaluateLicense, type StoredStatus } from "@forex/license";
 import { Container, Notice } from "@forex/ui";
 import { AddAccountForm } from "@/components/add-account-form";
+import { dateFormat, stateLabel } from "@/lib/license-labels";
 import { supabaseEnv } from "@/lib/supabase/env";
 import { getSessionUser } from "@/lib/supabase/server";
 import { removeAccount, signOut } from "./actions";
@@ -19,23 +21,14 @@ type AccountRow = {
   eas: { name: string } | null;
 };
 
-const stateLabel: Record<LicenseState, { text: string; className: string }> = {
-  active: { text: "Aktif", className: "text-bull-deep" },
-  pending: { text: "Menunggu aktivasi", className: "text-mark-deep" },
-  suspended: { text: "Ditangguhkan", className: "text-bear-deep" },
-  expired: { text: "Masa berlaku habis", className: "text-bear-deep" },
-  unknown: { text: "Tidak terdaftar", className: "text-ink-soft" },
-};
-
-const dateFormat = new Intl.DateTimeFormat("id-ID", { dateStyle: "long", timeZone: "Asia/Jakarta" });
-
 async function Accounts() {
   const user = await getSessionUser();
   if (!user) redirect("/masuk");
 
-  const [eas, accounts] = await Promise.all([
+  const [eas, accounts, admin] = await Promise.all([
     user.supabase.from("eas").select("id, name").order("name"),
     user.supabase.from("mt5_accounts").select("id, account_number, broker_server, status, expires_at, eas(name)").order("created_at"),
+    user.supabase.rpc("is_admin"),
   ]);
 
   if (eas.error || accounts.error) {
@@ -53,11 +46,18 @@ async function Accounts() {
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <p className="text-ink-soft">Masuk sebagai {user.email ?? "pengguna"}</p>
-        <form action={signOut}>
-          <button type="submit" className="underline">
-            Keluar
-          </button>
-        </form>
+        <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+          {admin.data === true && (
+            <Link href="/admin" className="underline">
+              Admin lisensi
+            </Link>
+          )}
+          <form action={signOut}>
+            <button type="submit" className="underline">
+              Keluar
+            </button>
+          </form>
+        </div>
       </div>
 
       <h2 className="mt-10 text-2xl font-bold">Akun terdaftar</h2>

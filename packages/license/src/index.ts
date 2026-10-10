@@ -98,3 +98,44 @@ export function buildVerifyResponse(request: VerifyRequest, record: LicenseRecor
   };
   return { ...fields, signature: sign(canonicalString(fields), secret) };
 }
+
+/** Perubahan lisensi yang dikirim admin dari portal. */
+export type LicenseUpdate = {
+  status: StoredStatus;
+  /** ISO 8601, atau null bila lisensi tidak punya batas waktu. */
+  expiresAt: string | null;
+};
+
+export const STORED_STATUSES: readonly StoredStatus[] = ["pending", "active", "suspended"];
+
+/** Admin bekerja dengan tanggal di Indonesia bagian barat (WIB), yang tidak mengenal perubahan jam musiman. */
+const WIB_OFFSET = "+07:00";
+const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
+
+/**
+ * Memeriksa isian formulir admin. `expiresOn` berupa tanggal TTTT-BB-HH; lisensi berlaku
+ * sampai akhir hari itu menurut WIB. Tanggal kosong berarti tanpa batas waktu.
+ */
+export function parseLicenseUpdate(input: { status: unknown; expiresOn: unknown }): { ok: true; value: LicenseUpdate } | { ok: false; error: string } {
+  const status = STORED_STATUSES.find((candidate) => candidate === input.status);
+  if (!status) {
+    return { ok: false, error: "Pilih status: menunggu, aktif, atau ditangguhkan." };
+  }
+  const expiresOn = typeof input.expiresOn === "string" ? input.expiresOn.trim() : "";
+  if (expiresOn === "") return { ok: true, value: { status, expiresAt: null } };
+
+  const expires = /^\d{4}-\d{2}-\d{2}$/.test(expiresOn) ? new Date(`${expiresOn}T23:59:59.999${WIB_OFFSET}`) : null;
+  // Tanggal seperti 2027-02-30 digeser JavaScript ke bulan berikutnya; tolak dengan mencocokkan ulang.
+  if (!expires || Number.isNaN(expires.getTime()) || expiryInputValue(expires.toISOString()) !== expiresOn) {
+    return { ok: false, error: "Tanggal berlaku tidak dikenali. Pilih tanggal dari kalender, atau kosongkan." };
+  }
+  return { ok: true, value: { status, expiresAt: expires.toISOString() } };
+}
+
+/** Tanggal TTTT-BB-HH (WIB) dari `expires_at`, untuk mengisi ulang formulir admin. Kosong bila tanpa batas. */
+export function expiryInputValue(expiresAt: string | null): string {
+  if (expiresAt === null) return "";
+  const time = Date.parse(expiresAt);
+  if (Number.isNaN(time)) return "";
+  return new Date(time + WIB_OFFSET_MS).toISOString().slice(0, 10);
+}
