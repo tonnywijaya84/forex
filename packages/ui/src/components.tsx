@@ -12,8 +12,8 @@ export function Container({ className, ...props }: ComponentPropsWithoutRef<"div
 
 type NavItem = { href: string; label: string };
 
-/** Kepala halaman: nama situs, navigasi dalam situs, dan tautan ke dua situs lainnya. */
-export function SiteHeader({ site, nav = [] }: { site: SiteKey; nav?: NavItem[] }) {
+/** Kepala halaman: logo (bila ada), nama situs, navigasi dalam situs, dan tautan ke dua situs lainnya. */
+export function SiteHeader({ site, nav = [], logo }: { site: SiteKey; nav?: NavItem[]; logo?: ReactNode }) {
   const others = (Object.keys(sites) as SiteKey[]).flatMap((key) => {
     const { name, url } = sites[key];
     return key !== site && url ? [{ key, name, url }] : [];
@@ -21,7 +21,8 @@ export function SiteHeader({ site, nav = [] }: { site: SiteKey; nav?: NavItem[] 
   return (
     <header className="border-b border-rule bg-paper">
       <Container className="flex flex-wrap items-center gap-x-8 gap-y-2 py-4">
-        <Link href="/" className="font-display text-xl font-bold no-underline [font-variation-settings:'wdth'_82]">
+        <Link href="/" className="flex items-center gap-3 font-display text-xl font-bold no-underline [font-variation-settings:'wdth'_82]">
+          {logo}
           {sites[site].name}
         </Link>
         {nav.length > 0 && (
@@ -70,7 +71,7 @@ export function SiteFooter({ site }: { site: SiteKey }) {
 const buttonBase =
   "inline-flex items-center justify-center rounded-sm px-5 py-2.5 font-medium no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-60";
 const buttonTone = {
-  primary: "bg-mark text-ink hover:bg-ink hover:text-paper",
+  primary: "bg-mark text-on-mark hover:bg-mark-hover hover:text-paper",
   quiet: "border border-ink text-ink hover:bg-ink hover:text-paper",
 };
 
