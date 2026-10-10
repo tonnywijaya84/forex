@@ -73,10 +73,10 @@ Cara EA memeriksa lisensi dijelaskan di [docs/api-lisensi.md](docs/api-lisensi.m
   syarat yang sebenarnya, ubah `isFinal` menjadi `true` supaya tanda "Syarat masih contoh" hilang.
 - Nama situs: ubah `packages/ui/src/sites.ts`.
 - Warna dan huruf: ubah `packages/ui/src/tokens.css`.
-  Dewa Pips memakai tema hitam putih berlatar hitam (`data-theme="mono"` di `apps/toko/src/app/layout.tsx`); warnanya ada di
-  blok `:root[data-theme="mono"]` pada file yang sama.
-- Logo Dewa Pips: `apps/toko/src/assets/dewa-pips-logo.png`. Favicon: `apps/toko/src/app/icon.png` dan
-  `apple-icon.png`.
+  Dewa Pips dan Portal Dewa Pips memakai tema hitam putih berlatar hitam (`data-theme="mono"` di `src/app/layout.tsx`
+  masing-masing); warnanya ada di blok `:root[data-theme="mono"]` pada file yang sama.
+- Logo Dewa Pips: `src/assets/dewa-pips-logo.png`. Favicon: `src/app/icon.png` dan `apple-icon.png`.
+  Ketiga file itu ada di `apps/toko` dan `apps/portal`; bila logo berganti, ganti di kedua folder.
 
 ## Memasang di Vercel
 
