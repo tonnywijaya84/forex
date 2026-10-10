@@ -34,23 +34,24 @@
 }
 
 /*
- * Tema hitam putih. Situs yang memasang `data-theme="mono"` pada <html> memakai warna di bawah ini
- * sebagai pengganti warna di atas. Nama tokennya sama, jadi komponen tidak perlu diubah.
+ * Tema hitam putih dengan latar hitam. Situs yang memasang `data-theme="mono"` pada <html> memakai
+ * warna di bawah ini sebagai pengganti warna di atas. Nama tokennya sama, jadi komponen tidak perlu diubah.
  */
 :root[data-theme="mono"] {
-  --color-paper: #ffffff;
-  --color-surface: #f3f3f3;
-  --color-ink: #0a0a0a;
-  --color-ink-soft: #525252;
-  --color-rule: #d4d4d4;
-  --color-bull: #0a0a0a;
-  --color-bull-deep: #0a0a0a;
-  --color-bear: #0a0a0a;
-  --color-bear-deep: #0a0a0a;
-  --color-mark: #0a0a0a;
-  --color-mark-deep: #0a0a0a;
-  --color-on-mark: #ffffff;
-  --color-mark-hover: #404040;
+  color-scheme: dark;
+  --color-paper: #000000;
+  --color-surface: #141414;
+  --color-ink: #f5f5f5;
+  --color-ink-soft: #b3b3b3;
+  --color-rule: #333333;
+  --color-bull: #f5f5f5;
+  --color-bull-deep: #f5f5f5;
+  --color-bear: #f5f5f5;
+  --color-bear-deep: #f5f5f5;
+  --color-mark: #ffffff;
+  --color-mark-deep: #ffffff;
+  --color-on-mark: #000000;
+  --color-mark-hover: #d4d4d4;
 }
 
 @layer base {
