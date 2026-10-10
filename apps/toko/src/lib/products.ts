@@ -24,7 +24,7 @@ export const products: Product[] = [
     eaCode: "averaging-v1",
     summary: "Menambah posisi bertahap saat harga bergerak melawan, dengan jarak dan lot tiap level yang diatur sendiri.",
     features: ["Jarak antar level dan lot tiap level diatur terpisah", "Take profit dihitung dari harga rata-rata posisi", "Entry pertama bisa dibuka manual"],
-    access: "paid",
+    access: "free_with_referral",
     priceIdr: null,
   },
   {
