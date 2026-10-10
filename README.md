@@ -34,6 +34,16 @@ Situs edukasi dan toko langsung bisa dibuka. Portal menampilkan petunjuk sampai 
 4. Salin `apps/portal/.env.example` menjadi `apps/portal/.env.local` dan isi nilainya.
 5. Jalankan ulang `pnpm dev:portal`.
 
+Untuk dipakai orang luar, dua hal lagi perlu diatur di Supabase:
+
+- **Layanan email sendiri.** Email bawaan Supabase hanya untuk uji coba (beberapa email per jam, hanya ke anggota
+  tim proyek). Di Authentication, Emails, SMTP Settings, sambungkan layanan email seperti Resend dengan domain
+  pengirim yang sudah diverifikasi.
+- **Isi email.** Di Authentication, Emails, Templates, ganti isi "Confirm sign up" dan "Magic link" dengan
+  `supabase/templates/confirm-signup.html` dan `supabase/templates/magic-link.html`. Tautan di dalamnya menuju
+  `/auth/confirm` di portal, sehingga alamat tautan sama dengan domain pengirim dan login bisa diselesaikan di
+  perangkat mana pun.
+
 ## Mengaktifkan lisensi
 
 Akun yang baru didaftarkan pengguna selalu berstatus `pending`. Pengguna tidak bisa mengubahnya sendiri.

@@ -34,5 +34,5 @@ export async function requestLoginLink(_previous: FormState, formData: FormData)
     }
     return { ok: false, message: "Tautan masuk gagal dikirim. Tunggu sebentar, lalu coba lagi." };
   }
-  return { ok: true, message: `Tautan masuk dikirim ke ${email}. Buka email itu di perangkat ini.` };
+  return { ok: true, message: `Tautan masuk dikirim ke ${email}. Kalau tidak ada di kotak masuk, cek folder spam.` };
 }

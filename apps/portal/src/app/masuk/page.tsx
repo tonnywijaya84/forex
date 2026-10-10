@@ -12,7 +12,7 @@ async function CallbackError({ searchParams }: { searchParams: PageProps<"/masuk
   return (
     <div className="mt-6 max-w-xl">
       <Notice title="Tautan masuk tidak bisa dipakai">
-        Tautan itu sudah kedaluwarsa atau dibuka di peramban lain. Minta tautan baru di bawah ini.
+        Tautan itu sudah kedaluwarsa atau sudah pernah dipakai. Minta tautan baru di bawah ini.
       </Notice>
     </div>
   );
