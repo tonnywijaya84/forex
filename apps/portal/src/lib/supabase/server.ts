@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { supabaseEnv } from "./env";
 
 /**
@@ -10,6 +11,8 @@ import { supabaseEnv } from "./env";
 export async function createClient() {
   const env = supabaseEnv();
   if (!env) return null;
+  // Pemeriksaan sesi membandingkan masa berlaku token dengan jam saat ini, jadi harus menunggu permintaan sungguhan.
+  await connection();
   const cookieStore = await cookies();
   return createServerClient(env.url, env.key, {
     cookies: {

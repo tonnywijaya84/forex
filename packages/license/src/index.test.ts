@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { buildVerifyResponse, canonicalString, evaluateLicense, parseVerifyRequest, sign, verifySignature } from "./index";
+import {
+  buildVerifyResponse,
+  canonicalString,
+  evaluateLicense,
+  expiryInputValue,
+  parseLicenseUpdate,
+  parseVerifyRequest,
+  sign,
+  verifySignature,
+} from "./index";
 
 const now = new Date("2026-10-09T10:00:00.000Z");
 
@@ -80,5 +89,56 @@ describe("tanda tangan", () => {
     expect(verifySignature(canonicalString({ ...fields, state: "pending" }), signature, secret)).toBe(false);
     expect(verifySignature(canonicalString(fields), signature, "rahasia-lain")).toBe(false);
     expect(verifySignature(canonicalString(fields), "00", secret)).toBe(false);
+  });
+});
+
+describe("parseLicenseUpdate", () => {
+  it("tanggal berlaku sampai akhir hari itu menurut WIB", () => {
+    expect(parseLicenseUpdate({ status: "active", expiresOn: "2027-01-31" })).toEqual({
+      ok: true,
+      value: { status: "active", expiresAt: "2027-01-31T16:59:59.999Z" },
+    });
+  });
+
+  it("tanggal kosong berarti tanpa batas waktu", () => {
+    expect(parseLicenseUpdate({ status: "active", expiresOn: "" })).toEqual({ ok: true, value: { status: "active", expiresAt: null } });
+    expect(parseLicenseUpdate({ status: "suspended", expiresOn: null })).toEqual({ ok: true, value: { status: "suspended", expiresAt: null } });
+  });
+
+  it("menolak status di luar tiga pilihan", () => {
+    expect(parseLicenseUpdate({ status: "expired", expiresOn: "" }).ok).toBe(false);
+    expect(parseLicenseUpdate({ status: null, expiresOn: "" }).ok).toBe(false);
+  });
+
+  it("menolak tanggal yang tidak ada atau salah bentuk", () => {
+    expect(parseLicenseUpdate({ status: "active", expiresOn: "2027-02-30" }).ok).toBe(false);
+    expect(parseLicenseUpdate({ status: "active", expiresOn: "2027-13-01" }).ok).toBe(false);
+    expect(parseLicenseUpdate({ status: "active", expiresOn: "31/01/2027" }).ok).toBe(false);
+  });
+
+  it("lisensi masih aktif di hari terakhirnya dan habis begitu hari berganti di WIB", () => {
+    const parsed = parseLicenseUpdate({ status: "active", expiresOn: "2027-01-31" });
+    if (!parsed.ok) throw new Error(parsed.error);
+    const record = { status: parsed.value.status, expiresAt: parsed.value.expiresAt };
+    expect(evaluateLicense(record, new Date("2027-01-31T23:00:00+07:00")).state).toBe("active");
+    expect(evaluateLicense(record, new Date("2027-02-01T00:00:00+07:00")).state).toBe("expired");
+  });
+});
+
+describe("expiryInputValue", () => {
+  it("mengembalikan tanggal WIB, bukan tanggal UTC", () => {
+    expect(expiryInputValue("2027-01-31T16:59:59.999Z")).toBe("2027-01-31");
+    expect(expiryInputValue("2027-01-31T17:00:00.000Z")).toBe("2027-02-01");
+  });
+
+  it("kosong untuk lisensi tanpa batas atau tanggal yang tidak terbaca", () => {
+    expect(expiryInputValue(null)).toBe("");
+    expect(expiryInputValue("bukan-tanggal")).toBe("");
+  });
+
+  it("hasilnya bisa disimpan ulang tanpa menggeser tanggal", () => {
+    const first = parseLicenseUpdate({ status: "active", expiresOn: "2026-12-31" });
+    if (!first.ok) throw new Error(first.error);
+    expect(expiryInputValue(first.value.expiresAt)).toBe("2026-12-31");
   });
 });

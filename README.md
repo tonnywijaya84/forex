@@ -6,7 +6,7 @@ Tiga situs dalam satu repo, memakai Next.js, TypeScript, Tailwind, dan Supabase 
 | --- | --- | --- |
 | `apps/edukasi` | Edukasi forex (domain 1) | Beranda, silabus 10 sesi, materi dan berita dari file Markdown |
 | `apps/toko` | Penjualan dan referral (domain 2) | Daftar produk, halaman produk, pencatatan kode referral |
-| `apps/portal` | Setup EA (subdomain domain 2) | Login email, pendaftaran akun MT5, API lisensi untuk EA |
+| `apps/portal` | Setup EA (subdomain domain 2) | Login email, pendaftaran akun MT5, halaman admin lisensi, API lisensi untuk EA |
 | `packages/ui` | Tampilan bersama | Warna, huruf, kepala dan kaki halaman |
 | `packages/license` | Logika lisensi | Penentuan status dan tanda tangan jawaban API |
 | `packages/db` | Uji database | Menjalankan migrasi dan menguji aturan aksesnya |
@@ -28,7 +28,7 @@ Situs edukasi dan toko langsung bisa dibuka. Portal menampilkan petunjuk sampai 
 ## Menyambungkan portal ke Supabase
 
 1. Buat proyek di [supabase.com](https://supabase.com).
-2. Buka SQL Editor, jalankan isi `supabase/migrations/20261009000000_init.sql`, lalu `supabase/seed.sql`.
+2. Buka SQL Editor, jalankan isi setiap file di `supabase/migrations` menurut urutan namanya, lalu `supabase/seed.sql`.
 3. Di Authentication, bagian URL Configuration, isi Site URL dengan alamat portal dan tambahkan
    `<alamat portal>/auth/callback` ke Redirect URLs. Untuk lokal: `http://localhost:3003/auth/callback`.
 4. Salin `apps/portal/.env.example` menjadi `apps/portal/.env.local` dan isi nilainya.
@@ -37,15 +37,20 @@ Situs edukasi dan toko langsung bisa dibuka. Portal menampilkan petunjuk sampai 
 ## Mengaktifkan lisensi
 
 Akun yang baru didaftarkan pengguna selalu berstatus `pending`. Pengguna tidak bisa mengubahnya sendiri.
-Aktifkan dari SQL Editor:
+
+Admin mengaktifkannya di halaman `/admin` portal: pilih status, isi tanggal "Berlaku sampai", lalu Simpan.
+Lisensi berlaku sampai akhir tanggal itu (WIB). Kosongkan tanggal untuk lisensi tanpa batas waktu.
+Halaman ini hanya terbuka untuk pengguna yang terdaftar di tabel `admins`; pengguna lain melihat halaman tidak ditemukan.
+
+Menambah admin dilakukan dari SQL Editor, setelah orangnya pernah login ke portal:
 
 ```sql
-update public.mt5_accounts
-set status = 'active', expires_at = now() + interval '1 year'
-where account_number = 276170008 and broker_server = 'Exness-MT5Real26';
+insert into public.admins (user_id)
+select id from auth.users where email = 'email-admin@contoh.com';
 ```
 
-Kosongkan `expires_at` (null) untuk lisensi tanpa batas waktu. Ubah `status` menjadi `suspended` untuk menangguhkan.
+Mencabut hak admin: hapus barisnya dari tabel `admins`. Daftar admin sengaja tidak disimpan di kode
+karena repo ini terbuka.
 
 Cara EA memeriksa lisensi dijelaskan di [docs/api-lisensi.md](docs/api-lisensi.md).
 
@@ -95,7 +100,7 @@ pnpm build
 
 - Pembayaran. Halaman produk belum punya checkout.
 - Kode di sisi EA (MQL5) untuk memanggil API lisensi.
-- Halaman admin. Aktivasi lisensi masih lewat SQL Editor.
+- Catatan siapa mengaktifkan lisensi dan kapan (riwayat perubahan oleh admin).
 - Pembatasan jumlah permintaan (rate limit) pada API lisensi.
 - Bukti kepemilikan akun MT5. Saat ini siapa pun yang login bisa mendaftarkan nomor akun mana pun,
   sehingga aktivasi oleh admin menjadi satu-satunya pemeriksaan.

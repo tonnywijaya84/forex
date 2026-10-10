@@ -5,8 +5,7 @@ import { redirect } from "next/navigation";
 import { SERVER_PATTERN } from "@forex/license";
 import type { FormState } from "@/lib/form-state";
 import { getSessionUser } from "@/lib/supabase/server";
-
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { UUID_PATTERN } from "@/lib/uuid";
 
 /** Mendaftarkan satu akun MT5 untuk satu EA. Status awalnya selalu pending (diatur database). */
 export async function addAccount(_previous: FormState, formData: FormData): Promise<FormState> {
