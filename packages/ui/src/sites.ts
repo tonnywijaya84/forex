@@ -25,7 +25,7 @@ export const sites: Record<SiteKey, { name: string; tagline: string; url: string
     url: siteUrl(process.env.NEXT_PUBLIC_URL_TOKO, "http://localhost:3002"),
   },
   portal: {
-    name: "Portal EA",
+    name: "Portal Dewa Pips",
     tagline: "Daftarkan akun MT5 untuk lisensi EA",
     url: siteUrl(process.env.NEXT_PUBLIC_URL_PORTAL, "http://localhost:3003"),
   },

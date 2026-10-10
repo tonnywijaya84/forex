@@ -66,7 +66,8 @@ async function Accounts() {
           Belum ada akun. Isi formulir di bawah untuk mendaftarkan akun MT5 pertama Anda.
         </p>
       ) : (
-        <div className="mt-4 overflow-x-auto">
+        // relative: teks khusus pembaca layar di dalam tabel diposisikan absolut; tanpa ini ia melebarkan halaman di ponsel.
+        <div className="relative mt-4 overflow-x-auto">
           <table className="w-full min-w-[40rem] border-collapse text-left">
             <thead>
               <tr className="border-b border-ink">

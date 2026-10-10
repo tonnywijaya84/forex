@@ -22,6 +22,16 @@ export async function requestLoginLink(_previous: FormState, formData: FormData)
     options: { emailRedirectTo: `${sites.portal.url}/auth/callback` },
   });
   if (error) {
+    // Supabase membatasi jumlah email per jam untuk seluruh proyek dan jeda antarpermintaan per alamat.
+    if (error.code === "over_email_send_rate_limit" || error.code === "over_request_rate_limit") {
+      return {
+        ok: false,
+        message: "Batas pengiriman email sedang tercapai. Tunggu beberapa menit, lalu coba lagi sekali saja.",
+      };
+    }
+    if (error.code === "email_address_invalid") {
+      return { ok: false, message: "Alamat email ini ditolak. Periksa penulisannya, atau pakai alamat lain." };
+    }
     return { ok: false, message: "Tautan masuk gagal dikirim. Tunggu sebentar, lalu coba lagi." };
   }
   return { ok: true, message: `Tautan masuk dikirim ke ${email}. Buka email itu di perangkat ini.` };
