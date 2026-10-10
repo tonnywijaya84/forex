@@ -44,13 +44,11 @@ export function getProduct(slug: string): Product | undefined {
 
 const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
 
-/** Label harga: "Gratis dengan syarat", harga rupiah, atau keterangan bahwa harga belum ditetapkan. */
-export function formatPrice(product: Pick<Product, "access" | "priceIdr">): string {
-  if (product.access === "free_with_referral") return "Gratis dengan syarat";
-  return product.priceIdr === null ? "Harga belum ditetapkan" : rupiah.format(product.priceIdr);
-}
-
-/** true bila label harga perlu ditonjolkan (gratis atau harga sudah ada). */
-export function hasPriceLabel(product: Pick<Product, "access" | "priceIdr">): boolean {
-  return product.access === "free_with_referral" || product.priceIdr !== null;
+/**
+ * Label harga untuk ditampilkan, atau null bila tidak ada yang perlu ditulis:
+ * produk gratis lewat referral dan produk yang harganya belum ditetapkan tidak diberi label.
+ */
+export function priceLabel(product: Pick<Product, "access" | "priceIdr">): string | null {
+  if (product.access !== "paid" || product.priceIdr === null) return null;
+  return rupiah.format(product.priceIdr);
 }

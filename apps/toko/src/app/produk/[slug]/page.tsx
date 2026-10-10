@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ButtonLink, Container, Notice, sites } from "@forex/ui";
 import { FreeAccessPanel } from "@/components/free-access-panel";
-import { formatPrice, getProduct, hasPriceLabel, products } from "@/lib/products";
+import { getProduct, priceLabel, products } from "@/lib/products";
 
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));
@@ -20,6 +20,7 @@ export default async function ProductPage({ params }: PageProps<"/produk/[slug]"
   const product = getProduct(slug);
   if (!product) notFound();
   const isFree = product.access === "free_with_referral";
+  const price = priceLabel(product);
 
   return (
     <Container className="py-12">
@@ -49,7 +50,7 @@ export default async function ProductPage({ params }: PageProps<"/produk/[slug]"
         </div>
         <aside className="self-start border-t-4 border-ink bg-surface p-6">
           <p className="text-sm text-ink-soft">Lisensi per akun MT5</p>
-          <p className={`mt-1 ${hasPriceLabel(product) ? "font-display text-3xl font-bold" : "text-lg text-ink-soft"}`}>{formatPrice(product)}</p>
+          {price && <p className="mt-1 font-display text-3xl font-bold">{price}</p>}
           {isFree ? (
             <FreeAccessPanel />
           ) : (
