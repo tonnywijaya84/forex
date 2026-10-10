@@ -1,6 +1,8 @@
 import { Suspense } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink, Container, sites } from "@forex/ui";
+import logo from "@/assets/dewa-pips-logo.png";
 import { ReferralBanner } from "@/components/referral-banner";
 import { formatPrice, hasPriceLabel, products } from "@/lib/products";
 
@@ -14,13 +16,23 @@ export default function Home({ searchParams }: PageProps<"/">) {
       </Suspense>
 
       <section className="border-b border-rule">
-        <Container className="py-14 lg:py-20">
-          <h1 className="max-w-[18ch] text-4xl font-bold sm:text-5xl">Expert Advisor untuk MetaTrader 5</h1>
-          <p className="mt-6 max-w-[58ch] text-lg text-ink-soft">
-            Setiap EA dilisensikan per nomor akun MT5. Sebagian bisa dipakai gratis lewat program referral broker,
-            sisanya dibeli. Setelah itu, daftarkan nomor akun Anda di {sites.portal.name} dan EA akan aktif di akun
-            itu.
-          </p>
+        <Container className="grid items-center gap-8 py-14 lg:grid-cols-[1fr_auto] lg:gap-16 lg:py-20">
+          <div>
+            <h1 className="max-w-[18ch] text-4xl font-bold sm:text-5xl">Expert Advisor untuk MetaTrader 5</h1>
+            <p className="mt-6 max-w-[58ch] text-lg text-ink-soft">
+              Setiap EA dilisensikan per nomor akun MT5. Sebagian bisa dipakai gratis lewat program referral broker,
+              sisanya dibeli. Setelah itu, daftarkan nomor akun Anda di {sites.portal.name} dan EA akan aktif di akun
+              itu.
+            </p>
+          </div>
+          <Image
+            src={logo}
+            alt="Logo Dewa Pips"
+            loading="eager"
+            fetchPriority="high"
+            sizes="(min-width: 1024px) 16rem, 8rem"
+            className="order-first size-32 lg:order-none lg:size-64"
+          />
         </Container>
       </section>
 

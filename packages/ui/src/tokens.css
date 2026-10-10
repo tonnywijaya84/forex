@@ -15,6 +15,9 @@
   --color-bear-deep: #a8322b;
   --color-mark: #f2b33d;
   --color-mark-deep: #7a5200;
+  /* Teks di atas warna mark, dan warna mark saat disorot. */
+  --color-on-mark: #14213a;
+  --color-mark-hover: #14213a;
 
   --font-display: "Bricolage Grotesque Variable", "Arial Narrow", Arial, sans-serif;
   --font-sans: "IBM Plex Sans Variable", "Helvetica Neue", Arial, sans-serif;
@@ -28,6 +31,26 @@
   --text-3xl: 2.5625rem;
   --text-4xl: 3.25rem;
   --text-5xl: 4.0625rem;
+}
+
+/*
+ * Tema hitam putih. Situs yang memasang `data-theme="mono"` pada <html> memakai warna di bawah ini
+ * sebagai pengganti warna di atas. Nama tokennya sama, jadi komponen tidak perlu diubah.
+ */
+:root[data-theme="mono"] {
+  --color-paper: #ffffff;
+  --color-surface: #f3f3f3;
+  --color-ink: #0a0a0a;
+  --color-ink-soft: #525252;
+  --color-rule: #d4d4d4;
+  --color-bull: #0a0a0a;
+  --color-bull-deep: #0a0a0a;
+  --color-bear: #0a0a0a;
+  --color-bear-deep: #0a0a0a;
+  --color-mark: #0a0a0a;
+  --color-mark-deep: #0a0a0a;
+  --color-on-mark: #ffffff;
+  --color-mark-hover: #404040;
 }
 
 @layer base {
