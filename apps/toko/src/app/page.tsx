@@ -20,9 +20,8 @@ export default function Home({ searchParams }: PageProps<"/">) {
           <div>
             <h1 className="max-w-[18ch] text-4xl font-bold sm:text-5xl">Expert Advisor untuk MetaTrader 5</h1>
             <p className="mt-6 max-w-[58ch] text-lg text-ink-soft">
-              Setiap EA dilisensikan per nomor akun MT5. Sebagian bisa dipakai gratis lewat program referral broker,
-              sisanya dibeli. Setelah itu, daftarkan nomor akun Anda di {sites.portal.name} dan EA akan aktif di akun
-              itu.
+              Setiap EA dilisensikan per nomor akun MT5 dan bisa dipakai gratis lewat program referral broker.
+              Setelah syaratnya terpenuhi, daftarkan nomor akun Anda di {sites.portal.name} untuk mengaktifkannya.
             </p>
           </div>
           <Image
