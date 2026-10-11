@@ -16,7 +16,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader
           site="edukasi"
           // Logonya sudah berupa tulisan "fxspot", jadi nama situs tidak ditulis lagi di sebelahnya.
-          logo={<Image src={logo} alt="" loading="eager" sizes="138px" className="h-11 w-auto" />}
+          logo={<Image src={logo} alt="" loading="eager" sizes="144px" className="h-11 w-auto" />}
           hideName
           nav={[
             { href: "/#silabus", label: "Silabus" },
