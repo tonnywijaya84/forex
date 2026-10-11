@@ -95,6 +95,8 @@ Cara EA memeriksa lisensi dijelaskan di [docs/api-lisensi.md](docs/api-lisensi.m
 - Warna dan huruf: ubah `packages/ui/src/tokens.css`.
   Dewa Pips dan Portal Dewa Pips memakai tema hitam putih berlatar hitam (`data-theme="mono"` di `src/app/layout.tsx`
   masing-masing); warnanya ada di blok `:root[data-theme="mono"]` pada file yang sama.
+- Logo FxSpot: `apps/edukasi/src/assets/fxspot-logo.png` (tulisan "fxspot" berlatar transparan, tanpa tagline).
+  Favicon: `apps/edukasi/src/app/icon.png` dan `apple-icon.png`, diambil dari huruf "o" pada logo.
 - Logo Dewa Pips: `src/assets/dewa-pips-logo.png`. Favicon: `src/app/icon.png` dan `apple-icon.png`.
   Ketiga file itu ada di `apps/toko` dan `apps/portal`; bila logo berganti, ganti di kedua folder.
 
