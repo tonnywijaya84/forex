@@ -12,8 +12,22 @@ export function Container({ className, ...props }: ComponentPropsWithoutRef<"div
 
 type NavItem = { href: string; label: string };
 
-/** Kepala halaman: logo (bila ada), nama situs, navigasi dalam situs, dan tautan ke dua situs lainnya. */
-export function SiteHeader({ site, nav = [], logo }: { site: SiteKey; nav?: NavItem[]; logo?: ReactNode }) {
+/**
+ * Kepala halaman: logo (bila ada), nama situs, navigasi dalam situs, dan tautan ke dua situs lainnya.
+ * `hideName` dipakai bila logonya sudah memuat tulisan nama situs: nama tetap ada untuk pembaca layar,
+ * tetapi tidak ditampilkan dua kali.
+ */
+export function SiteHeader({
+  site,
+  nav = [],
+  logo,
+  hideName = false,
+}: {
+  site: SiteKey;
+  nav?: NavItem[];
+  logo?: ReactNode;
+  hideName?: boolean;
+}) {
   const others = (Object.keys(sites) as SiteKey[]).flatMap((key) => {
     const { name, url } = sites[key];
     return key !== site && url ? [{ key, name, url }] : [];
@@ -23,7 +37,7 @@ export function SiteHeader({ site, nav = [], logo }: { site: SiteKey; nav?: NavI
       <Container className="flex flex-wrap items-center gap-x-8 gap-y-2 py-4">
         <Link href="/" className="flex items-center gap-3 font-display text-xl font-bold no-underline [font-variation-settings:'wdth'_82]">
           {logo}
-          {sites[site].name}
+          <span className={hideName ? "sr-only" : undefined}>{sites[site].name}</span>
         </Link>
         {nav.length > 0 && (
           <nav aria-label="Navigasi utama" className="flex flex-wrap gap-x-6 gap-y-1">
