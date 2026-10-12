@@ -1,11 +1,11 @@
 ---
-title: "Dolar di level tertinggi enam bulan menjelang data inflasi AS"
+title: "Dolar di level tertinggi 18 bulan menjelang data inflasi AS"
 date: 2026-10-12
 category: Pasar
-summary: Indeks dolar menutup pekan lalu di level tertinggi enam bulan. Pasar kini menunggu inflasi AS bulan September, yang dirilis Rabu 14 Oktober pukul 19.30 WIB.
+summary: Indeks dolar menutup pekan lalu di dekat level tertinggi 18 bulan. Pasar kini menunggu inflasi AS bulan September, yang dirilis Rabu 14 Oktober pukul 19.30 WIB.
 ---
 
-Dolar AS memasuki pekan ini dalam posisi kuat. Indeks dolar naik sekitar 0,3% sepanjang pekan lalu dan menembus level tertinggi dalam enam bulan, sementara EUR/USD sempat turun ke bawah 1,1200, terendah dalam enam bulan, sebelum memulihkan sebagian penurunannya.
+Dolar AS memasuki pekan ini dalam posisi kuat. Indeks dolar naik sekitar 0,3% sepanjang pekan lalu dan mencetak level tertinggi dalam 18 bulan, sementara EUR/USD sempat turun ke bawah 1,1200 dan euro mencatat penurunan mingguan kelima berturut-turut.
 
 ## Apa yang mendorong dolar
 
@@ -45,5 +45,8 @@ Tidak ada yang tahu ke arah mana harga bergerak setelah rilis. Yang bisa dipasti
 - [DailyForex: Pairs in Focus 12 to 16 October 2026](https://www.dailyforex.com/forex-technical-analysis/2026/10/weekly-pairs-in-focus-12th-to-16th-october-2026/250583) (11 Oktober 2026)
 - [Forex.com: US Dollar Price Action Setups](https://forex.com/en-us/news-and-analysis/us-dollar-price-action-setups-eur-usd-usd-jpy-gbp-usd-usd-cad-2026-10-09) (9 Oktober 2026)
 - [The Rio Times: Global Economy Briefing](https://riotimesonline.com/global-economy-briefing-october-10-2026) (10 Oktober 2026)
+- [Reuters lewat Investing.com: Dollar stays near 18-month high](https://investing.com/news/economy-news/dollar-stays-near-18month-high-as-mideast-conflict-inflation-data-in-focus-4942999) (12 Oktober 2026)
+
+_Koreksi 12 Oktober 2026: versi awal tulisan ini menyebut level tertinggi enam bulan. Yang benar, indeks dolar berada di dekat level tertinggi 18 bulan._
 
 Trading forex berisiko tinggi dan dapat menghabiskan seluruh modal. Tulisan ini merangkum berita untuk tujuan edukasi, bukan nasihat keuangan atau ajakan membuka posisi.
