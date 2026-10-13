@@ -454,11 +454,15 @@ function swingChart(options: {
   steps?: { x: number; y: number; n: number }[];
   /** Latar tipis hijau (bull) atau merah (bear) selebar grafik, dengan nama di kanan. Misalnya premium dan discount. */
   shades?: { top: number; bottom: number; from?: number; tone: "bull" | "bear"; label: string }[];
+  /** Deretan titik kecil yang melambangkan kumpulan stop: hijau untuk buy stop, merah untuk sell stop. */
+  pools?: { x: number; y: number; tone: "bull" | "bear"; label?: string; side?: "left" | "right"; count?: number }[];
+  /** Garis lurus tipis, misalnya trendline. */
+  lines?: { from: [number, number]; to: [number, number] }[];
   /** Ruang di kanan untuk tulisan level. */
   rightSpace?: number;
   arrow?: boolean;
 }): string {
-  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, breaks = [], spans = [], steps = [], shades = [], arrow = true } = options;
+  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, breaks = [], spans = [], steps = [], shades = [], pools = [], lines = [], arrow = true } = options;
   const width = options.width ?? W;
   const height = options.height ?? H;
   const font = width < 260 ? 12 : 13;
@@ -560,6 +564,33 @@ function swingChart(options: {
     )
     .join("");
 
+  const poolShapes = pools
+    .map((pool) => {
+      const count = pool.count ?? 5;
+      const gap = 7;
+      const cx = x(pool.x);
+      const cy = y(pool.y);
+      const dots = Array.from(
+        { length: count },
+        (_, index) => `<circle cx="${cx + (index - (count - 1) / 2) * gap}" cy="${cy}" r="2.5" fill="var(--color-${pool.tone})"/>`,
+      ).join("");
+      const half = ((count - 1) / 2) * gap;
+      const left = pool.side === "left";
+      return (
+        dots +
+        (pool.label
+          ? text(left ? cx - half - 7 : cx + half + 7, cy + 4, pool.label, ` font-weight="600" fill="var(--color-${pool.tone}-deep)"${left ? ' text-anchor="end"' : ""}`)
+          : "")
+      );
+    })
+    .join("");
+  const lineShapes = lines
+    .map(
+      (line) =>
+        `<line x1="${x(line.from[0])}" y1="${y(line.from[1])}" x2="${x(line.to[0])}" y2="${y(line.to[1])}" stroke="var(--color-ink-soft)" stroke-width="1.5"/>`,
+    )
+    .join("");
+
   const pointLabels = points
     .filter((point) => point.label)
     .map((point) => {
@@ -585,6 +616,7 @@ function swingChart(options: {
     boxShapes +
     bandShape +
     levelShapes +
+    lineShapes +
     minorShape +
     path +
     head +
@@ -592,6 +624,7 @@ function swingChart(options: {
     breakShapes +
     spanShapes +
     stepShapes +
+    poolShapes +
     pointLabels +
     segmentLabels +
     `</svg>`
@@ -1947,7 +1980,256 @@ const imbalanceTargets =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 8 (likuiditas).
+
+const liquidityPlaces =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      arrow: false,
+      points: [
+        { x: 0, y: 40 },
+        { x: 24, y: 76 },
+        { x: 50, y: 22 },
+        { x: 76, y: 66 },
+        { x: 100, y: 48 },
+      ],
+      pools: [
+        { x: 24, y: 86, tone: "bull", label: "buy stop" },
+        { x: 50, y: 12, tone: "bear", label: "sell stop" },
+      ],
+      label: "Titik hijau di atas swing high melambangkan buy stop. Titik merah di bawah swing low melambangkan sell stop.",
+    }),
+    "1. Swing high dan swing low",
+    "Buy stop (hijau) di atas swing high, sell stop (merah) di bawah swing low.",
+  ) +
+  panel(
+    swingChart({
+      arrow: false,
+      points: [
+        { x: 0, y: 50 },
+        { x: 16, y: 78 },
+        { x: 30, y: 42 },
+        { x: 46, y: 78 },
+        { x: 62, y: 24 },
+        { x: 78, y: 52 },
+        { x: 92, y: 24 },
+        { x: 100, y: 40 },
+      ],
+      breaks: [
+        { from: 16, to: 46, y: 78, label: "" },
+        { from: 62, to: 92, y: 24, label: "" },
+      ],
+      pools: [
+        { x: 31, y: 88, tone: "bull", label: "buy stop" },
+        { x: 77, y: 13, tone: "bear", label: "sell stop", side: "left" },
+      ],
+      label: "Dua puncak sejajar dengan kumpulan buy stop di atasnya, dan dua lembah sejajar dengan kumpulan sell stop di bawahnya.",
+    }),
+    "2. Equal high dan equal low",
+    "Puncak atau lembah yang sejajar mengumpulkan stop di titik yang sama.",
+  ) +
+  panel(
+    swingChart({
+      arrow: false,
+      boxes: [{ from: 0, to: 100, top: 70, bottom: 30 }],
+      points: [
+        { x: 0, y: 40 },
+        { x: 14, y: 68 },
+        { x: 28, y: 33 },
+        { x: 44, y: 69 },
+        { x: 58, y: 32 },
+        { x: 74, y: 68 },
+        { x: 88, y: 34 },
+        { x: 100, y: 50 },
+      ],
+      pools: [
+        { x: 50, y: 80, tone: "bull", label: "buy stop" },
+        { x: 50, y: 20, tone: "bear", label: "sell stop" },
+      ],
+      label: "Harga berputar di dalam kisaran. Order breakout menunggu di atas batas atas dan di bawah batas bawah.",
+    }),
+    "3. Batas kisaran sideways",
+    "Order breakout menunggu di luar batas atas dan batas bawah.",
+  ) +
+  panel(
+    swingChart({
+      points: [
+        { x: 0, y: 10 },
+        { x: 14, y: 36 },
+        { x: 24, y: 26 },
+        { x: 40, y: 58 },
+        { x: 50, y: 43.3 },
+        { x: 66, y: 76 },
+        { x: 76, y: 60.7 },
+        { x: 96, y: 94 },
+      ],
+      lines: [{ from: [0, 10], to: [100, 76.7] }],
+      pools: [
+        { x: 24, y: 17, tone: "bear", count: 3 },
+        { x: 50, y: 34, tone: "bear", count: 3 },
+        { x: 76, y: 51, tone: "bear", count: 3, label: "sell stop" },
+      ],
+      label: "Uptrend yang menyentuh trendline tiga kali. Setiap sentuhan menambah sell stop di bawah garis.",
+    }),
+    "4. Trendline",
+    "Setiap sentuhan pada trendline menambah stop di balik garis itu.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Puncak-puncak kecil saat harga merambat turun ke zona. Masing-masing meninggalkan stop di atasnya.
+const compressionHighs: [number, number][] = [
+  [12, 86],
+  [24, 78],
+  [36, 70],
+  [48, 62],
+  [60, 54],
+  [72, 46],
+];
+/** Titik ketika kenaikan dari 22 (x 80) ke 96 (x 100) melewati harga `level`. */
+const reversalAt = (level: number) => 80 + ((level - 22) / 74) * 20;
+
+const compressionInducement =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      points: [
+        { x: 0, y: 92 },
+        { x: 8, y: 80 },
+        ...compressionHighs.flatMap(([hx, hy]) => [
+          { x: hx, y: hy },
+          { x: hx + 8, y: hy - 14 },
+        ]).slice(0, -1),
+        { x: 80, y: 22 },
+        { x: 100, y: 96 },
+      ],
+      breaks: compressionHighs.map(([hx, hy]) => ({ from: hx, to: reversalAt(hy), y: hy, label: "" })),
+      band: { top: 30, bottom: 10, label: "zona" },
+      label: "Harga turun ke zona lewat banyak swing kecil yang rapat. Saat harga berbalik naik, garis stop di atas setiap puncak kecil tersapu satu per satu.",
+    }),
+    "Compression",
+    "Garis putus-putus: stop di atas setiap puncak kecil. Saat harga berbalik, deretan stop itu tersapu cepat.",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      points: [
+        { x: 0, y: 92 },
+        { x: 22, y: 56, label: "inducement", place: "below" },
+        { x: 32, y: 70 },
+        { x: 52, y: 22 },
+        { x: 100, y: 92 },
+      ],
+      boxes: [{ from: 18, to: 40, top: 62, bottom: 54 }],
+      breaks: [{ from: 22, to: 39, y: 56, label: "" }],
+      band: { top: 32, bottom: 14, label: "zona" },
+      label: "Sebuah swing kecil terbentuk di atas zona utama dan mengundang entry lebih awal. Harga menyapu lembahnya, masuk ke zona utama, lalu naik.",
+    }),
+    "Inducement",
+    "Swing kecil di atas zona mengundang entry lebih awal. Stop-nya disapu dulu sebelum harga sampai ke zona utama.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const stopPlacement =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [...equalLows, [50, 51, 37, 48], [48, 62, 47, 60]],
+      levels: [
+        { price: 50, from: 5, label: "entry" },
+        { price: 42, from: 1, label: "stop" },
+      ],
+      marks: [{ index: 6, text: "kena" }],
+      label: "Stop diletakkan tepat di bawah dua lembah sejajar. Wick candle berikutnya menyapu stop itu, lalu harga naik.",
+    }),
+    "Mudah ditebak",
+    "Stop tepat di bawah lembah yang terlihat semua orang. Sapuan mengenainya, lalu harga naik tanpa posisi Anda.",
+  ) +
+  panel(
+    candleChart({
+      candles: [...equalLows, [50, 51, 37, 48], [48, 62, 47, 60]],
+      zone: { top: 46, bottom: 36, from: 1, label: "zona" },
+      levels: [
+        { price: 50, from: 5, label: "entry" },
+        { price: 33, from: 1, label: "stop" },
+      ],
+      label: "Stop diletakkan di bawah zona yang dipakai. Wick sapuan masuk ke zona tetapi tidak sampai ke stop.",
+    }),
+    "Di luar zona",
+    "Stop di luar zona yang dipakai, sehingga sapuan tidak mengenainya. Jarak yang lebih lebar diimbangi ukuran posisi yang lebih kecil.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const entrySequence =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      points: [
+        { x: 0, y: 18 },
+        { x: 18, y: 60 },
+        { x: 28, y: 42 },
+        { x: 46, y: 90 },
+        { x: 58, y: 54 },
+        { x: 64, y: 66 },
+        { x: 72, y: 53 },
+        { x: 82, y: 36 },
+        { x: 100, y: 94 },
+      ],
+      breaks: [
+        { from: 18, to: 37, y: 60, label: "" },
+        { from: 58, to: 75, y: 53.5, label: "" },
+      ],
+      band: { top: 42, bottom: 30, from: 46, label: "zona" },
+      steps: [
+        { x: 27, y: 69, n: 1 },
+        { x: 52, y: 50, n: 2 },
+        { x: 88, y: 24, n: 3 },
+      ],
+      label: "Timeframe besar: BOS ke atas (1), koreksi membentuk dua lembah sejajar di atas zona (2), lalu harga menyapu lembah itu dan masuk ke zona (3).",
+    }),
+    "Timeframe besar",
+    "1 BOS menegaskan arah. 2 Koreksi membentuk likuiditas (equal low) di atas zona. 3 Harga menyapunya dan masuk ke zona.",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      band: { top: 40, bottom: 20, label: "zona" },
+      points: [
+        { x: 0, y: 94 },
+        { x: 12, y: 70 },
+        { x: 20, y: 80 },
+        { x: 34, y: 55 },
+        { x: 42, y: 66 },
+        { x: 56, y: 40 },
+        { x: 64, y: 50 },
+        { x: 76, y: 28 },
+        { x: 100, y: 84 },
+      ],
+      breaks: [{ from: 64, to: 90, y: 50, label: "ChoCh" }],
+      steps: [{ x: 92, y: 38, n: 4 }],
+      label: "Timeframe kecil: di dalam zona, harga ditutup di atas lower high terakhir. Itulah ChoCh (4).",
+    }),
+    "Timeframe kecil",
+    "4 ChoCh muncul di dalam zona. Aturan entry, stop, dan ukuran posisinya ada di Sesi 9.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "likuiditas-tempat": liquidityPlaces,
+  "compression-inducement": compressionInducement,
+  "letak-stop": stopPlacement,
+  "urutan-entry": entrySequence,
   "sehat-timpang": healthyVsImpulsive,
   "imbalance-terisi": imbalanceFill,
   "imbalance-area": imbalanceAreas,
