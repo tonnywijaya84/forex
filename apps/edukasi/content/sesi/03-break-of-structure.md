@@ -12,6 +12,8 @@ Di Sesi 1, tren dibaca sebagai rangkaian swing. Break of structure (BOS) adalah 
 - Pada uptrend, BOS terjadi saat sebuah candle ditutup di atas swing high terakhir.
 - Pada downtrend, BOS terjadi saat sebuah candle ditutup di bawah swing low terakhir.
 
+<!-- gambar: bos-arah -->
+
 BOS menegaskan arah. BOS belum menjadi alasan untuk langsung masuk, karena harga yang baru menembus biasanya sudah jauh dari area dengan risiko kecil.
 
 BOS dibaca di timeframe besar, yaitu H4 atau D1. Di timeframe kecil, penembusan terjadi terlalu sering dan kebanyakan hanya bagian dari struktur minor.
@@ -22,6 +24,8 @@ Tidak setiap penembusan dihitung. Di kelas ini, BOS dianggap sah bila dua syarat
 
 1. **Ada koreksi lebih dulu.** Sebelum menembus, harga harus terkoreksi sampai melewati ujung candle yang membentuk swing itu. Tanpa koreksi, harga hanya meneruskan leg yang sama dan belum ada swing baru yang ditembus.
 2. **Ditembus oleh harga penutupan.** Body candle harus ditutup melewati level. Wick yang menembus lalu ditutup kembali di dalam belum dihitung.
+
+<!-- gambar: bos-koreksi -->
 
 | | Bullish BOS | Bearish BOS |
 | --- | --- | --- |
@@ -45,6 +49,8 @@ Harga jarang melanjutkan gerakan dalam garis lurus. Setelah BOS, harga umumnya t
 - Titik terendah koreksi sebelum BOS menjadi higher low yang baru. Selama low itu bertahan, uptrend dianggap utuh. Pada downtrend, hal yang sama berlaku untuk lower high.
 
 Mengejar harga tepat setelah BOS berarti masuk di titik terjauh dari level pembatal, sehingga jarak stop menjadi paling lebar.
+
+<!-- gambar: bos-retracement -->
 
 ## Tiga pemeriksaan sebelum menandai BOS
 

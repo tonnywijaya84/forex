@@ -411,11 +411,15 @@ function swingChart(options: {
   boxes?: { from: number; to: number; top: number; bottom: number; label?: string }[];
   /** Jalur rencana yang digambar putus-putus dengan panah di ujungnya, misalnya skenario di peta. */
   plan?: [number, number][];
+  /** Garis putus-putus pendek dari swing yang ditembus sampai titik tembusnya, dengan tulisan (bawaan "BOS"). */
+  breaks?: { from: number; to: number; y: number; label?: string; place?: "above" | "below" }[];
+  /** Garis tegak berwarna merah antara dua harga, misalnya jarak stop. Tulisannya di bawah ujung bawah. */
+  spans?: { x: number; from: number; to: number; label: string }[];
   /** Ruang di kanan untuk tulisan level. */
   rightSpace?: number;
   arrow?: boolean;
 }): string {
-  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, arrow = true } = options;
+  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, breaks = [], spans = [], arrow = true } = options;
   const width = options.width ?? W;
   const height = options.height ?? H;
   const font = width < 260 ? 12 : 13;
@@ -474,6 +478,34 @@ function swingChart(options: {
         arrowhead(plan[plan.length - 2], plan[plan.length - 1])
       : "";
 
+  const breakShapes = breaks
+    .map(
+      (mark) =>
+        `<line x1="${x(mark.from)}" x2="${x(mark.to)}" y1="${y(mark.y)}" y2="${y(mark.y)}" stroke="var(--color-ink)" stroke-width="1.5" stroke-dasharray="4 3"/>` +
+        text(
+          (x(mark.from) + x(mark.to)) / 2,
+          y(mark.y) + (mark.place === "below" ? font + 5 : -6),
+          mark.label ?? "BOS",
+          ` text-anchor="middle" font-weight="600" fill="var(--color-ink)"`,
+        ),
+    )
+    .join("");
+  const spanShapes = spans
+    .map((span) => {
+      const sx = x(span.x);
+      const upper = y(Math.max(span.from, span.to));
+      const lower = y(Math.min(span.from, span.to));
+      const cap = (cy: number) =>
+        `<line x1="${sx - 5}" x2="${sx + 5}" y1="${cy}" y2="${cy}" stroke="var(--color-bear)" stroke-width="2"/>`;
+      return (
+        `<line x1="${sx}" x2="${sx}" y1="${upper}" y2="${lower}" stroke="var(--color-bear)" stroke-width="2"/>` +
+        cap(upper) +
+        cap(lower) +
+        text(sx, lower + font + 6, span.label, ` text-anchor="middle" font-weight="600" fill="var(--color-bear-deep)"`)
+      );
+    })
+    .join("");
+
   const pointLabels = points
     .filter((point) => point.label)
     .map((point) => {
@@ -502,6 +534,8 @@ function swingChart(options: {
     path +
     head +
     planShape +
+    breakShapes +
+    spanShapes +
     pointLabels +
     segmentLabels +
     `</svg>`
@@ -994,7 +1028,145 @@ const legReality =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 3 (break of structure).
+
+const upSwings: SwingPoint[] = [
+  { x: 0, y: 5 },
+  { x: 20, y: 42 },
+  { x: 32, y: 24 },
+  { x: 54, y: 66 },
+  { x: 66, y: 48 },
+  { x: 88, y: 92 },
+];
+
+const bosDirection =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      points: upSwings,
+      breaks: [
+        { from: 20, to: 46, y: 42 },
+        { from: 54, to: 77, y: 66 },
+      ],
+      label: "Uptrend: setiap kali harga naik melewati swing high sebelumnya, terjadi BOS.",
+    }),
+    "Bullish BOS",
+    "Candle ditutup di atas swing high terakhir. Uptrend masih berjalan.",
+  ) +
+  panel(
+    swingChart({
+      points: upSwings.map((point) => ({ ...point, y: 100 - point.y })),
+      breaks: [
+        { from: 20, to: 46, y: 58, place: "below" },
+        { from: 54, to: 77, y: 34, place: "below" },
+      ],
+      label: "Downtrend: setiap kali harga turun melewati swing low sebelumnya, terjadi BOS.",
+    }),
+    "Bearish BOS",
+    "Candle ditutup di bawah swing low terakhir. Downtrend masih berjalan.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const swingLevels: Level[] = [
+  { price: 52, from: 2, label: "swing high" },
+  { price: 37, from: 2, label: "low candle" },
+];
+
+const bosCorrection =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [
+        [20, 30, 18, 28],
+        [28, 40, 27, 38],
+        [38, 52, 37, 50],
+        [50, 51, 45, 47],
+        [47, 49, 44, 46],
+        [46, 58, 45, 56],
+      ],
+      levels: swingLevels,
+      label: "Koreksi kecil berhenti jauh di atas low candle pembentuk swing high, lalu harga naik melewati swing high.",
+    }),
+    "Tanpa koreksi: belum BOS",
+    "Koreksi berhenti di atas low candle pembentuk swing. Kenaikan berikutnya masih leg yang sama.",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        [20, 30, 18, 28],
+        [28, 40, 27, 38],
+        [38, 52, 37, 50],
+        [50, 51, 42, 44],
+        [44, 45, 32, 34],
+        [34, 46, 33, 45],
+        [45, 60, 44, 58],
+      ],
+      levels: swingLevels,
+      label: "Koreksi turun melewati low candle pembentuk swing high, lalu candle terakhir ditutup di atas swing high.",
+    }),
+    "Ada koreksi: BOS sah",
+    "Harga turun melewati low candle pembentuk swing, lalu ditutup di atas swing high.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Leg BOS dari higher low (30) ke puncak baru (90).
+const bosLeg: SwingPoint[] = [
+  { x: 0, y: 18 },
+  { x: 20, y: 56 },
+  { x: 34, y: 30, label: "higher low", place: "below" },
+  { x: 58, y: 90 },
+];
+const bosLevel = (ratio: number) => fib(30, 90, ratio);
+const afterBosPlan: [number, number][] = [
+  [58, 90],
+  [78, bosLevel(0.7)],
+  [98, 98],
+];
+
+const bosRetracement =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      arrow: false,
+      points: bosLeg,
+      breaks: [{ from: 20, to: 46, y: 56 }],
+      band: { top: bosLevel(0.618), bottom: bosLevel(0.81), from: 58, label: "area" },
+      plan: afterBosPlan,
+      label: "Setelah BOS, Fibonacci ditarik dari higher low ke puncak baru. Garis putus-putus: harga terkoreksi ke area 0,618 sampai 0,81 sebelum naik lagi.",
+    }),
+    "Tunggu retracement",
+    "Leg yang menghasilkan BOS dipakai untuk Fibonacci. Area yang ditunggu tetap 0,618 sampai 0,81.",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      arrow: false,
+      points: bosLeg.map(({ x, y }) => ({ x, y })),
+      levels: [{ y: 30, from: 34, label: "batal", strong: true }],
+      plan: afterBosPlan,
+      spans: [
+        { x: 58, from: 90, to: 30, label: "kejar" },
+        { x: 78, from: bosLevel(0.7), to: 30, label: "tunggu" },
+      ],
+      label: "Garis merah tegak menunjukkan jarak dari titik masuk ke level batal. Masuk tepat setelah BOS jaraknya jauh lebih panjang daripada masuk di area koreksi.",
+    }),
+    "Mengejar atau menunggu",
+    "Garis merah adalah jarak stop sampai level batal di higher low. Mengejar tepat setelah BOS membuatnya paling lebar.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "bos-arah": bosDirection,
+  "bos-koreksi": bosCorrection,
+  "bos-retracement": bosRetracement,
   "seimbang-berpindah": balanceShift,
   "jam-sesi": sessions,
   "rilis-berita": newsRelease,
