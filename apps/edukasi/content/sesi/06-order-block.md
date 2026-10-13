@@ -33,6 +33,8 @@ Syarat kelima nanti memakai dua istilah baru. Tarik Fibonacci pada leg major, la
 
 Area 0,618 sampai 0,81 dari Sesi 1 berada di dalam discount pada uptrend, dan di dalam premium pada downtrend.
 
+<!-- gambar: premium-discount -->
+
 ## Lima syarat order block
 
 Tidak setiap candle sebelum gerakan kuat layak ditandai. Periksa lima hal ini.
@@ -42,6 +44,8 @@ Tidak setiap candle sebelum gerakan kuat layak ditandai. Periksa lima hal ini.
 3. **Disertai volume besar.** Candle impulsnya punya volume lebih besar daripada candle di sekitarnya. Di forex yang tersedia hanya tick volume, jadi pakai sebagai pembanding kasar.
 4. **Menembus struktur.** Gerakan dari order block itu menghasilkan BOS atau ChoCh.
 5. **Berada di sisi yang benar.** Bullish order block berada di area discount, dan bearish order block di area premium.
+
+<!-- gambar: syarat-order-block -->
 
 Order block yang hanya memenuhi satu atau dua syarat sebaiknya dilewati.
 
@@ -56,11 +60,15 @@ Keduanya menandai area tempat harga pernah berbalik dengan kuat. Bedanya ada pad
 | Tersentuh harga | Lebih jarang | Lebih sering |
 | Cocok untuk | Titik masuk di timeframe kecil | Peta kasar di timeframe besar |
 
+<!-- gambar: ob-vs-supply-demand -->
+
 ## Kapan order block tidak berlaku lagi
 
 - **Ditembus.** Bila sebuah candle ditutup melewati ujung terjauh zona, order block itu batal.
 - **Sudah dikunjungi.** Kunjungan pertama adalah yang paling diperhatikan. Setelah harga pernah masuk dan memantul, zona yang sama dianggap lebih lemah.
 - **Melawan struktur major.** Bullish order block di dalam downtrend major tidak dipakai untuk membeli.
+
+<!-- gambar: ob-batal -->
 
 ## Order block di dalam peta
 
