@@ -412,7 +412,7 @@ function swingChart(options: {
   /** Jalur rencana yang digambar putus-putus dengan panah di ujungnya, misalnya skenario di peta. */
   plan?: [number, number][];
   /** Garis putus-putus pendek dari swing yang ditembus sampai titik tembusnya, dengan tulisan (bawaan "BOS"). */
-  breaks?: { from: number; to: number; y: number; label?: string; place?: "above" | "below" }[];
+  breaks?: { from: number; to: number; y: number; label?: string; place?: "above" | "below"; labelAt?: number }[];
   /** Garis tegak berwarna merah antara dua harga, misalnya jarak stop. Tulisannya di bawah ujung bawah. */
   spans?: { x: number; from: number; to: number; label: string }[];
   /** Lingkaran bernomor, misalnya urutan langkah yang dijelaskan di teks. */
@@ -485,7 +485,7 @@ function swingChart(options: {
       (mark) =>
         `<line x1="${x(mark.from)}" x2="${x(mark.to)}" y1="${y(mark.y)}" y2="${y(mark.y)}" stroke="var(--color-ink)" stroke-width="1.5" stroke-dasharray="4 3"/>` +
         (mark.label === "" ? "" : text(
-          (x(mark.from) + x(mark.to)) / 2,
+          mark.labelAt === undefined ? (x(mark.from) + x(mark.to)) / 2 : x(mark.labelAt),
           y(mark.y) + (mark.place === "below" ? font + 5 : -6),
           mark.label ?? "BOS",
           ` text-anchor="middle" font-weight="600" fill="var(--color-ink)"`,
@@ -1370,7 +1370,189 @@ const trendCycle =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 5 (jebakan struktur).
+
+const fakeRetracement =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      points: [
+        { x: 0, y: 8 },
+        { x: 30, y: 62 },
+        { x: 36, y: 54, label: "HL?", place: "below" },
+        { x: 52, y: 90 },
+        { x: 78, y: 33 },
+        { x: 100, y: 94 },
+      ],
+      breaks: [{ from: 36, to: 70, y: 54, label: "ChoCh?", place: "below" }],
+      label: "Lembah kecil setelah koreksi dangkal diberi label higher low. Saat koreksi sebenarnya datang, lembah itu tertembus dan terbaca sebagai ChoCh, lalu harga naik lagi.",
+    }),
+    "Ditandai terlalu cepat",
+    "Lembah kecil diberi label HL. Saat koreksi sebenarnya datang, lembah itu tertembus dan terbaca sebagai ChoCh.",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      points: [
+        { x: 0, y: 8 },
+        { x: 44, y: 70 },
+        { x: 54, y: 58, label: "bukan swing", place: "below" },
+        { x: 84, y: 96 },
+      ],
+      levels: [{ y: fib(8, 70, 0.5), label: "0,5", strong: true }],
+      label: "Fibonacci ditarik dari awal leg sampai puncaknya. Koreksi berhenti jauh di atas level 0,5, jadi lembahnya belum menjadi swing.",
+    }),
+    "Ukur dengan Fibonacci",
+    "Koreksi belum sampai 0,5 dari leg-nya. Lembah itu belum swing, jadi leg masih berlanjut.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Leg dari 8 ke 92, dengan puncak kecil (58) dan koreksi dangkal (50) di tengahnya.
+const fakeBosPoints: SwingPoint[] = [
+  { x: 0, y: 8 },
+  { x: 36, y: 58 },
+  { x: 46, y: 50 },
+  { x: 70, y: 92 },
+];
+
+const fakeBos =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      arrow: false,
+      points: fakeBosPoints,
+      breaks: [{ from: 36, to: 52, y: 58, label: "BOS?", labelAt: 39 }],
+      band: { top: fib(50, 92, 0.618), bottom: fib(50, 92, 0.81), from: 70, label: "area?" },
+      label: "Puncak kecil ditembus dan diberi label BOS. Fibonacci ditarik dari lembah kecil, sehingga area yang ditunggu berada terlalu tinggi.",
+    }),
+    "Fake BOS",
+    "Puncak kecil dari koreksi dangkal ditembus. Fibonacci ditarik pada leg yang salah, jadi area terlalu tinggi.",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      arrow: false,
+      points: fakeBosPoints,
+      band: { top: fib(8, 92, 0.618), bottom: fib(8, 92, 0.81), from: 70, label: "area" },
+      label: "Leg yang sama diukur dari awal sampai puncak. Area 0,618 sampai 0,81 berada jauh lebih rendah.",
+    }),
+    "Leg yang benar",
+    "Leg diukur dari awal sampai puncaknya. Area yang ditunggu jauh lebih rendah.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const confusionStructure =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      arrow: false,
+      points: [
+        { x: 0, y: 40 },
+        { x: 10, y: 70 },
+        { x: 18, y: 48 },
+        { x: 28, y: 76 },
+        { x: 36, y: 34 },
+        { x: 46, y: 60 },
+        { x: 54, y: 28 },
+        { x: 64, y: 72 },
+        { x: 72, y: 44 },
+        { x: 82, y: 80 },
+        { x: 90, y: 38 },
+        { x: 100, y: 62 },
+      ],
+      breaks: [
+        { from: 10, to: 27, y: 70 },
+        { from: 18, to: 34, y: 48, label: "ChoCh", place: "below" },
+        { from: 36, to: 53, y: 34, place: "below" },
+        { from: 46, to: 62, y: 60, label: "ChoCh" },
+      ],
+      label: "Di timeframe kecil, harga berputar dan membentuk BOS dan ChoCh bergantian ke atas dan ke bawah.",
+    }),
+    "Timeframe kecil",
+    "BOS dan ChoCh muncul bergantian. Arah tampak berubah setiap beberapa candle.",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 44,
+      arrow: false,
+      boxes: [{ from: 66, to: 100, top: 94, bottom: 60, label: "kisaran" }],
+      points: [
+        { x: 0, y: 10 },
+        { x: 30, y: 62 },
+        { x: 42, y: 40 },
+        { x: 66, y: 90 },
+        { x: 72, y: 72 },
+        { x: 78, y: 84 },
+        { x: 84, y: 66 },
+        { x: 90, y: 80 },
+        { x: 96, y: 64 },
+        { x: 100, y: 74 },
+      ],
+      levels: [{ y: 40, from: 42, label: "major", strong: true }],
+      label: "Di timeframe besar, putaran tadi hanya kisaran kecil di atas uptrend. Swing major di bawahnya belum ditembus.",
+    }),
+    "Naik satu tingkat",
+    "Di timeframe besar, putaran itu hanya kisaran kecil. Selama swing major belum ditembus, arah peta tetap.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+/** Mencerminkan candle naik-turun, untuk membuat versi swing low dari contoh swing high. */
+const mirrorCandle = ([open, high, low, close]: Candle): Candle => [100 - open, 100 - low, 100 - high, 100 - close];
+
+// Wick menembus swing high (52) sampai 64 lalu ditutup di 47. Candle ke-10 kembali ke zona dan ditolak lagi.
+const rejectionHigh: Candle[] = [
+  [30, 38, 29, 37],
+  [37, 46, 36, 44],
+  [44, 52, 43, 50],
+  [50, 51, 44, 46],
+  [46, 48, 40, 42],
+  [42, 49, 41, 48],
+  [48, 64, 46, 47],
+  [47, 49, 43, 44],
+  [44, 47, 41, 46],
+  [46, 58, 45, 45],
+  [45, 46, 38, 39],
+];
+
+const rejectionBlock =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: rejectionHigh,
+      level: { price: 52, from: 2, label: "swing high" },
+      zone: { top: 64, bottom: 48, from: 6, label: "rejection" },
+      label: "Sebuah candle menembus swing high dengan wick panjang lalu ditutup di bawahnya. Zona wick itu ditandai. Beberapa candle kemudian harga kembali ke zona dan ditolak lagi.",
+    }),
+    "Di swing high",
+    "Wick menembus swing high, lalu candle ditutup di bawahnya. Saat harga kembali ke zona, perhatikan apakah penolakan terulang.",
+  ) +
+  panel(
+    candleChart({
+      candles: rejectionHigh.map(mirrorCandle),
+      level: { price: 48, from: 2, label: "swing low" },
+      zone: { top: 52, bottom: 36, from: 6, label: "rejection" },
+      label: "Sebuah candle menembus swing low dengan wick panjang lalu ditutup di atasnya. Zona wick itu ditandai. Beberapa candle kemudian harga kembali ke zona dan ditolak lagi.",
+    }),
+    "Di swing low",
+    "Sama, arahnya terbalik: wick menembus swing low, lalu candle ditutup di atasnya.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "fake-retracement": fakeRetracement,
+  "fake-bos": fakeBos,
+  "confusion-structure": confusionStructure,
+  "rejection-block": rejectionBlock,
   "choch-arah": chochDirection,
   "choch-kemungkinan": chochOutcomes,
   "choch-timeframe": chochTimeframe,
