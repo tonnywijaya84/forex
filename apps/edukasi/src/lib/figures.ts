@@ -2225,7 +2225,359 @@ const entrySequence =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 9 (strategi entry dan manajemen risiko).
+
+/** Diagram batang mendatar sederhana: nama di kiri, batang, lalu keterangan di ujung batang. */
+function barChart(options: {
+  label: string;
+  rows: { name: string; value: number; text: string }[];
+  max: number;
+  tone: "ink" | "bull" | "bear";
+}): string {
+  const nameWidth = 70;
+  const textSpace = 90;
+  const x0 = PAD + nameWidth;
+  const length = (value: number) => (value / options.max) * (W - PAD - x0 - textSpace);
+  const gap = (H - 60) / options.rows.length;
+  const rows = options.rows
+    .map((row, index) => {
+      const cy = 30 + gap * (index + 0.5);
+      return (
+        `<text x="${PAD}" y="${cy + 4}" font-size="13" font-weight="600" fill="var(--color-ink)">${row.name}</text>` +
+        `<rect x="${x0}" y="${cy - 11}" width="${length(row.value)}" height="22" fill="var(--color-${options.tone})"${options.tone === "ink" ? "" : ' fill-opacity="0.8"'}/>` +
+        `<text x="${x0 + length(row.value) + 6}" y="${cy + 4}" font-size="13" fill="var(--color-ink-soft)">${row.text}</text>`
+      );
+    })
+    .join("");
+  return (
+    `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${options.label}" class="h-auto w-full bg-surface">` +
+    `<line x1="${x0}" x2="${x0}" y1="30" y2="${H - 30}" stroke="var(--color-rule)"/>` +
+    rows +
+    `</svg>`
+  );
+}
+
+// Leg naik dari 30 ke 90. OB utama di pangkal, imbalance di tengah, OB dangkal dekat level 0,5 (60).
+const bosLegCandles: Candle[] = [
+  [46, 48, 38, 40],
+  [40, 41, 30, 33],
+  [33, 44, 32, 43],
+  [43, 47, 40, 46],
+  [46, 58, 45, 57],
+  [57, 64, 53, 62],
+  [62, 65, 58, 60],
+  [60, 74, 59, 73],
+  [73, 84, 71, 82],
+  [82, 90, 80, 88],
+];
+const bosLegZones: Zone[] = [
+  { top: 65, bottom: 58, from: 6, label: "OB dangkal" },
+  { top: 53, bottom: 47, from: 3, label: "imbalance", tone: "rule" },
+  { top: 41, bottom: 30, from: 1, label: "OB utama" },
+];
+
+const threeAreas =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: bosLegCandles,
+      zones: bosLegZones,
+      label: "Leg naik yang menghasilkan BOS meninggalkan tiga area: order block dangkal dekat level 0,5, imbalance di tengah, dan order block utama di pangkal leg.",
+    }),
+    "Tiga area",
+    "OB dangkal dekat 0,5, imbalance di tengah leg, dan OB utama di pangkal leg.",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        ...bosLegCandles,
+        [88, 89, 76, 78],
+        [78, 79, 61, 63],
+        [63, 66, 55, 57],
+        [57, 58, 44, 46],
+        [46, 47, 38, 40],
+        [40, 52, 39, 50],
+      ],
+      zones: bosLegZones,
+      label: "Saat harga terkoreksi, order block dangkal tersentuh lalu ditembus, imbalance terisi, dan harga sampai di order block utama sebelum naik.",
+    }),
+    "Saat harga terkoreksi",
+    "OB dangkal tersentuh lebih dulu dan ditembus, imbalance terisi, lalu harga sampai di OB utama.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const checklistSteps =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      rightSpace: 48,
+      arrow: false,
+      points: [
+        { x: 0, y: 44 },
+        { x: 14, y: 64 },
+        { x: 24, y: 26, label: "low", place: "below" },
+        { x: 52, y: 92, label: "high" },
+        { x: 76, y: 40 },
+      ],
+      breaks: [{ from: 14, to: 42, y: 64 }],
+      levels: [{ y: fib(26, 92, 0.5), from: 52, label: "0,5" }],
+      band: { top: fib(26, 92, 0.618), bottom: fib(26, 92, 0.81), from: 52, label: "area" },
+      steps: [
+        { x: 63, y: 95, n: 1 },
+        { x: 6, y: 72, n: 2 },
+        { x: 90, y: 30, n: 3 },
+      ],
+      label: "Timeframe besar: high dan low terbaru ditandai (1), arah dari BOS terakhir (2), lalu Fibonacci dengan area 0,618 sampai 0,81 (3). Harga sedang terkoreksi masuk ke area itu.",
+    }),
+    "Timeframe besar (langkah 1–3)",
+    "1 Tandai high dan low. 2 Arah dari BOS terakhir. 3 Tarik Fibonacci; area utamanya 0,618 sampai 0,81 (kuning).",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 48,
+      arrow: false,
+      points: [
+        { x: 0, y: 90 },
+        { x: 10, y: 70 },
+        { x: 16, y: 78 },
+        { x: 28, y: 56 },
+        { x: 34, y: 64 },
+        { x: 46, y: 42 },
+        { x: 52, y: 50 },
+        { x: 62, y: 30 },
+        { x: 76, y: 64 },
+      ],
+      breaks: [{ from: 52, to: 72, y: 50, label: "ChoCh" }],
+      boxes: [{ from: 58, to: 100, top: 38, bottom: 28 }],
+      levels: [
+        { y: 78, from: 16, label: "target" },
+        { y: 38, from: 58, label: "entry" },
+        { y: 22, from: 58, label: "stop", strong: true },
+      ],
+      plan: [
+        [76, 64],
+        [86, 39],
+        [100, 84],
+      ],
+      steps: [
+        { x: 46, y: 58, n: 4 },
+        { x: 52, y: 33, n: 5 },
+        { x: 94, y: 94, n: 6 },
+      ],
+      label: "Timeframe kecil: ChoCh ke atas (4), order block dari gerakan ChoCh (5), lalu rencana dengan entry di order block, stop di bawah zona, dan target di swing high (6).",
+    }),
+    "Timeframe kecil (langkah 4–6)",
+    "4 ChoCh setelah harga masuk area. 5 Order block dari gerakan ChoCh. 6 Limit order di order block, stop di luar zona, target di swing high terdekat.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const lotByStop =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    barChart({
+      tone: "bear",
+      max: 50,
+      rows: [
+        { name: "Posisi A", value: 15, text: "15 pip" },
+        { name: "Posisi B", value: 25, text: "25 pip" },
+        { name: "Posisi C", value: 50, text: "50 pip" },
+      ],
+      label: "Jarak stop tiga posisi: 15, 25, dan 50 pip.",
+    }),
+    "Jarak stop",
+    "Makin jauh level pembatal, makin lebar jarak stop.",
+  ) +
+  panel(
+    barChart({
+      tone: "ink",
+      max: 0.06,
+      rows: [
+        { name: "Posisi A", value: 0.06, text: "0,06 lot" },
+        { name: "Posisi B", value: 0.04, text: "0,04 lot" },
+        { name: "Posisi C", value: 0.02, text: "0,02 lot" },
+      ],
+      label: "Ukuran lot tiga posisi yang sama: 0,06, 0,04, dan 0,02 lot.",
+    }),
+    "Ukuran lot",
+    "Lot mengecil mengikuti jarak stop, sehingga rugi bila stop tersentuh tetap sekitar 10 dolar (1% dari 1.000 dolar).",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+/** Kotak posisi beli dengan rasio 1:2: jarak ke target dua kali jarak ke stop. */
+function riskRewardBox(): string {
+  const left = 110;
+  const right = W - PAD - 20;
+  const entry = 140;
+  const unit = 45;
+  const target = entry - unit * 2;
+  const stop = entry + unit;
+  const label = (y: number, content: string) =>
+    `<text x="${PAD}" y="${y + 4}" font-size="13" fill="var(--color-ink-soft)">${content}</text>`;
+  return (
+    `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Posisi beli dengan rasio 1:2. Kotak hijau dari entry ke target dua kali lebih tinggi dari kotak merah dari entry ke stop." class="h-auto w-full bg-surface">` +
+    `<rect x="${left}" y="${target}" width="${right - left}" height="${entry - target}" fill="var(--color-bull)" fill-opacity="0.15"/>` +
+    `<rect x="${left}" y="${entry}" width="${right - left}" height="${stop - entry}" fill="var(--color-bear)" fill-opacity="0.15"/>` +
+    `<line x1="${left}" x2="${right}" y1="${target}" y2="${target}" stroke="var(--color-bull)" stroke-width="1.5"/>` +
+    `<line x1="${left}" x2="${right}" y1="${stop}" y2="${stop}" stroke="var(--color-bear)" stroke-width="1.5"/>` +
+    `<line x1="${left - 10}" x2="${right}" y1="${entry}" y2="${entry}" stroke="var(--color-ink)" stroke-width="2"/>` +
+    `<text x="${(left + right) / 2}" y="${(target + entry) / 2 + 6}" text-anchor="middle" font-size="18" font-weight="700" fill="var(--color-bull-deep)">2R</text>` +
+    `<text x="${(left + right) / 2}" y="${(entry + stop) / 2 + 6}" text-anchor="middle" font-size="18" font-weight="700" fill="var(--color-bear-deep)">1R</text>` +
+    label(target, "target") +
+    label(entry, "entry") +
+    label(stop, "stop") +
+    `</svg>`
+  );
+}
+
+const ratioAndWinRate =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(riskRewardBox(), "Rasio 1:2", "Jarak ke target dua kali jarak ke stop. 1R adalah besar risiko per posisi.") +
+  panel(
+    barChart({
+      tone: "ink",
+      max: 60,
+      rows: [
+        { name: "1:1", value: 50, text: "50%" },
+        { name: "1:1,5", value: 40, text: "40%" },
+        { name: "1:2", value: 33.3, text: "33,3%" },
+        { name: "1:3", value: 25, text: "25%" },
+      ],
+      label: "Win rate impas menurut rasio: 1:1 50%, 1:1,5 40%, 1:2 33,3%, 1:3 25%.",
+    }),
+    "Win rate impas",
+    "Makin besar rasionya, makin rendah win rate yang dibutuhkan agar impas. Belum termasuk spread, komisi, dan swap.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 10 (praktik di market nyata).
+
+/** Empat anak tangga latihan, dari bar replay sampai menaikkan ukuran. */
+function practiceStairs(): string {
+  const names = [
+    ["Bar", "replay"],
+    ["Akun", "demo"],
+    ["Akun riil,", "lot terkecil"],
+    ["Menaikkan", "ukuran"],
+  ];
+  const width = 66;
+  const gap = (W - PAD * 2 - width * 4) / 3;
+  const bottom = H - PAD;
+  const blocks = names
+    .map(([first, second], index) => {
+      const height = 44 + index * 40;
+      const left = PAD + index * (width + gap);
+      const top = bottom - height;
+      const cx = left + width / 2;
+      return (
+        `<rect x="${left}" y="${top}" width="${width}" height="${height}" fill="var(--color-ink)"/>` +
+        `<text x="${cx}" y="${top + 26}" text-anchor="middle" font-size="18" font-weight="700" fill="var(--color-surface)">${index + 1}</text>` +
+        `<text x="${cx}" y="${top - 22}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-ink)">${first}</text>` +
+        `<text x="${cx}" y="${top - 8}" text-anchor="middle" font-size="12" fill="var(--color-ink-soft)">${second}</text>`
+      );
+    })
+    .join("");
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Empat anak tangga latihan: 1 bar replay, 2 akun demo, 3 akun riil dengan lot terkecil, 4 menaikkan ukuran." class="h-auto w-full bg-surface">${blocks}</svg>`;
+}
+
+const practiceStages =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(practiceStairs(), "Empat tahap", "Naik satu anak tangga hanya setelah syarat tahap sebelumnya terpenuhi. Tidak ada keharusan sampai ke tahap 3.") +
+  panel(
+    barChart({
+      tone: "bear",
+      max: 4,
+      rows: [
+        { name: "Tahap 1", value: 0, text: "tanpa dana" },
+        { name: "Tahap 2", value: 0, text: "dana virtual" },
+        { name: "Tahap 3", value: 1, text: "lot terkecil" },
+        { name: "Tahap 4", value: 3, text: "naik bertahap" },
+      ],
+      label: "Dana riil yang dipertaruhkan: tahap 1 dan 2 tidak ada, tahap 3 sekecil mungkin, tahap 4 naik sedikit demi sedikit.",
+    }),
+    "Dana yang dipertaruhkan",
+    "Dana riil baru dipakai di tahap 3 dengan ukuran terkecil, dan hanya dana yang siap hilang seluruhnya.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Contoh 20 posisi dengan rasio 1:2: 8 menang (+2R), 12 kalah (−1R), dengan lima kalah beruntun di posisi 7 sampai 11.
+const sampleResults = [2, -1, -1, 2, -1, 2, -1, -1, -1, -1, -1, 2, 2, -1, 2, -1, -1, 2, -1, 2];
+const resultsLeft = PAD + 34;
+const resultsStep = (W - PAD - resultsLeft) / sampleResults.length;
+/** Latar abu-abu untuk rangkaian rugi, dari akhir posisi 6 sampai akhir posisi 11. */
+const losingStreak = (top: number, bottom: number) =>
+  `<rect x="${resultsLeft + resultsStep * 6}" y="${top}" width="${resultsStep * 5}" height="${bottom - top}" fill="var(--color-rule)" fill-opacity="0.5"/>` +
+  `<text x="${resultsLeft + resultsStep * 8.5}" y="${top - 6}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-ink-soft)">5 kalah beruntun</text>`;
+const axisLabel = (y: number, content: string) =>
+  `<text x="${PAD}" y="${y + 4}" font-size="12" fill="var(--color-ink-soft)">${content}</text>`;
+
+function resultBars(): string {
+  const zero = 124;
+  const unit = 40;
+  const bars = sampleResults
+    .map((result, index) => {
+      const cx = resultsLeft + resultsStep * (index + 0.5);
+      const height = Math.abs(result) * unit;
+      return `<rect x="${cx - resultsStep * 0.3}" y="${result > 0 ? zero - height : zero}" width="${resultsStep * 0.6}" height="${height}" fill="${result > 0 ? "var(--color-bull)" : "var(--color-bear)"}"/>`;
+    })
+    .join("");
+  return (
+    `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Hasil 20 posisi satu per satu: batang hijau +2R untuk menang, batang merah −1R untuk kalah. Posisi 7 sampai 11 kalah berturut-turut." class="h-auto w-full bg-surface">` +
+    losingStreak(36, zero + unit + 12) +
+    `<line x1="${resultsLeft}" x2="${W - PAD}" y1="${zero}" y2="${zero}" stroke="var(--color-ink-soft)"/>` +
+    bars +
+    axisLabel(zero - unit * 2, "+2R") +
+    axisLabel(zero, "0") +
+    axisLabel(zero + unit, "−1R") +
+    `</svg>`
+  );
+}
+
+function resultCurve(): string {
+  const totals = sampleResults.reduce<number[]>((sums, result) => [...sums, sums[sums.length - 1] + result], [0]);
+  const top = 50;
+  const bottom = 186;
+  const y = (value: number) => bottom - ((value + 2) / 6) * (bottom - top);
+  const x = (index: number) => resultsLeft + resultsStep * index;
+  return (
+    `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Hasil kumulatif 20 posisi. Selama lima kalah beruntun hasil turun dari +3R ke −2R, lalu naik dan berakhir di +4R." class="h-auto w-full bg-surface">` +
+    losingStreak(36, bottom + 8) +
+    `<line x1="${resultsLeft}" x2="${W - PAD}" y1="${y(0)}" y2="${y(0)}" stroke="var(--color-ink-soft)" stroke-dasharray="4 4"/>` +
+    `<polyline points="${totals.map((total, index) => `${x(index)},${y(total)}`).join(" ")}" fill="none" stroke="var(--color-ink)" stroke-width="2.5" stroke-linejoin="round"/>` +
+    `<circle cx="${x(totals.length - 1)}" cy="${y(totals[totals.length - 1])}" r="4" fill="var(--color-ink)"/>` +
+    axisLabel(y(4), "+4R") +
+    axisLabel(y(0), "0") +
+    axisLabel(y(-2), "−2R") +
+    `</svg>`
+  );
+}
+
+const sampleCurve =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(resultBars(), "Hasil per posisi", "Contoh 20 posisi dengan rasio 1:2: 8 menang (+2R) dan 12 kalah (−1R). Abu-abu: lima kali kalah berturut-turut.") +
+  panel(resultCurve(), "Hasil kumulatif", "Total +4R, rata-rata +0,2R per posisi. Selama rangkaian rugi, hasil sempat turun 5R. Ini contoh hitungan, bukan hasil nyata.") +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "tiga-area": threeAreas,
+  "checklist-langkah": checklistSteps,
+  "lot-stop": lotByStop,
+  "rasio-winrate": ratioAndWinRate,
+  "tahap-latihan": practiceStages,
+  "kurva-hasil": sampleCurve,
   "likuiditas-tempat": liquidityPlaces,
   "compression-inducement": compressionInducement,
   "letak-stop": stopPlacement,
