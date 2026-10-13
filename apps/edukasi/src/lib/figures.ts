@@ -356,7 +356,291 @@ const entryPlan =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Diagram garis (zig-zag) untuk Sesi 1: tanpa candle, hanya jalur swing.
+// Koordinat titik memakai skala 0-100 di kedua sumbu; 0 di kiri bawah.
+
+type SwingPoint = { x: number; y: number; label?: string; place?: "above" | "below" };
+type SwingLevel = { y: number; label: string; from?: number; strong?: boolean };
+
+function swingChart(options: {
+  label: string;
+  points: SwingPoint[];
+  width?: number;
+  height?: number;
+  /** Jalur kedua yang lebih tipis, misalnya struktur minor di dalam struktur major. */
+  minor?: [number, number][];
+  /** Tulisan di tengah ruas: `segment` 0 berarti ruas antara titik 0 dan titik 1. */
+  segments?: { segment: number; text: string }[];
+  levels?: SwingLevel[];
+  band?: { top: number; bottom: number; from?: number };
+  /** Ruang di kanan untuk tulisan level. */
+  rightSpace?: number;
+  arrow?: boolean;
+}): string {
+  const { label, points, minor, segments = [], levels = [], band, arrow = true } = options;
+  const width = options.width ?? W;
+  const height = options.height ?? H;
+  const font = width < 260 ? 12 : 13;
+  const right = options.rightSpace ?? 0;
+  const top = PAD + 14;
+  const bottom = height - PAD - 14;
+  const x = (value: number) => PAD + (value / 100) * (width - PAD * 2 - right);
+  const y = (value: number) => bottom - (value / 100) * (bottom - top);
+  const text = (tx: number, ty: number, content: string, extra = "") =>
+    `<text x="${tx}" y="${ty}" font-size="${font}" fill="var(--color-ink-soft)"${extra}>${content}</text>`;
+
+  const bandShape = band
+    ? `<rect x="${x(band.from ?? 0)}" y="${y(band.top)}" width="${x(100) - x(band.from ?? 0)}" height="${y(band.bottom) - y(band.top)}" fill="var(--color-mark)" fill-opacity="0.4"/>`
+    : "";
+  const levelShapes = levels
+    .map(
+      (level) =>
+        `<line x1="${x(level.from ?? 0)}" x2="${x(100)}" y1="${y(level.y)}" y2="${y(level.y)}" stroke="var(--color-ink)" stroke-width="${level.strong ? 1.5 : 1}" stroke-dasharray="5 4"${level.strong ? "" : ' stroke-opacity="0.6"'}/>` +
+        text(x(100) + 6, y(level.y) + 4, level.label),
+    )
+    .join("");
+  const minorShape = minor
+    ? `<polyline points="${minor.map(([px, py]) => `${x(px)},${y(py)}`).join(" ")}" fill="none" stroke="var(--color-bull)" stroke-width="1.5" stroke-linejoin="round"/>`
+    : "";
+  const path = `<polyline points="${points.map((point) => `${x(point.x)},${y(point.y)}`).join(" ")}" fill="none" stroke="var(--color-ink)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+  let head = "";
+  if (arrow && points.length > 1) {
+    const end = points[points.length - 1];
+    const before = points[points.length - 2];
+    const ex = x(end.x);
+    const ey = y(end.y);
+    const angle = Math.atan2(ey - y(before.y), ex - x(before.x));
+    const size = 9;
+    const corner = (offset: number) =>
+      `${ex - size * Math.cos(angle + offset)},${ey - size * Math.sin(angle + offset)}`;
+    head = `<polygon points="${ex},${ey} ${corner(0.45)} ${corner(-0.45)}" fill="var(--color-ink)"/>`;
+  }
+
+  const pointLabels = points
+    .filter((point) => point.label)
+    .map((point) => {
+      const below = point.place === "below";
+      return text(x(point.x), y(point.y) + (below ? font + 5 : -8), point.label!, ` text-anchor="middle" font-weight="600"`);
+    })
+    .join("");
+  const segmentLabels = segments
+    .map(({ segment, text: content }) => {
+      const a = points[segment];
+      const b = points[segment + 1];
+      const mx = (x(a.x) + x(b.x)) / 2;
+      const my = (y(a.y) + y(b.y)) / 2;
+      // Geser tulisan ke kanan bawah ruas naik, atau kanan atas ruas turun, supaya tidak menimpa garis.
+      const rising = b.y > a.y;
+      return text(mx + 8, my + (rising ? 10 : -2), content, ` font-weight="600" fill="var(--color-ink)"`);
+    })
+    .join("");
+
+  return (
+    `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${label}" class="h-auto w-full bg-surface">` +
+    bandShape +
+    levelShapes +
+    minorShape +
+    path +
+    head +
+    pointLabels +
+    segmentLabels +
+    `</svg>`
+  );
+}
+
+const basicStructure =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      points: [
+        { x: 0, y: 5 },
+        { x: 28, y: 55 },
+        { x: 44, y: 32 },
+        { x: 70, y: 80 },
+        { x: 84, y: 60 },
+        { x: 100, y: 98 },
+      ],
+      segments: [
+        { segment: 0, text: "E" },
+        { segment: 1, text: "R" },
+        { segment: 2, text: "E" },
+        { segment: 3, text: "R" },
+        { segment: 4, text: "E" },
+      ],
+      label: "Uptrend: gerakan naik panjang (expansion) bergantian dengan koreksi turun yang lebih pendek (retracement).",
+    }),
+    "Uptrend",
+    "Expansion (E) naik, diselingi retracement (R) turun.",
+  ) +
+  panel(
+    swingChart({
+      points: [
+        { x: 0, y: 95 },
+        { x: 28, y: 45 },
+        { x: 44, y: 68 },
+        { x: 70, y: 20 },
+        { x: 84, y: 40 },
+        { x: 100, y: 2 },
+      ],
+      segments: [
+        { segment: 0, text: "E" },
+        { segment: 1, text: "R" },
+        { segment: 2, text: "E" },
+        { segment: 3, text: "R" },
+        { segment: 4, text: "E" },
+      ],
+      label: "Downtrend: gerakan turun panjang (expansion) bergantian dengan koreksi naik yang lebih pendek (retracement).",
+    }),
+    "Downtrend",
+    "Expansion (E) turun, diselingi retracement (R) naik.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const SMALL = { width: 200, height: 190 };
+
+const threeConditions =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-3">` +
+  panel(
+    swingChart({
+      ...SMALL,
+      points: [
+        { x: 0, y: 2 },
+        { x: 28, y: 45, label: "HH" },
+        { x: 46, y: 25, label: "HL", place: "below" },
+        { x: 72, y: 72, label: "HH" },
+        { x: 86, y: 52, label: "HL", place: "below" },
+        { x: 100, y: 92 },
+      ],
+      label: "Uptrend: setiap puncak lebih tinggi dari puncak sebelumnya (HH) dan setiap lembah lebih tinggi dari lembah sebelumnya (HL).",
+    }),
+    "Uptrend",
+    "Puncak dan lembah sama-sama makin tinggi.",
+  ) +
+  panel(
+    swingChart({
+      ...SMALL,
+      rightSpace: 34,
+      arrow: false,
+      points: [
+        { x: 0, y: 30 },
+        { x: 16, y: 70 },
+        { x: 32, y: 32 },
+        { x: 50, y: 68 },
+        { x: 66, y: 30 },
+        { x: 84, y: 70 },
+        { x: 100, y: 34 },
+      ],
+      levels: [
+        { y: 70, label: "EQH", strong: true },
+        { y: 30, label: "EQL", strong: true },
+      ],
+      label: "Sideways: harga bolak-balik di antara puncak yang hampir sejajar (EQH) dan lembah yang hampir sejajar (EQL).",
+    }),
+    "Sideways",
+    "Puncak dan lembah hampir sejajar.",
+  ) +
+  panel(
+    swingChart({
+      ...SMALL,
+      points: [
+        { x: 0, y: 98 },
+        { x: 28, y: 55, label: "LL", place: "below" },
+        { x: 46, y: 75, label: "LH" },
+        { x: 72, y: 28, label: "LL", place: "below" },
+        { x: 86, y: 48, label: "LH" },
+        { x: 100, y: 8 },
+      ],
+      label: "Downtrend: setiap puncak lebih rendah dari puncak sebelumnya (LH) dan setiap lembah lebih rendah dari lembah sebelumnya (LL).",
+    }),
+    "Downtrend",
+    "Puncak dan lembah sama-sama makin rendah.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+/** Harga di level Fibonacci `ratio`, diukur dari ujung leg (`end`) kembali ke awal leg (`start`). */
+const fib = (start: number, end: number, ratio: number) => end - ratio * (end - start);
+
+function fibonacciPanel(direction: "up" | "down"): string {
+  const up = direction === "up";
+  const start = up ? 8 : 92;
+  const end = up ? 88 : 12;
+  const at = (ratio: number) => fib(start, end, ratio);
+  const deepest = at(0.7);
+  return swingChart({
+    rightSpace: 40,
+    points: [
+      { x: 0, y: start, label: up ? "low" : "high", place: up ? "below" : "above" },
+      { x: 40, y: end, label: up ? "high" : "low", place: up ? "above" : "below" },
+      { x: 66, y: deepest },
+      { x: 92, y: up ? 98 : 2 },
+    ],
+    band: { top: Math.max(at(0.618), at(0.81)), bottom: Math.min(at(0.618), at(0.81)), from: 40 },
+    levels: [
+      { y: at(0), label: "0", from: 40 },
+      { y: at(0.5), label: "0,5", from: 40, strong: true },
+      { y: at(0.618), label: "0,618", from: 40 },
+      { y: at(0.81), label: "0,81", from: 40 },
+      { y: at(1), label: "1", from: 0 },
+    ],
+    label: up
+      ? "Fibonacci ditarik dari swing low ke swing high. Harga terkoreksi melewati level 0,5 sampai ke area antara 0,618 dan 0,81, lalu naik lagi."
+      : "Fibonacci ditarik dari swing high ke swing low. Harga terkoreksi melewati level 0,5 sampai ke area antara 0,618 dan 0,81, lalu turun lagi.",
+  });
+}
+
+const fibonacciRetracement =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(fibonacciPanel("up"), "Uptrend: tarik dari low ke high", "Koreksi melewati 0,5, lalu masuk area kuning 0,618 sampai 0,81.") +
+  panel(fibonacciPanel("down"), "Downtrend: tarik dari high ke low", "Cara bacanya sama, hanya arahnya terbalik.") +
+  `</div>` +
+  `</figure>`;
+
+const majorPoints: SwingPoint[] = [
+  { x: 0, y: 4, label: "O", place: "below" },
+  { x: 40, y: 62, label: "A" },
+  { x: 60, y: 34, label: "B", place: "below" },
+  { x: 100, y: 96, label: "C" },
+];
+
+const majorMinor =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      points: majorPoints,
+      label: "Struktur major: naik dari O ke A, terkoreksi ke B, lalu naik ke C.",
+    }),
+    "Struktur major",
+    "Dilihat di timeframe besar: naik O ke A, koreksi ke B, naik lagi ke C.",
+  ) +
+  panel(
+    swingChart({
+      points: majorPoints,
+      minor: [
+        [0, 4], [8, 20], [12, 13], [20, 32], [24, 25], [32, 48], [35, 41], [40, 62],
+        [44, 50], [47, 55], [51, 42], [54, 47], [60, 34],
+        [66, 50], [70, 43], [77, 63], [81, 56], [88, 78], [92, 71], [100, 96],
+      ],
+      label: "Struktur yang sama dengan garis tipis berwarna hijau: setiap kaki major tersusun dari banyak swing kecil (minor).",
+    }),
+    "Major dan minor",
+    "Di timeframe kecil, setiap kaki major (garis tebal) tersusun dari swing minor (garis hijau).",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "struktur-dasar": basicStructure,
+  "tiga-kondisi": threeConditions,
+  "fibonacci-retracement": fibonacciRetracement,
+  "major-minor": majorMinor,
   "entry-plan": entryPlan,
   "liquidity-sweep": liquiditySweep,
   imbalance,

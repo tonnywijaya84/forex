@@ -16,6 +16,8 @@ Setiap tren tersusun dari dua gerakan yang bergantian.
 
 Uptrend adalah rangkaian expansion naik yang diselingi retracement turun. Downtrend adalah kebalikannya.
 
+<!-- gambar: struktur-dasar -->
+
 ## Tiga kondisi struktur
 
 | Kondisi | Tanda di chart | Artinya |
@@ -23,6 +25,8 @@ Uptrend adalah rangkaian expansion naik yang diselingi retracement turun. Downtr
 | Uptrend | Higher high (HH) dan higher low (HL) | Pembeli dominan |
 | Sideways | High dan low hampir sejajar (EQH dan EQL) | Belum ada pihak yang dominan |
 | Downtrend | Lower high (LH) dan lower low (LL) | Penjual dominan |
+
+<!-- gambar: tiga-kondisi -->
 
 ## Mengukur kedalaman koreksi
 
@@ -33,9 +37,13 @@ Dua aturan yang dipakai di kelas ini:
 1. Sebuah swing baru dianggap sah bila koreksinya mencapai minimal 50% dari leg sebelumnya.
 2. Area entry yang dicari berada di antara level 0,618 dan 0,81.
 
+<!-- gambar: fibonacci-retracement -->
+
 ## Struktur major dan minor
 
 Struktur major dibaca di timeframe besar dan menentukan arah serta target. Struktur minor dibaca di timeframe kecil dan dipakai untuk mencari titik masuk dengan risiko kecil. Urutan bacanya selalu sama: major dulu, baru minor.
+
+<!-- gambar: major-minor -->
 
 > Gerakan kecil di dalam sebuah retracement adalah struktur minor, bukan tanda bahwa tren berbalik.
 
