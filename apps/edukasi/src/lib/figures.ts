@@ -1767,7 +1767,191 @@ const orderBlockInvalid =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 7 (imbalance).
+
+const healthyVsImpulsive =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      labelWidth: 0,
+      candles: [
+        [30, 36, 28, 34],
+        [34, 38, 31, 33],
+        [33, 40, 32, 38],
+        [38, 41, 35, 37],
+        [37, 44, 36, 42],
+        [42, 45, 39, 40],
+        [40, 48, 39, 46],
+        [46, 49, 43, 45],
+        [45, 52, 44, 50],
+        [50, 54, 47, 52],
+      ],
+      label: "Harga naik perlahan. Setiap candle tumpang-tindih dengan candle sebelumnya.",
+    }),
+    "Gerakan sehat",
+    "Candle saling tumpang-tindih. Setiap harga sempat diperdagangkan dua arah.",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        [30, 34, 28, 33],
+        [33, 36, 31, 35],
+        [35, 52, 34, 51],
+        [51, 62, 49, 60],
+        [60, 63, 57, 62],
+        [62, 64, 58, 59],
+      ],
+      zones: [
+        { top: 49, bottom: 36, from: 1, label: "imbalance" },
+        { top: 57, bottom: 52, from: 2, label: "" },
+      ],
+      label: "Dua candle naik sangat panjang. Ada rentang harga yang hanya dilewati satu candle, ditandai kuning.",
+    }),
+    "Gerakan timpang",
+    "Harga melompat. Rentang kuning hanya dilewati satu candle: itulah imbalance.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Imbalance bullish di 40 sampai 49 dari tiga candle (1, 2, 3), lalu satu candle lanjutan.
+const imbalanceBase: Candle[] = [
+  [30, 36, 28, 34],
+  [34, 40, 33, 38],
+  [38, 58, 37, 56],
+  [56, 64, 49, 62],
+  [62, 66, 60, 65],
+];
+const imbalanceZone: Zone = { top: 49, bottom: 40, from: 1, label: "imbalance" };
+
+const imbalanceFill =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [...imbalanceBase, [65, 66, 55, 57], [57, 58, 44, 52], [52, 64, 51, 62], [62, 70, 61, 68]],
+      zone: imbalanceZone,
+      label: "Harga kembali turun masuk ke separuh zona imbalance, lalu naik lagi.",
+    }),
+    "Terisi sebagian",
+    "Harga kembali mengisi sebagian zona, lalu melanjutkan arah semula.",
+  ) +
+  panel(
+    candleChart({
+      candles: [...imbalanceBase, [65, 72, 64, 70], [70, 76, 68, 74], [74, 75, 69, 71], [71, 80, 70, 78]],
+      zone: imbalanceZone,
+      label: "Harga terus naik. Koreksinya berhenti jauh di atas zona imbalance.",
+    }),
+    "Tidak pernah terisi",
+    "Pada tren yang kuat, harga bisa pergi tanpa kembali ke zona.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const imbalanceAreas =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [...imbalanceBase, [65, 66, 54, 56], [56, 57, 45, 47], [47, 48, 35, 37]],
+      zone: imbalanceZone,
+      marks: [{ index: 7, text: "batal" }],
+      label: "Harga kembali ke zona imbalance dan candle terakhir ditutup di bawah seluruh zona. Imbalance batal.",
+    }),
+    "Batal",
+    "Candle ditutup melewati seluruh zona. Imbalance itu tidak ditunggu lagi.",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        [42, 44, 36, 38],
+        [38, 39, 32, 34],
+        [34, 50, 33, 49],
+        [49, 54, 45, 52],
+        [52, 55, 50, 53],
+        [53, 56, 51, 55],
+        [55, 68, 54, 67],
+        [67, 72, 62, 70],
+        [70, 73, 68, 72],
+        [72, 84, 71, 83],
+        [83, 88, 80, 86],
+      ],
+      zones: [
+        { top: 39, bottom: 32, from: 1, label: "order block", tone: "rule" },
+        { top: 45, bottom: 39, from: 1, label: "pangkal" },
+        { top: 62, bottom: 56, from: 5, label: "tengah" },
+        { top: 80, bottom: 73, from: 8, label: "ujung" },
+      ],
+      label: "Satu leg naik meninggalkan tiga imbalance: di pangkal tepat di atas order block, di tengah, dan di dekat ujung leg.",
+    }),
+    "Letak di leg",
+    "Dekat ujung paling mudah tersentuh, tetapi paling jauh dari level pembatal. Pangkal sebaliknya, dan bertumpuk dengan order block.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const targetBoxes = [
+  { from: 30, to: 100, top: 58, bottom: 50 },
+  { from: 0, to: 100, top: 99, bottom: 92 },
+];
+const targetBreaks = [{ from: 20, to: 100, y: 84, label: "" }];
+const targetSteps = [
+  { x: 66, y: 54, n: 1 },
+  { x: 60, y: 84, n: 2 },
+  { x: 46, y: 95.5, n: 3 },
+];
+const targetPoints: SwingPoint[] = [
+  { x: 0, y: 64 },
+  { x: 20, y: 84 },
+  { x: 40, y: 30 },
+  { x: 48, y: 40 },
+  { x: 58, y: 18, label: "entry", place: "below" },
+];
+const targetPlan: [number, number][] = [
+  [58, 18],
+  [72, 40],
+  [78, 34],
+  [98, 96],
+];
+
+const imbalanceTargets =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      arrow: false,
+      points: targetPoints,
+      boxes: targetBoxes,
+      breaks: targetBreaks,
+      steps: targetSteps,
+      plan: targetPlan,
+      label: "Posisi beli dari sebuah low. Sasaran pertama imbalance terdekat di atas, kedua swing high, ketiga imbalance timeframe besar yang lebih tinggi lagi.",
+    }),
+    "Posisi beli",
+    "Sasaran dari yang terdekat: 1 imbalance terdekat, 2 swing high berikutnya, 3 imbalance timeframe besar yang belum terisi.",
+  ) +
+  panel(
+    swingChart({
+      arrow: false,
+      points: flipPoints(targetPoints),
+      boxes: targetBoxes.map((box) => ({ ...box, top: flip(box.bottom), bottom: flip(box.top) })),
+      breaks: targetBreaks.map((mark) => ({ ...mark, y: flip(mark.y) })),
+      steps: targetSteps.map((step) => ({ ...step, y: flip(step.y) })),
+      plan: targetPlan.map(([px, py]) => [px, flip(py)]),
+      label: "Posisi jual dari sebuah high. Sasaran pertama imbalance terdekat di bawah, kedua swing low, ketiga imbalance timeframe besar yang lebih rendah lagi.",
+    }),
+    "Posisi jual",
+    "Urutan yang sama ke bawah: imbalance terdekat, swing low berikutnya, lalu imbalance timeframe besar.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "sehat-timpang": healthyVsImpulsive,
+  "imbalance-terisi": imbalanceFill,
+  "imbalance-area": imbalanceAreas,
+  "imbalance-target": imbalanceTargets,
   "premium-discount": premiumDiscount,
   "syarat-order-block": orderBlockRules,
   "ob-vs-supply-demand": orderBlockVsSupplyDemand,

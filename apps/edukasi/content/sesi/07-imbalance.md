@@ -13,6 +13,8 @@ Pada gerakan yang sehat, candle saling tumpang-tindih. Setiap harga yang dilewat
 
 Pada gerakan impulsif, satu sisi nyaris kosong. Harga melompat, dan ada rentang yang hanya dilewati satu candle tanpa sempat diuji dari arah sebaliknya. Rentang itulah imbalance. Nama lainnya fair value gap (FVG).
 
+<!-- gambar: sehat-timpang -->
+
 ## Cara mengenali: aturan tiga candle
 
 Imbalance dibaca dari tiga candle berurutan. Yang dibandingkan adalah wick candle pertama dan wick candle ketiga.
@@ -35,6 +37,8 @@ Di dalam imbalance, transaksi baru terjadi satu arah. Harga cenderung kembali ke
 
 Kata kuncinya adalah cenderung. Pada tren yang kuat, banyak imbalance tidak pernah terisi. Imbalance menandai area yang layak ditunggu, dan tidak menjamin harga akan sampai ke sana.
 
+<!-- gambar: imbalance-terisi -->
+
 ## Imbalance sebagai area yang ditunggu
 
 - **Kunjungan pertama yang dipakai.** Zona yang sudah pernah terisi penuh tidak ditunggu lagi.
@@ -49,6 +53,8 @@ Satu leg sering meninggalkan beberapa imbalance. Letaknya menentukan sifatnya.
 | Tengah leg | Sedang | Sedang |
 | Pangkal leg, dekat order block | Paling kecil | Paling sempit |
 
+<!-- gambar: imbalance-area -->
+
 ## Imbalance sebagai target
 
 Imbalance di timeframe besar yang belum terisi sering dituju harga. Karena itu ia bisa dipakai sebagai sasaran, dengan urutan dari yang terdekat:
@@ -58,6 +64,8 @@ Imbalance di timeframe besar yang belum terisi sering dituju harga. Karena itu i
 3. Imbalance timeframe besar yang belum terisi.
 
 Zona yang sudah terisi penuh tidak dipakai sebagai sasaran.
+
+<!-- gambar: imbalance-target -->
 
 ## Imbalance di dalam peta
 
