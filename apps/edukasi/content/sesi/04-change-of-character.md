@@ -16,6 +16,8 @@ Aturan penutupannya sama dengan BOS: yang dihitung adalah body, bukan wick.
 
 Higher low yang dimaksud adalah low yang mendahului BOS terakhir. Low kecil di dalam struktur minor tidak dihitung, karena menembusnya hanya berarti harga sedang terkoreksi.
 
+<!-- gambar: choch-arah -->
+
 ## BOS dan ChoCh
 
 Keduanya adalah penembusan struktur. Bedanya ada pada arah penembusan terhadap tren.
@@ -37,6 +39,8 @@ Satu ChoCh belum membentuk tren baru. Setelah ChoCh pada uptrend, ada tiga kemun
 2. **Mendatar.** Harga berputar di antara high dan low terakhir tanpa arah yang jelas.
 3. **Gagal.** Harga naik kembali dan menembus high terakhir. Penurunan tadi ternyata hanya retracement yang dalam.
 
+<!-- gambar: choch-kemungkinan -->
+
 Karena itu, respons terhadap ChoCh ada dua tahap. Begitu ChoCh muncul, berhenti mencari entry searah tren lama. Entry ke arah baru baru dicari setelah ada konfirmasi berupa BOS ke arah itu.
 
 ## ChoCh di timeframe besar dan kecil
@@ -45,6 +49,8 @@ Arti sebuah ChoCh bergantung pada timeframe tempat ia muncul.
 
 - **Di timeframe besar,** ChoCh mempertanyakan tren major. Ini peringatan bahwa peta perlu dibuat ulang.
 - **Di timeframe kecil,** ChoCh sering hanya menandai berakhirnya sebuah retracement. Saat harga H4 sedang terkoreksi turun di dalam uptrend, koreksi itu tampak sebagai downtrend di M15. ChoCh ke atas di M15 adalah tanda awal bahwa koreksi selesai dan harga kembali mengikuti tren major.
+
+<!-- gambar: choch-timeframe -->
 
 Kegunaan kedua inilah yang dipakai untuk mencari titik masuk. Urutannya dibahas lengkap di Sesi 9.
 
@@ -59,6 +65,8 @@ Dengan BOS dan ChoCh, satu putaran pasar bisa dibaca sebagai urutan berikut.
 3. ChoCh muncul: swing penjaga tren ditembus.
 4. Arah baru terkonfirmasi lewat BOS pertama ke arah sebaliknya.
 5. Tren baru berjalan, dan urutannya berulang.
+
+<!-- gambar: siklus-tren -->
 
 Tidak setiap putaran selesai. Banyak yang berhenti di langkah 3, lalu harga kembali ke tren lama.
 

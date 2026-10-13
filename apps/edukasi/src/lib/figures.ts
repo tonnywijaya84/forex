@@ -415,11 +415,13 @@ function swingChart(options: {
   breaks?: { from: number; to: number; y: number; label?: string; place?: "above" | "below" }[];
   /** Garis tegak berwarna merah antara dua harga, misalnya jarak stop. Tulisannya di bawah ujung bawah. */
   spans?: { x: number; from: number; to: number; label: string }[];
+  /** Lingkaran bernomor, misalnya urutan langkah yang dijelaskan di teks. */
+  steps?: { x: number; y: number; n: number }[];
   /** Ruang di kanan untuk tulisan level. */
   rightSpace?: number;
   arrow?: boolean;
 }): string {
-  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, breaks = [], spans = [], arrow = true } = options;
+  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, breaks = [], spans = [], steps = [], arrow = true } = options;
   const width = options.width ?? W;
   const height = options.height ?? H;
   const font = width < 260 ? 12 : 13;
@@ -482,12 +484,12 @@ function swingChart(options: {
     .map(
       (mark) =>
         `<line x1="${x(mark.from)}" x2="${x(mark.to)}" y1="${y(mark.y)}" y2="${y(mark.y)}" stroke="var(--color-ink)" stroke-width="1.5" stroke-dasharray="4 3"/>` +
-        text(
+        (mark.label === "" ? "" : text(
           (x(mark.from) + x(mark.to)) / 2,
           y(mark.y) + (mark.place === "below" ? font + 5 : -6),
           mark.label ?? "BOS",
           ` text-anchor="middle" font-weight="600" fill="var(--color-ink)"`,
-        ),
+        )),
     )
     .join("");
   const spanShapes = spans
@@ -504,6 +506,14 @@ function swingChart(options: {
         text(sx, lower + font + 6, span.label, ` text-anchor="middle" font-weight="600" fill="var(--color-bear-deep)"`)
       );
     })
+    .join("");
+
+  const stepShapes = steps
+    .map(
+      (step) =>
+        `<circle cx="${x(step.x)}" cy="${y(step.y)}" r="9" fill="var(--color-ink)"/>` +
+        `<text x="${x(step.x)}" y="${y(step.y) + 4}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-surface)">${step.n}</text>`,
+    )
     .join("");
 
   const pointLabels = points
@@ -536,6 +546,7 @@ function swingChart(options: {
     planShape +
     breakShapes +
     spanShapes +
+    stepShapes +
     pointLabels +
     segmentLabels +
     `</svg>`
@@ -1163,7 +1174,207 @@ const bosRetracement =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 4 (change of character).
+
+/** Membalik gambar naik menjadi gambar turun: harga dicerminkan, tulisan di atas pindah ke bawah. */
+const flip = (value: number) => 100 - value;
+const flipPoints = (points: SwingPoint[]): SwingPoint[] =>
+  points.map((point) => ({ ...point, y: flip(point.y), place: point.place === "below" ? "above" : "below" }));
+
+const chochUp: SwingPoint[] = [
+  { x: 0, y: 10 },
+  { x: 18, y: 50 },
+  { x: 30, y: 32 },
+  { x: 52, y: 72 },
+  { x: 64, y: 52, label: "HL", place: "below" },
+  { x: 80, y: 84 },
+  { x: 100, y: 30 },
+];
+
+const chochDirection =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      points: chochUp,
+      breaks: [
+        { from: 18, to: 42, y: 50 },
+        { from: 52, to: 76, y: 72 },
+        { from: 64, to: 94, y: 52, label: "ChoCh", place: "below" },
+      ],
+      label: "Uptrend dengan dua BOS, lalu harga turun dan ditutup di bawah higher low yang mendahului BOS terakhir. Itulah ChoCh.",
+    }),
+    "ChoCh pada uptrend",
+    "Candle ditutup di bawah higher low (HL) yang mendahului BOS terakhir.",
+  ) +
+  panel(
+    swingChart({
+      points: flipPoints(chochUp).map((point) => (point.label ? { ...point, label: "LH" } : point)),
+      breaks: [
+        { from: 18, to: 42, y: flip(50), place: "below" },
+        { from: 52, to: 76, y: flip(72), place: "below" },
+        { from: 64, to: 94, y: flip(52), label: "ChoCh" },
+      ],
+      label: "Downtrend dengan dua BOS, lalu harga naik dan ditutup di atas lower high yang mendahului BOS terakhir. Itulah ChoCh.",
+    }),
+    "ChoCh pada downtrend",
+    "Candle ditutup di atas lower high (LH) yang mendahului BOS terakhir.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Uptrend yang terkena ChoCh: higher low di 45 ditembus oleh penurunan ke 35.
+const afterChoch: SwingPoint[] = [
+  { x: 0, y: 25 },
+  { x: 16, y: 60 },
+  { x: 28, y: 45 },
+  { x: 42, y: 85 },
+  { x: 54, y: 35 },
+];
+const chochMark = { from: 28, to: 53, y: 45, label: "ChoCh", place: "below" as const };
+
+const chochOutcomes =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-3">` +
+  panel(
+    swingChart({
+      ...SMALL,
+      points: [...afterChoch, { x: 66, y: 60 }, { x: 82, y: 18 }],
+      breaks: [chochMark, { from: 54, to: 78, y: 35, place: "below" }],
+      label: "Setelah ChoCh, harga membentuk lower high lalu menembus low berikutnya. BOS turun mengonfirmasi downtrend.",
+    }),
+    "Berbalik",
+    "Lower high terbentuk, lalu BOS turun mengonfirmasi downtrend.",
+  ) +
+  panel(
+    swingChart({
+      ...SMALL,
+      arrow: false,
+      boxes: [{ from: 54, to: 100, top: 85, bottom: 35 }],
+      points: [...afterChoch, { x: 64, y: 74 }, { x: 74, y: 40 }, { x: 84, y: 76 }, { x: 94, y: 38 }, { x: 100, y: 55 }],
+      breaks: [chochMark],
+      label: "Setelah ChoCh, harga bolak-balik di antara high dan low terakhir tanpa arah yang jelas.",
+    }),
+    "Mendatar",
+    "Harga berputar di antara high dan low terakhir.",
+  ) +
+  panel(
+    swingChart({
+      ...SMALL,
+      points: [...afterChoch, { x: 66, y: 62 }, { x: 74, y: 50 }, { x: 96, y: 97 }],
+      breaks: [chochMark, { from: 42, to: 92, y: 85 }],
+      label: "Setelah ChoCh, harga naik lagi dan menembus high terakhir. Uptrend berlanjut.",
+    }),
+    "Gagal",
+    "High terakhir ditembus. Penurunan tadi hanya retracement yang dalam.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const chochTimeframe =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      points: [
+        { x: 0, y: 10 },
+        { x: 40, y: 88 },
+        { x: 68, y: 33 },
+        { x: 96, y: 96 },
+      ],
+      segments: [{ segment: 1, text: "koreksi" }],
+      band: { top: fib(10, 88, 0.618), bottom: fib(10, 88, 0.81), from: 40, label: "area" },
+      label: "Di H4, uptrend terkoreksi turun ke area 0,618 sampai 0,81, lalu naik lagi.",
+    }),
+    "H4: koreksi di dalam uptrend",
+    "Harga turun ke area 0,618 sampai 0,81, tetapi tren major masih naik.",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      band: { top: 40, bottom: 20, label: "area" },
+      points: [
+        { x: 0, y: 95 },
+        { x: 12, y: 70 },
+        { x: 20, y: 80, label: "LH" },
+        { x: 34, y: 55 },
+        { x: 42, y: 66, label: "LH" },
+        { x: 56, y: 40 },
+        { x: 64, y: 50 },
+        { x: 76, y: 28 },
+        { x: 100, y: 84 },
+      ],
+      breaks: [{ from: 64, to: 90, y: 50, label: "ChoCh" }],
+      label: "Koreksi yang sama di M15 tampak sebagai downtrend dengan lower high. Di dalam area, harga ditutup di atas lower high terakhir: ChoCh ke atas.",
+    }),
+    "M15: ChoCh ke atas",
+    "Di M15 koreksi tampak sebagai downtrend. ChoCh ke atas adalah tanda awal koreksi selesai.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Satu putaran dari uptrend ke downtrend. Nomor lingkaran sesuai lima langkah di teks.
+const cycleUp: SwingPoint[] = [
+  { x: 0, y: 8 },
+  { x: 12, y: 38 },
+  { x: 18, y: 26 },
+  { x: 30, y: 60 },
+  { x: 37, y: 46 },
+  { x: 50, y: 82 },
+  { x: 58, y: 64 },
+  { x: 66, y: 77 },
+  { x: 76, y: 40 },
+  { x: 84, y: 56 },
+  { x: 100, y: 14 },
+];
+const cycleBreaks = [
+  { from: 12, to: 23, y: 38 },
+  { from: 30, to: 43, y: 60 },
+  { from: 50, to: 68, y: 82 },
+  { from: 37, to: 76, y: 46 },
+  { from: 76, to: 92, y: 40 },
+].map((mark) => ({ ...mark, label: "" }));
+const cycleSteps = [
+  { x: 21, y: 58, n: 1 },
+  { x: 66, y: 91, n: 2 },
+  { x: 68, y: 34, n: 3 },
+  { x: 96, y: 48, n: 4 },
+  { x: 88, y: 10, n: 5 },
+];
+
+const trendCycle =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      points: cycleUp,
+      breaks: cycleBreaks,
+      steps: cycleSteps,
+      label: "Satu putaran: uptrend dengan BOS berulang (1), puncak baru gagal terbentuk (2), ChoCh menembus higher low (3), BOS turun pertama (4), lalu downtrend berjalan (5).",
+    }),
+    "Dari uptrend ke downtrend",
+    "1 BOS berulang, 2 gagal membuat BOS, 3 ChoCh, 4 BOS pertama ke arah baru, 5 tren baru berjalan.",
+  ) +
+  panel(
+    swingChart({
+      points: flipPoints(cycleUp),
+      breaks: cycleBreaks.map((mark) => ({ ...mark, y: flip(mark.y) })),
+      steps: cycleSteps.map((step) => ({ ...step, y: flip(step.y) })),
+      label: "Putaran sebaliknya: downtrend dengan BOS berulang (1), lembah baru gagal terbentuk (2), ChoCh menembus lower high (3), BOS naik pertama (4), lalu uptrend berjalan (5).",
+    }),
+    "Dari downtrend ke uptrend",
+    "Urutan yang sama, arahnya terbalik.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "choch-arah": chochDirection,
+  "choch-kemungkinan": chochOutcomes,
+  "choch-timeframe": chochTimeframe,
+  "siklus-tren": trendCycle,
   "bos-arah": bosDirection,
   "bos-koreksi": bosCorrection,
   "bos-retracement": bosRetracement,
