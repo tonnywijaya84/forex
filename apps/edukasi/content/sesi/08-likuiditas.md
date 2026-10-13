@@ -27,6 +27,8 @@ Saat harga menyentuh kumpulan itu, semua stop berubah menjadi order pasar pada w
 
 Tambahkan satu dari Sesi 2: high dan low sesi Asia.
 
+<!-- gambar: likuiditas-tempat -->
+
 ## Sapuan likuiditas
 
 Sapuan terjadi saat harga melewati sebuah level, mengambil order di baliknya, lalu ditutup kembali. Ini gerakan yang sama dengan wick di Sesi 3 dan rejection block di Sesi 5.
@@ -46,6 +48,8 @@ Dua pola ini meninggalkan likuiditas di jalur menuju sebuah zona.
 
 Bila ada level yang jelas di antara harga dan zona yang ditunggu, perkirakan level itu disapu lebih dulu.
 
+<!-- gambar: compression-inducement -->
+
 ## Letak stop-loss Anda sendiri
 
 > Bila stop-loss Anda berada di tempat yang paling mudah ditebak, order Anda termasuk likuiditas yang dicari.
@@ -54,6 +58,8 @@ Dua kebiasaan yang mengikutinya:
 
 1. Letakkan level pembatal di luar zona yang dipakai, bukan tepat di swing terdekat yang terlihat semua orang.
 2. Jarak stop yang lebih lebar diimbangi dengan ukuran posisi yang lebih kecil. Cara menghitungnya ada di Sesi 9.
+
+<!-- gambar: letak-stop -->
 
 ## Likuiditas sebagai sasaran
 
@@ -67,6 +73,8 @@ Dengan semua lapisan sampai sesi ini, urutan sebelum sebuah entry menjadi sepert
 2. Harga terkoreksi dan membentuk likuiditas di atas zona, misalnya lembah kecil atau equal low.
 3. Harga menyapu likuiditas itu dan masuk ke order block atau imbalance.
 4. ChoCh muncul di timeframe kecil.
+
+<!-- gambar: urutan-entry -->
 
 Sesi 9 mengubah urutan ini menjadi aturan entry, stop, dan ukuran posisi.
 
