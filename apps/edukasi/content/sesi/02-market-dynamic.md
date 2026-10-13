@@ -22,6 +22,8 @@ Pasar bergantian di antara dua keadaan. Saat pembeli dan penjual sepakat pada ki
 
 Keduanya selalu bergantian: expansion berakhir di kisaran baru, dan kisaran itu suatu saat ditinggalkan lewat expansion berikutnya. Karena itu pertanyaan pertama saat membuka chart adalah apakah pasar sedang berputar atau sedang berpindah.
 
+<!-- gambar: seimbang-berpindah -->
+
 ## Jam sesi pasar
 
 Pasar forex buka 24 jam pada hari kerja, tetapi keramaiannya mengikuti jam kerja tiga pusat keuangan.
@@ -34,9 +36,13 @@ Pasar forex buka 24 jam pada hari kerja, tetapi keramaiannya mengikuti jam kerja
 
 Jam London dan New York mundur satu jam pada musim dingin di Eropa dan Amerika Serikat. High dan low sesi Asia layak ditandai, karena sering menjadi acuan pada sesi berikutnya.
 
+<!-- gambar: jam-sesi -->
+
 ## Berita ekonomi
 
 Rilis data berdampak tinggi, misalnya keputusan suku bunga, inflasi, dan data tenaga kerja Amerika Serikat, dapat menggerakkan harga jauh dalam hitungan detik. Pada saat itu spread melebar dan order bisa terisi di harga yang berbeda dari yang diminta.
+
+<!-- gambar: rilis-berita -->
 
 Dua kebiasaan yang dipakai di kelas ini:
 
@@ -54,6 +60,8 @@ Market mapping adalah peta yang dibuat sebelum order. Isinya arah pasar, area ya
 5. Tulis skenarionya dalam satu kalimat: apa yang ditunggu, dan apa yang membatalkan peta.
 6. Setelah peta jadi, turun ke timeframe kecil untuk membaca struktur minor.
 
+<!-- gambar: peta-pasar -->
+
 > Peta dibuat sebelum harga sampai ke area yang ditunggu. Peta yang dibuat sesudahnya hanya membenarkan posisi yang sudah terlanjur dibuka.
 
 Sesi-sesi berikutnya menambah lapisan pada peta ini: break of structure, order block, imbalance, dan likuiditas.
@@ -61,6 +69,8 @@ Sesi-sesi berikutnya menambah lapisan pada peta ini: break of structure, order b
 ## Struktur di chart nyata
 
 Di buku, sebuah leg digambar sebagai satu garis lurus. Di chart nyata, satu leg major tersusun dari banyak swing minor yang naik turun. Saat memetakan, ukur leg major dari titik awalnya sampai ujungnya, dan abaikan puncak serta lembah kecil di dalamnya.
+
+<!-- gambar: leg-chart-nyata -->
 
 Cara termudah melihatnya adalah fitur bar replay di platform chart: putar ulang satu leg di H4 candle demi candle, lalu perhatikan berapa banyak struktur minor yang terbentuk di dalamnya.
 
