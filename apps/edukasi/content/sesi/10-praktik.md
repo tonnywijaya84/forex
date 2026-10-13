@@ -22,6 +22,8 @@ Selama latihan, pakai satu pair, satu pasangan timeframe, dan satu jenis setup. 
 
 Dana di akun riil haruslah dana yang siap hilang seluruhnya.
 
+<!-- gambar: tahap-latihan -->
+
 ## Jurnal trading
 
 Jurnal mengubah pengalaman menjadi data. Tanpa jurnal, evaluasi hanya mengandalkan ingatan, dan ingatan cenderung menyimpan posisi yang menang.
@@ -60,6 +62,8 @@ Contoh hitungan untuk 20 posisi dengan rasio 1:2:
 Win rate 40% berada di atas win rate impas 33,3% untuk rasio 1:2 dari Sesi 9. Namun 20 posisi masih contoh yang kecil, jadi kesimpulannya bersifat sementara.
 
 Rangkaian rugi perlu dipahami sebelum terjadi. Dengan win rate 40%, peluang mengalami lima kali kalah berturut-turut di dalam 20 posisi adalah sekitar 48%, hampir satu dari dua. Rangkaian seperti itu belum membuktikan bahwa strateginya rusak. Inilah alasan risiko per posisi dijaga tetap kecil.
+
+<!-- gambar: kurva-hasil -->
 
 ## Membaca hasil evaluasi
 

@@ -17,6 +17,8 @@ Leg yang menghasilkan BOS biasanya meninggalkan tiga area di antara level 0,5 da
 | Imbalance | Tengah leg | Cenderung terisi saat harga turun lebih dalam. |
 | Order block utama | Pangkal leg | Area yang ditunggu, terutama bila likuiditas di dekatnya belum disapu. |
 
+<!-- gambar: tiga-area -->
+
 ## Checklist enam langkah
 
 Kerjakan berurutan. Bila satu langkah tidak terpenuhi, tidak ada entry.
@@ -27,6 +29,8 @@ Kerjakan berurutan. Bila satu langkah tidak terpenuhi, tidak ada entry.
 4. **Tunggu ChoCh di timeframe kecil** setelah harga masuk ke area itu.
 5. **Tandai order block** yang lahir dari gerakan ChoCh tersebut.
 6. **Pasang rencananya:** limit order di order block, stop di luar zona, dan target di swing high atau swing low terdekat.
+
+<!-- gambar: checklist-langkah -->
 
 <!-- gambar: entry-plan -->
 
@@ -54,6 +58,8 @@ Dengan risiko yang sama, lot berubah mengikuti jarak stop.
 
 Pada stop 15 pip, hasil hitungnya 0,067 lot dan dibulatkan ke bawah. Nilai pip berbeda untuk setiap pair dan untuk emas, jadi periksa spesifikasi kontrak di broker sebelum menghitung.
 
+<!-- gambar: lot-stop -->
+
 ## Rasio risiko-imbal hasil dan win rate
 
 Rasio risiko-imbal hasil membandingkan jarak ke stop dengan jarak ke target. Rasio 1:2 berarti target berjarak dua kali jarak stop.
@@ -70,6 +76,8 @@ Rasio ini menentukan win rate terendah agar hasilnya impas:
 | 1:3 | 25% |
 
 Angka di atas belum memperhitungkan spread, komisi, dan swap. Dalam praktik, win rate yang dibutuhkan sedikit lebih tinggi.
+
+<!-- gambar: rasio-winrate -->
 
 Sebagai hitungan, ambil 10 posisi dengan rasio 1:2 dan risiko yang sama, lalu sebut risiko itu 1R.
 
