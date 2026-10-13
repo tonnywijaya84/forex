@@ -11,7 +11,8 @@ const PAD = 16;
 const LABEL_WIDTH = 74;
 
 type Level = { price: number; from: number; label: string };
-type Zone = { top: number; bottom: number; from: number; label: string };
+/** `tone` "rule" memberi warna abu-abu, untuk membedakan dua zona yang berdampingan. */
+type Zone = { top: number; bottom: number; from: number; label: string; tone?: "mark" | "rule" };
 /** Tulisan kecil di bawah sebuah candle, misalnya nomor urut. */
 type Mark = { index: number; text: string };
 
@@ -19,6 +20,8 @@ type Mark = { index: number; text: string };
 type TimeWindow = { from: number; to: number; label: string; shade?: boolean };
 /** Garis lurus dari low candle `start` ke high candle `end`, misalnya satu leg major. */
 type Leg = { start: number; end: number; startLabel: string; endLabel: string };
+/** Lingkaran bernomor di atas sebuah candle. `price` "volume" menaruhnya di atas batang volume candle itu. */
+type Badge = { index: number; price: number | "volume"; text: string };
 
 /** Grafik candlestick kecil. Bisa diberi garis level putus-putus, zona berwarna, dan tulisan di bawah candle. */
 function candleChart(options: {
@@ -27,23 +30,32 @@ function candleChart(options: {
   level?: Level;
   levels?: Level[];
   zone?: Zone;
+  zones?: Zone[];
   marks?: Mark[];
   windows?: TimeWindow[];
   leg?: Leg;
+  /** Tick volume per candle, digambar sebagai batang di bawah grafik. */
+  volumes?: number[];
+  badges?: Badge[];
   /** Lebar kolom kiri untuk tulisan level. 0 bila grafik tidak memakai level. */
   labelWidth?: number;
 }): string {
-  const { candles, label, zone, marks = [], windows = [], leg } = options;
+  const { candles, label, marks = [], windows = [], leg, volumes, badges = [] } = options;
   const levels = [...(options.level ? [options.level] : []), ...(options.levels ?? [])];
+  const zones = [...(options.zone ? [options.zone] : []), ...(options.zones ?? [])];
   const labelWidth = options.labelWidth ?? LABEL_WIDTH;
   // Garis level boleh berada di luar rentang candle, misalnya stop di balik zona.
   const top = Math.max(...candles.map((candle) => candle[1]), ...levels.map((level) => level.price)) + 6;
   const bottom = Math.min(...candles.map((candle) => candle[2]), ...levels.map((level) => level.price)) - 6;
   // Nama rentang waktu ditulis di atas candle, jadi candle tertinggi digeser sedikit ke bawah.
   const plotTop = PAD + (windows.length > 0 ? 20 : 0);
+  // Batang volume mengambil 40 piksel terbawah.
+  const VOLUME_HEIGHT = 30;
+  const plotBottom = H - PAD - (volumes ? VOLUME_HEIGHT + 10 : 0);
   const step = (W - PAD * 2 - labelWidth) / candles.length;
   const x = (index: number) => PAD + labelWidth + step * (index + 0.5);
-  const y = (price: number) => plotTop + ((top - price) / (top - bottom)) * (H - PAD - plotTop);
+  const y = (price: number) => plotTop + ((top - price) / (top - bottom)) * (plotBottom - plotTop);
+  const volumeHeight = (index: number) => (volumes ? (volumes[index] / Math.max(...volumes)) * VOLUME_HEIGHT : 0);
   const caption = (text: string, price: number) =>
     `<text x="${PAD}" y="${y(price) + 4}" font-size="13" fill="var(--color-ink-soft)">${text}</text>`;
 
@@ -59,10 +71,31 @@ function candleChart(options: {
     })
     .join("");
 
-  const zoneShape = zone
-    ? `<rect x="${x(zone.from) - step * 0.5}" y="${y(zone.top)}" width="${W - PAD - (x(zone.from) - step * 0.5)}" height="${y(zone.bottom) - y(zone.top)}" fill="var(--color-mark)" fill-opacity="0.4"/>` +
-      caption(zone.label, (zone.top + zone.bottom) / 2)
+  const zoneShape = zones
+    .map(
+      (zone) =>
+        `<rect x="${x(zone.from) - step * 0.5}" y="${y(zone.top)}" width="${W - PAD - (x(zone.from) - step * 0.5)}" height="${y(zone.bottom) - y(zone.top)}" fill="${zone.tone === "rule" ? "var(--color-rule)" : "var(--color-mark)"}" fill-opacity="${zone.tone === "rule" ? 0.7 : 0.4}"/>` +
+        caption(zone.label, (zone.top + zone.bottom) / 2),
+    )
+    .join("");
+  const volumeShapes = volumes
+    ? candles
+        .map(([open, , , close], index) => {
+          const height = volumeHeight(index);
+          return `<rect x="${x(index) - step * 0.3}" y="${H - PAD - height}" width="${step * 0.6}" height="${height}" fill="${close >= open ? "var(--color-bull)" : "var(--color-bear)"}" fill-opacity="0.45"/>`;
+        })
+        .join("") +
+      `<text x="${PAD}" y="${H - PAD - 4}" font-size="13" fill="var(--color-ink-soft)">volume</text>`
     : "";
+  const badgeShapes = badges
+    .map((badge) => {
+      const cy = badge.price === "volume" ? H - PAD - volumeHeight(badge.index) - 13 : y(badge.price);
+      return (
+        `<circle cx="${x(badge.index)}" cy="${cy}" r="9" fill="var(--color-ink)"/>` +
+        `<text x="${x(badge.index)}" y="${cy + 4}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-surface)">${badge.text}</text>`
+      );
+    })
+    .join("");
   const levelShape = levels
     .map(
       (level) =>
@@ -102,9 +135,11 @@ function candleChart(options: {
     windowShapes +
     zoneShape +
     levelShape +
+    volumeShapes +
     bars +
     legShape +
     markShapes +
+    badgeShapes +
     `</svg>`
   );
 }
@@ -417,11 +452,13 @@ function swingChart(options: {
   spans?: { x: number; from: number; to: number; label: string }[];
   /** Lingkaran bernomor, misalnya urutan langkah yang dijelaskan di teks. */
   steps?: { x: number; y: number; n: number }[];
+  /** Latar tipis hijau (bull) atau merah (bear) selebar grafik, dengan nama di kanan. Misalnya premium dan discount. */
+  shades?: { top: number; bottom: number; from?: number; tone: "bull" | "bear"; label: string }[];
   /** Ruang di kanan untuk tulisan level. */
   rightSpace?: number;
   arrow?: boolean;
 }): string {
-  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, breaks = [], spans = [], steps = [], arrow = true } = options;
+  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, breaks = [], spans = [], steps = [], shades = [], arrow = true } = options;
   const width = options.width ?? W;
   const height = options.height ?? H;
   const font = width < 260 ? 12 : 13;
@@ -437,6 +474,13 @@ function swingChart(options: {
     ? `<rect x="${x(band.from ?? 0)}" y="${y(band.top)}" width="${x(100) - x(band.from ?? 0)}" height="${y(band.bottom) - y(band.top)}" fill="var(--color-mark)" fill-opacity="0.4"/>` +
       (band.label ? text(x(100) + 6, (y(band.top) + y(band.bottom)) / 2 + 4, band.label) : "")
     : "";
+  const shadeShapes = shades
+    .map(
+      (shade) =>
+        `<rect x="${x(shade.from ?? 0)}" y="${y(shade.top)}" width="${x(100) - x(shade.from ?? 0)}" height="${y(shade.bottom) - y(shade.top)}" fill="var(--color-${shade.tone})" fill-opacity="0.1"/>` +
+        text(x(100) + 6, (y(shade.top) + y(shade.bottom)) / 2 + 4, shade.label, ` font-weight="600" fill="var(--color-${shade.tone}-deep)"`),
+    )
+    .join("");
   const boxShapes = boxes
     .map(
       (box) =>
@@ -537,6 +581,7 @@ function swingChart(options: {
 
   return (
     `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${label}" class="h-auto w-full bg-surface">` +
+    shadeShapes +
     boxShapes +
     bandShape +
     levelShapes +
@@ -1548,7 +1593,185 @@ const rejectionBlock =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 6 (order block).
+
+/** Leg major dari 5 ke 95, dibagi dua di 0,5: premium di atas, discount di bawah. */
+function premiumDiscountPanel(direction: "up" | "down"): string {
+  const up = direction === "up";
+  const start = up ? 5 : 95;
+  const end = up ? 95 : 5;
+  const at = (ratio: number) => fib(start, end, ratio);
+  return swingChart({
+    rightSpace: 64,
+    points: [
+      { x: 8, y: start, label: up ? "low" : "high", place: up ? "below" : "above" },
+      { x: 46, y: end, label: up ? "high" : "low", place: up ? "above" : "below" },
+      { x: 72, y: at(0.7) },
+      { x: 96, y: up ? 98 : 2 },
+    ],
+    shades: [
+      { top: 95, bottom: 50, from: 8, tone: "bear", label: "premium" },
+      { top: 50, bottom: 5, from: 8, tone: "bull", label: "discount" },
+    ],
+    levels: [{ y: 50, from: 8, label: "0,5", strong: true }],
+    band: { top: Math.max(at(0.618), at(0.81)), bottom: Math.min(at(0.618), at(0.81)), from: 46 },
+    label: up
+      ? "Leg naik dibagi dua di level 0,5. Separuh atas premium, separuh bawah discount. Area kuning 0,618 sampai 0,81 berada di discount."
+      : "Leg turun dibagi dua di level 0,5. Separuh atas premium, separuh bawah discount. Area kuning 0,618 sampai 0,81 berada di premium.",
+  });
+}
+
+const premiumDiscount =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(premiumDiscountPanel("up"), "Uptrend", "Area 0,618 sampai 0,81 (kuning) berada di discount, separuh bawah leg.") +
+  panel(premiumDiscountPanel("down"), "Downtrend", "Area 0,618 sampai 0,81 (kuning) berada di premium, separuh atas leg.") +
+  `</div>` +
+  `</figure>`;
+
+const orderBlockRules =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [
+        [62, 64, 56, 57],
+        [57, 58, 50, 52],
+        [52, 53, 46, 49],
+        [49, 64, 48, 63],
+        [63, 74, 62, 72],
+        [72, 76, 69, 70],
+      ],
+      zones: [
+        { top: 53, bottom: 46, from: 2, label: "order block" },
+        { top: 62, bottom: 53, from: 2, label: "imbalance", tone: "rule" },
+      ],
+      badges: [
+        { index: 2, price: 42, text: "1" },
+        { index: 5, price: 57.5, text: "2" },
+      ],
+      label: "Candle turun terakhir menembus low candle sebelumnya, lalu dua candle naik kuat meninggalkan celah harga di atas order block.",
+    }),
+    "Syarat 1 dan 2",
+    "1: low candle sebelumnya tersapu. 2: gerakan naik meninggalkan imbalance (abu-abu).",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        [50, 58, 49, 56],
+        [56, 62, 55, 60],
+        [60, 61, 52, 53],
+        [53, 54, 47, 49],
+        [49, 50, 44, 46],
+        [46, 60, 45, 59],
+        [59, 70, 58, 68],
+        [68, 72, 65, 66],
+      ],
+      volumes: [30, 26, 28, 25, 34, 95, 80, 36],
+      level: { price: 62, from: 1, label: "swing high" },
+      zone: { top: 50, bottom: 44, from: 4, label: "order block" },
+      badges: [
+        { index: 5, price: "volume", text: "3" },
+        { index: 6, price: 75, text: "4" },
+      ],
+      label: "Candle naik dari order block punya volume jauh lebih besar, dan candle berikutnya ditutup di atas swing high.",
+    }),
+    "Syarat 3 dan 4",
+    "3: volume candle impuls jauh lebih besar. 4: gerakannya ditutup di atas swing high (BOS). Syarat 5 ada di gambar premium dan discount di atas.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Tiga candle dasar (base) sebelum harga naik. Candle turun terakhirnya adalah order block.
+const baseRally: Candle[] = [
+  [62, 64, 54, 56],
+  [56, 57, 48, 50],
+  [50, 58, 45, 52],
+  [52, 56, 46, 48],
+  [48, 50, 43, 45],
+  [45, 60, 44, 59],
+  [59, 70, 58, 68],
+  [68, 72, 65, 66],
+  [66, 67, 55, 57],
+  [57, 64, 56, 63],
+];
+
+const orderBlockVsSupplyDemand =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: baseRally,
+      zone: { top: 50, bottom: 43, from: 4, label: "order block" },
+      label: "Zona order block hanya selebar satu candle. Koreksi berikutnya berhenti di atasnya.",
+    }),
+    "Order block",
+    "Satu candle. Jarak stop lebih kecil, tetapi lebih jarang tersentuh harga.",
+  ) +
+  panel(
+    candleChart({
+      candles: baseRally,
+      zone: { top: 58, bottom: 43, from: 2, label: "demand" },
+      label: "Zona demand mencakup tiga candle dasar. Koreksi berikutnya masuk ke bagian atas zona itu.",
+    }),
+    "Zona supply-demand",
+    "Beberapa candle. Lebih sering tersentuh, tetapi jarak stop lebih lebar.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+// Bullish order block di 40 sampai 49, lalu harga naik dan kembali.
+const orderBlockStart: Candle[] = [
+  [60, 62, 52, 54],
+  [54, 55, 46, 48],
+  [48, 49, 40, 42],
+  [42, 58, 41, 57],
+  [57, 66, 56, 64],
+];
+
+const orderBlockInvalid =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      candles: [...orderBlockStart, [64, 65, 52, 54], [54, 55, 44, 46], [46, 47, 34, 36]],
+      zone: { top: 49, bottom: 40, from: 2, label: "order block" },
+      marks: [{ index: 7, text: "batal" }],
+      label: "Harga kembali ke order block dan candle terakhir ditutup di bawah low zona. Order block batal.",
+    }),
+    "Ditembus",
+    "Candle ditutup di bawah ujung terjauh zona. Order block batal.",
+  ) +
+  panel(
+    candleChart({
+      candles: [
+        ...orderBlockStart,
+        [64, 65, 50, 52],
+        [52, 53, 45, 51],
+        [51, 62, 50, 60],
+        [60, 61, 50, 52],
+        [52, 53, 43, 48],
+        [48, 52, 46, 50],
+      ],
+      zone: { top: 49, bottom: 40, from: 2, label: "order block" },
+      marks: [
+        { index: 6, text: "1" },
+        { index: 9, text: "2" },
+      ],
+      label: "Harga masuk ke order block dua kali. Kunjungan pertama memantul kuat, kunjungan kedua pantulannya lemah.",
+    }),
+    "Sudah dikunjungi",
+    "Kunjungan pertama (1) paling diperhatikan. Pada kunjungan berikutnya (2), zona dianggap lebih lemah.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "premium-discount": premiumDiscount,
+  "syarat-order-block": orderBlockRules,
+  "ob-vs-supply-demand": orderBlockVsSupplyDemand,
+  "ob-batal": orderBlockInvalid,
   "fake-retracement": fakeRetracement,
   "fake-bos": fakeBos,
   "confusion-structure": confusionStructure,
