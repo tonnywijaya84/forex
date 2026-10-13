@@ -15,6 +15,11 @@ type Zone = { top: number; bottom: number; from: number; label: string };
 /** Tulisan kecil di bawah sebuah candle, misalnya nomor urut. */
 type Mark = { index: number; text: string };
 
+/** Rentang waktu yang diberi latar dan nama di atasnya, misalnya satu sesi pasar. */
+type TimeWindow = { from: number; to: number; label: string; shade?: boolean };
+/** Garis lurus dari low candle `start` ke high candle `end`, misalnya satu leg major. */
+type Leg = { start: number; end: number; startLabel: string; endLabel: string };
+
 /** Grafik candlestick kecil. Bisa diberi garis level putus-putus, zona berwarna, dan tulisan di bawah candle. */
 function candleChart(options: {
   candles: Candle[];
@@ -23,15 +28,22 @@ function candleChart(options: {
   levels?: Level[];
   zone?: Zone;
   marks?: Mark[];
+  windows?: TimeWindow[];
+  leg?: Leg;
+  /** Lebar kolom kiri untuk tulisan level. 0 bila grafik tidak memakai level. */
+  labelWidth?: number;
 }): string {
-  const { candles, label, zone, marks = [] } = options;
+  const { candles, label, zone, marks = [], windows = [], leg } = options;
   const levels = [...(options.level ? [options.level] : []), ...(options.levels ?? [])];
+  const labelWidth = options.labelWidth ?? LABEL_WIDTH;
   // Garis level boleh berada di luar rentang candle, misalnya stop di balik zona.
   const top = Math.max(...candles.map((candle) => candle[1]), ...levels.map((level) => level.price)) + 6;
   const bottom = Math.min(...candles.map((candle) => candle[2]), ...levels.map((level) => level.price)) - 6;
-  const step = (W - PAD * 2 - LABEL_WIDTH) / candles.length;
-  const x = (index: number) => PAD + LABEL_WIDTH + step * (index + 0.5);
-  const y = (price: number) => PAD + ((top - price) / (top - bottom)) * (H - PAD * 2);
+  // Nama rentang waktu ditulis di atas candle, jadi candle tertinggi digeser sedikit ke bawah.
+  const plotTop = PAD + (windows.length > 0 ? 20 : 0);
+  const step = (W - PAD * 2 - labelWidth) / candles.length;
+  const x = (index: number) => PAD + labelWidth + step * (index + 0.5);
+  const y = (price: number) => plotTop + ((top - price) / (top - bottom)) * (H - PAD - plotTop);
   const caption = (text: string, price: number) =>
     `<text x="${PAD}" y="${y(price) + 4}" font-size="13" fill="var(--color-ink-soft)">${text}</text>`;
 
@@ -66,11 +78,32 @@ function candleChart(options: {
     )
     .join("");
 
+  const windowShapes = windows
+    .map((span) => {
+      const left = x(span.from) - step * 0.5;
+      const right = x(span.to) + step * 0.5;
+      return (
+        (span.shade === false
+          ? ""
+          : `<rect x="${left}" y="${PAD}" width="${right - left}" height="${H - PAD * 2}" fill="var(--color-rule)" fill-opacity="0.4"/>`) +
+        `<text x="${(left + right) / 2}" y="${PAD + 14}" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-ink-soft)">${span.label}</text>`
+      );
+    })
+    .join("");
+
+  const legShape = leg
+    ? `<line x1="${x(leg.start)}" y1="${y(candles[leg.start][2])}" x2="${x(leg.end)}" y2="${y(candles[leg.end][1])}" stroke="var(--color-ink)" stroke-width="2.5" stroke-linecap="round"/>` +
+      `<text x="${x(leg.start) - step * 0.5}" y="${y(candles[leg.start][2]) + 17}" font-size="13" font-weight="600" fill="var(--color-ink)">${leg.startLabel}</text>` +
+      `<text x="${x(leg.end) + step * 0.5}" y="${y(candles[leg.end][1]) - 8}" text-anchor="end" font-size="13" font-weight="600" fill="var(--color-ink)">${leg.endLabel}</text>`
+    : "";
+
   return (
     `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" class="h-auto w-full bg-surface">` +
+    windowShapes +
     zoneShape +
     levelShape +
     bars +
+    legShape +
     markShapes +
     `</svg>`
   );
@@ -373,12 +406,16 @@ function swingChart(options: {
   /** Tulisan di tengah ruas: `segment` 0 berarti ruas antara titik 0 dan titik 1. */
   segments?: { segment: number; text: string }[];
   levels?: SwingLevel[];
-  band?: { top: number; bottom: number; from?: number };
+  band?: { top: number; bottom: number; from?: number; label?: string };
+  /** Kotak berwarna dengan batas kiri dan kanan, misalnya kisaran harga. Namanya ditulis di atas kotak. */
+  boxes?: { from: number; to: number; top: number; bottom: number; label?: string }[];
+  /** Jalur rencana yang digambar putus-putus dengan panah di ujungnya, misalnya skenario di peta. */
+  plan?: [number, number][];
   /** Ruang di kanan untuk tulisan level. */
   rightSpace?: number;
   arrow?: boolean;
 }): string {
-  const { label, points, minor, segments = [], levels = [], band, arrow = true } = options;
+  const { label, points, minor, segments = [], levels = [], band, boxes = [], plan, arrow = true } = options;
   const width = options.width ?? W;
   const height = options.height ?? H;
   const font = width < 260 ? 12 : 13;
@@ -391,8 +428,16 @@ function swingChart(options: {
     `<text x="${tx}" y="${ty}" font-size="${font}" fill="var(--color-ink-soft)"${extra}>${content}</text>`;
 
   const bandShape = band
-    ? `<rect x="${x(band.from ?? 0)}" y="${y(band.top)}" width="${x(100) - x(band.from ?? 0)}" height="${y(band.bottom) - y(band.top)}" fill="var(--color-mark)" fill-opacity="0.4"/>`
+    ? `<rect x="${x(band.from ?? 0)}" y="${y(band.top)}" width="${x(100) - x(band.from ?? 0)}" height="${y(band.bottom) - y(band.top)}" fill="var(--color-mark)" fill-opacity="0.4"/>` +
+      (band.label ? text(x(100) + 6, (y(band.top) + y(band.bottom)) / 2 + 4, band.label) : "")
     : "";
+  const boxShapes = boxes
+    .map(
+      (box) =>
+        `<rect x="${x(box.from)}" y="${y(box.top)}" width="${x(box.to) - x(box.from)}" height="${y(box.bottom) - y(box.top)}" fill="var(--color-mark)" fill-opacity="0.4"/>` +
+        (box.label ? text(x(box.from), y(box.top) - 7, box.label) : ""),
+    )
+    .join("");
   const levelShapes = levels
     .map(
       (level) =>
@@ -405,18 +450,29 @@ function swingChart(options: {
     : "";
   const path = `<polyline points="${points.map((point) => `${x(point.x)},${y(point.y)}`).join(" ")}" fill="none" stroke="var(--color-ink)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
 
+  /** Kepala panah di titik `to`, searah ruas dari `from`. Koordinat 0-100. */
+  const arrowhead = (from: [number, number], to: [number, number]) => {
+    const ex = x(to[0]);
+    const ey = y(to[1]);
+    const angle = Math.atan2(ey - y(from[1]), ex - x(from[0]));
+    const size = 9;
+    const corner = (offset: number) =>
+      `${ex - size * Math.cos(angle + offset)},${ey - size * Math.sin(angle + offset)}`;
+    return `<polygon points="${ex},${ey} ${corner(0.45)} ${corner(-0.45)}" fill="var(--color-ink)"/>`;
+  };
+
   let head = "";
   if (arrow && points.length > 1) {
     const end = points[points.length - 1];
     const before = points[points.length - 2];
-    const ex = x(end.x);
-    const ey = y(end.y);
-    const angle = Math.atan2(ey - y(before.y), ex - x(before.x));
-    const size = 9;
-    const corner = (offset: number) =>
-      `${ex - size * Math.cos(angle + offset)},${ey - size * Math.sin(angle + offset)}`;
-    head = `<polygon points="${ex},${ey} ${corner(0.45)} ${corner(-0.45)}" fill="var(--color-ink)"/>`;
+    head = arrowhead([before.x, before.y], [end.x, end.y]);
   }
+
+  const planShape =
+    plan && plan.length > 1
+      ? `<polyline points="${plan.map(([px, py]) => `${x(px)},${y(py)}`).join(" ")}" fill="none" stroke="var(--color-ink)" stroke-width="2" stroke-dasharray="6 5" stroke-linejoin="round"/>` +
+        arrowhead(plan[plan.length - 2], plan[plan.length - 1])
+      : "";
 
   const pointLabels = points
     .filter((point) => point.label)
@@ -439,11 +495,13 @@ function swingChart(options: {
 
   return (
     `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${label}" class="h-auto w-full bg-surface">` +
+    boxShapes +
     bandShape +
     levelShapes +
     minorShape +
     path +
     head +
+    planShape +
     pointLabels +
     segmentLabels +
     `</svg>`
@@ -636,7 +694,312 @@ const majorMinor =
   `</div>` +
   `</figure>`;
 
+// ---------------------------------------------------------------------------------------------
+// Gambar untuk Sesi 2 (market dynamic).
+
+const balanceShift =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      arrow: false,
+      boxes: [{ from: 0, to: 100, top: 66, bottom: 34, label: "kisaran" }],
+      points: [
+        { x: 0, y: 46 },
+        { x: 12, y: 64 },
+        { x: 24, y: 37 },
+        { x: 38, y: 62 },
+        { x: 52, y: 36 },
+        { x: 66, y: 63 },
+        { x: 80, y: 38 },
+        { x: 94, y: 61 },
+        { x: 100, y: 52 },
+      ],
+      label: "Harga bolak-balik di dalam satu kotak kisaran.",
+    }),
+    "Seimbang: harga berputar",
+    "Pembeli dan penjual sepakat pada satu kisaran, jadi harga bolak-balik di dalamnya.",
+  ) +
+  panel(
+    swingChart({
+      arrow: false,
+      boxes: [
+        { from: 0, to: 36, top: 32, bottom: 11, label: "kisaran lama" },
+        { from: 56, to: 100, top: 89, bottom: 66, label: "kisaran baru" },
+      ],
+      points: [
+        { x: 0, y: 20 },
+        { x: 8, y: 30 },
+        { x: 16, y: 13 },
+        { x: 26, y: 30 },
+        { x: 34, y: 15 },
+        { x: 58, y: 80 },
+        { x: 66, y: 68 },
+        { x: 76, y: 87 },
+        { x: 86, y: 69 },
+        { x: 96, y: 85 },
+        { x: 100, y: 77 },
+      ],
+      segments: [{ segment: 4, text: "expansion" }],
+      label: "Harga berputar di kisaran bawah, naik cepat dalam satu gerakan panjang, lalu berputar lagi di kisaran yang lebih tinggi.",
+    }),
+    "Tidak seimbang: harga berpindah",
+    "Satu pihak dominan. Harga pindah cepat (expansion) ke kisaran baru, lalu berputar lagi.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+/** Jam ramai tiga sesi dalam WIB. Sumbu mulai pukul 05.00 supaya sesi New York tidak terpotong tengah malam. */
+function sessionHours(): string {
+  const left = 92;
+  const right = W - PAD;
+  const start = 5;
+  const hx = (hour: number) => left + ((hour - start) / 24) * (right - left);
+  const axisY = 178;
+  const rows = [
+    { name: "Asia", from: 7, to: 16, text: "07.00–16.00" },
+    { name: "London", from: 14, to: 23, text: "14.00–23.00" },
+    { name: "New York", from: 19, to: 28, text: "19.00–04.00" },
+  ];
+  const overlap =
+    `<rect x="${hx(19)}" y="36" width="${hx(23) - hx(19)}" height="${axisY - 36}" fill="var(--color-mark)" fill-opacity="0.4"/>` +
+    `<text x="${(hx(19) + hx(23)) / 2}" y="28" text-anchor="middle" font-size="12" fill="var(--color-ink-soft)">paling ramai</text>`;
+  const bars = rows
+    .map((row, index) => {
+      const cy = 60 + index * 40;
+      return (
+        `<text x="${PAD}" y="${cy + 4}" font-size="13" font-weight="600" fill="var(--color-ink)">${row.name}</text>` +
+        `<rect x="${hx(row.from)}" y="${cy - 12}" width="${hx(row.to) - hx(row.from)}" height="24" fill="var(--color-ink)"/>` +
+        `<text x="${(hx(row.from) + hx(row.to)) / 2}" y="${cy + 4}" text-anchor="middle" font-size="12" fill="var(--color-surface)">${row.text}</text>`
+      );
+    })
+    .join("");
+  const ticks = [7, 10, 13, 16, 19, 22, 25, 28]
+    .map(
+      (hour) =>
+        `<line x1="${hx(hour)}" x2="${hx(hour)}" y1="${axisY}" y2="${axisY + 4}" stroke="var(--color-ink-soft)"/>` +
+        `<text x="${hx(hour)}" y="${axisY + 18}" text-anchor="middle" font-size="12" fill="var(--color-ink-soft)">${String(hour % 24).padStart(2, "0")}</text>`,
+    )
+    .join("");
+  return (
+    `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Jam sesi dalam WIB: Asia 07.00 sampai 16.00, London 14.00 sampai 23.00, New York 19.00 sampai 04.00. London dan New York berbarengan pukul 19.00 sampai 23.00." class="h-auto w-full bg-surface">` +
+    overlap +
+    bars +
+    `<line x1="${left}" x2="${right}" y1="${axisY}" y2="${axisY}" stroke="var(--color-ink-soft)"/>` +
+    ticks +
+    `<text x="${PAD}" y="${axisY + 18}" font-size="12" fill="var(--color-ink-soft)">jam WIB</text>` +
+    `</svg>`
+  );
+}
+
+const sessions =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(sessionHours(), "Jam sesi (WIB)", "Kolom kuning: London dan New York berbarengan, biasanya saat paling ramai.") +
+  panel(
+    candleChart({
+      candles: [
+        [44, 47, 42, 46],
+        [46, 49, 44, 45],
+        [45, 48, 43, 47],
+        [47, 50, 45, 46],
+        [46, 48, 41, 43],
+        [43, 46, 41, 45],
+        [45, 49, 44, 48],
+        [48, 50, 46, 47],
+        [47, 52, 46, 51],
+        [51, 58, 50, 57],
+        [57, 60, 53, 55],
+        [55, 63, 54, 62],
+      ],
+      levels: [
+        { price: 50, from: 0, label: "high Asia" },
+        { price: 41, from: 0, label: "low Asia" },
+      ],
+      windows: [
+        { from: 0, to: 7, label: "Asia" },
+        { from: 8, to: 11, label: "London", shade: false },
+      ],
+      label: "Candle sesi Asia bergerak sempit di antara high dan low Asia. Saat London dibuka, harga keluar dari kisaran itu.",
+    }),
+    "Tandai kisaran Asia",
+    "High dan low Asia menjadi acuan di sesi berikutnya. Arah keluarnya tidak selalu sama.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+/** Harga beli (ask) dan harga jual (bid) di sekitar rilis data. Jaraknya adalah spread. */
+function spreadChart(): string {
+  const right = 40;
+  const xs = [0, 10, 20, 30, 40, 46, 52, 58, 64, 72, 80, 90, 100];
+  const mid = [50, 51, 50, 52, 51, 51, 57, 61, 60, 61, 60, 61, 60];
+  const half = [2, 2, 2, 2, 2, 7, 12, 8, 5, 3, 2, 2, 2];
+  const top = PAD + 18;
+  const bottom = H - PAD - 18;
+  const x = (value: number) => PAD + (value / 100) * (W - PAD * 2 - right);
+  const y = (value: number) => bottom - ((value - 30) / 50) * (bottom - top);
+  const ask = xs.map((value, index) => `${x(value)},${y(mid[index] + half[index])}`);
+  const bid = xs.map((value, index) => `${x(value)},${y(mid[index] - half[index])}`);
+  const last = xs.length - 1;
+  const line = (points: string[]) =>
+    `<polyline points="${points.join(" ")}" fill="none" stroke="var(--color-ink)" stroke-width="2" stroke-linejoin="round"/>`;
+  const label = (tx: number, ty: number, content: string, extra = "") =>
+    `<text x="${tx}" y="${ty}" font-size="13" fill="var(--color-ink-soft)"${extra}>${content}</text>`;
+  return (
+    `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Garis harga beli (ask) dan harga jual (bid) berdekatan, lalu menjauh saat data dirilis, kemudian kembali berdekatan." class="h-auto w-full bg-surface">` +
+    `<polygon points="${[...ask, ...[...bid].reverse()].join(" ")}" fill="var(--color-mark)" fill-opacity="0.4"/>` +
+    `<line x1="${x(46)}" x2="${x(46)}" y1="${top}" y2="${bottom}" stroke="var(--color-ink-soft)" stroke-dasharray="4 4"/>` +
+    label(x(46), H - PAD, "rilis", ` text-anchor="middle"`) +
+    line(ask) +
+    line(bid) +
+    label(x(100) + 6, y(mid[last] + half[last]) - 2, "ask") +
+    label(x(100) + 6, y(mid[last] - half[last]) + 12, "bid") +
+    label(x(55), y(69) - 10, "spread melebar", ` font-weight="600" fill="var(--color-ink)"`) +
+    `</svg>`
+  );
+}
+
+const newsRelease =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    candleChart({
+      labelWidth: 0,
+      candles: [
+        [50, 52, 48, 51],
+        [51, 53, 49, 50],
+        [50, 52, 48, 49],
+        [49, 51, 47, 50],
+        [50, 52, 49, 51],
+        [51, 52, 49, 50],
+        [50, 72, 30, 64],
+        [64, 68, 58, 60],
+        [60, 66, 57, 65],
+        [65, 67, 61, 62],
+        [62, 66, 60, 64],
+        [64, 67, 62, 63],
+        [63, 66, 61, 65],
+      ],
+      windows: [{ from: 5, to: 8, label: "jeda" }],
+      marks: [{ index: 6, text: "rilis" }],
+      label: "Candle kecil-kecil sebelum rilis, lalu satu candle sangat panjang dengan sumbu jauh ke atas dan ke bawah saat data dirilis.",
+    }),
+    "Candle saat rilis",
+    "Harga bisa bergerak jauh ke dua arah dalam satu candle. Di area abu-abu (jeda), jangan membuka posisi baru.",
+  ) +
+  panel(spreadChart(), "Spread saat rilis", "Jarak harga beli (ask) dan harga jual (bid) melebar, lalu menyempit lagi.") +
+  `</div>` +
+  `</figure>`;
+
+const mapLeg = { start: 10, end: 88 };
+const mapLevel = (ratio: number) => fib(mapLeg.start, mapLeg.end, ratio);
+
+const marketMap =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      arrow: false,
+      points: [
+        { x: 12, y: mapLeg.start, label: "swing low", place: "below" },
+        { x: 46, y: mapLeg.end, label: "swing high" },
+      ],
+      band: { top: mapLevel(0.618), bottom: mapLevel(0.81), from: 46, label: "area" },
+      levels: [{ y: mapLeg.start, label: "batal", from: 12, strong: true }],
+      plan: [
+        [46, mapLeg.end],
+        [70, mapLevel(0.7)],
+        [96, 96],
+      ],
+      label: "Peta di timeframe besar: leg naik dari swing low ke swing high, area kuning antara Fibonacci 0,618 dan 0,81, garis batal di swing low, dan garis putus-putus berupa skenario turun ke area lalu naik lagi.",
+    }),
+    "Timeframe besar (D1 atau H4)",
+    "Tandai leg terakhir, area 0,618 sampai 0,81, dan level yang membatalkan peta. Garis putus-putus hanya skenario, belum tentu terjadi.",
+  ) +
+  panel(
+    swingChart({
+      rightSpace: 40,
+      band: { top: 56, bottom: 30, label: "area" },
+      levels: [{ y: 10, label: "batal", strong: true }],
+      points: [
+        { x: 0, y: 94 },
+        { x: 10, y: 76 },
+        { x: 16, y: 84 },
+        { x: 28, y: 62 },
+        { x: 34, y: 70 },
+        { x: 46, y: 48 },
+        { x: 52, y: 56 },
+        { x: 62, y: 36 },
+        { x: 70, y: 52 },
+        { x: 76, y: 44 },
+        { x: 88, y: 70 },
+        { x: 94, y: 62 },
+        { x: 100, y: 86 },
+      ],
+      label: "Di timeframe kecil, harga turun dalam swing-swing kecil masuk ke area kuning, lalu berbalik naik tanpa menyentuh garis batal.",
+    }),
+    "Timeframe kecil",
+    "Saat harga masuk area, baca struktur minornya. Caranya dibahas mulai Sesi 3.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
+const legReality =
+  `<figure>` +
+  `<div class="grid gap-6 sm:grid-cols-2">` +
+  panel(
+    swingChart({
+      arrow: false,
+      points: [
+        { x: 10, y: 6, label: "awal leg", place: "below" },
+        { x: 90, y: 94, label: "ujung leg" },
+      ],
+      label: "Di buku, satu leg naik digambar sebagai satu garis lurus.",
+    }),
+    "Di buku",
+    "Satu leg digambar sebagai satu garis lurus.",
+  ) +
+  panel(
+    candleChart({
+      labelWidth: 0,
+      candles: [
+        [22, 26, 18, 25],
+        [25, 30, 24, 29],
+        [29, 33, 26, 27],
+        [27, 28, 23, 24],
+        [24, 32, 23, 31],
+        [31, 38, 30, 37],
+        [37, 40, 33, 34],
+        [34, 35, 30, 31],
+        [31, 40, 30, 39],
+        [39, 47, 38, 46],
+        [46, 48, 41, 42],
+        [42, 43, 38, 40],
+        [40, 49, 39, 48],
+        [48, 56, 47, 55],
+        [55, 57, 50, 51],
+        [51, 60, 50, 59],
+        [59, 66, 58, 65],
+        [65, 67, 60, 61],
+        [61, 70, 60, 69],
+        [69, 76, 68, 75],
+      ],
+      leg: { start: 0, end: 19, startLabel: "awal leg", endLabel: "ujung leg" },
+      label: "Di chart nyata, leg yang sama terdiri dari banyak candle yang naik turun. Garis lurus ditarik dari low candle pertama ke high candle terakhir.",
+    }),
+    "Di chart nyata",
+    "Leg yang sama berisi banyak naik turun kecil. Ukur dari awal sampai ujungnya saja.",
+  ) +
+  `</div>` +
+  `</figure>`;
+
 export const figures: Record<string, string> = {
+  "seimbang-berpindah": balanceShift,
+  "jam-sesi": sessions,
+  "rilis-berita": newsRelease,
+  "peta-pasar": marketMap,
+  "leg-chart-nyata": legReality,
   "struktur-dasar": basicStructure,
   "tiga-kondisi": threeConditions,
   "fibonacci-retracement": fibonacciRetracement,
