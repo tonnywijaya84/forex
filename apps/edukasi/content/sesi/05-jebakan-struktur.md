@@ -21,12 +21,16 @@ Akibatnya, higher low palsu itu berada terlalu dekat dengan harga. Saat harga ak
 
 Cara memeriksanya: tarik Fibonacci dari awal leg sampai puncaknya. Bila koreksi belum mencapai 0,5, lembah itu belum menjadi swing.
 
+<!-- gambar: fake-retracement -->
+
 ## Jebakan 2: fake BOS dan fake ChoCh
 
 Keduanya adalah penembusan terhadap swing yang tidak sah.
 
 - **Fake BOS.** Harga menembus puncak kecil yang lahir dari koreksi dangkal. Ini hanya lanjutan leg yang sama, sesuai syarat pertama di Sesi 3. Bila ditandai sebagai BOS, Fibonacci ditarik pada leg yang salah dan area yang ditunggu menjadi terlalu tinggi.
 - **Fake ChoCh.** Harga menembus lembah kecil yang tidak sah. Bila dibaca sebagai tanda pembalikan, entry dibuka melawan tren tepat saat harga masuk ke area retracement, yaitu tempat tren biasanya berlanjut.
+
+<!-- gambar: fake-bos -->
 
 Urutan pertanyaannya perlu dibalik. Tanyakan dulu apakah swing itu sah, baru kemudian apakah swing itu ditembus.
 
@@ -42,11 +46,15 @@ Jalan keluarnya adalah naik satu tingkat.
 
 Kondisi ini sama dengan keadaan seimbang di Sesi 2: pasar sedang berputar, belum berpindah.
 
+<!-- gambar: confusion-structure -->
+
 ## Rejection block
 
 Rejection block adalah candle ber-wick panjang di swing high atau swing low. Harga menembus level, lalu ditutup kembali di dalamnya. Di Sesi 3, penembusan seperti ini tidak dihitung sebagai BOS.
 
 Zona yang dibentuk wick itu menandai area tempat harga ditolak. Tandai zonanya di peta. Bila harga kembali ke sana, perhatikan apakah penolakan terulang.
+
+<!-- gambar: rejection-block -->
 
 ## Mengapa jebakan ini terjadi
 
