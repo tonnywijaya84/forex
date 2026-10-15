@@ -35,7 +35,7 @@ export default async function ArticlePage({ params }: PageProps<"/berita/[slug]"
         <Link href="/berita">Berita</Link> / <time dateTime={article.date}>{formatDate(article.date)}</time>
         {article.category && ` / ${article.category}`}
       </p>
-      <h1 className="mt-4 max-w-[26ch] text-4xl font-bold sm:text-5xl">{article.title}</h1>
+      <h1 className="mt-4 max-w-[26ch] text-4xl font-bold break-words sm:text-5xl">{article.title}</h1>
       <p className="mt-5 max-w-[60ch] text-lg text-ink-soft">{article.summary}</p>
       {/* Isi berasal dari file Markdown milik repo ini, bukan dari input pengguna. */}
       <article className="lesson mt-10 max-w-[68ch]" dangerouslySetInnerHTML={{ __html: article.html }} />
