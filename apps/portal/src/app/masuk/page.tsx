@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import { Container, Notice } from "@forex/ui";
-import { LoginForm } from "@/components/login-form";
+import { LoginForm } from "@/components/auth-forms";
+import { NotConnected } from "@/components/not-connected";
 import { supabaseEnv } from "@/lib/supabase/env";
 
 export const metadata: Metadata = { title: "Masuk" };
@@ -11,8 +13,12 @@ async function CallbackError({ searchParams }: { searchParams: PageProps<"/masuk
   if (!gagal) return null;
   return (
     <div className="mt-6 max-w-xl">
-      <Notice title="Tautan masuk tidak bisa dipakai">
-        Tautan itu sudah kedaluwarsa atau sudah pernah dipakai. Minta tautan baru di bawah ini.
+      <Notice title="Tautan tidak bisa dipakai">
+        Tautan itu sudah kedaluwarsa atau sudah pernah dipakai. Minta tautan baru lewat{" "}
+        <Link href="/lupa-sandi" className="underline">
+          Lupa kata sandi
+        </Link>
+        .
       </Notice>
     </div>
   );
@@ -24,22 +30,24 @@ export default function LoginPage({ searchParams }: PageProps<"/masuk">) {
     <Container className="py-14">
       <h1 className="text-4xl font-bold">Masuk</h1>
       <p className="mt-4 max-w-[56ch] text-ink-soft">
-        Tulis email Anda. Kami kirim tautan sekali pakai untuk masuk, tanpa kata sandi.
+        Masuk dengan email dan kata sandi Anda. Belum punya akun?{" "}
+        <Link href="/daftar" className="text-ink underline">
+          Daftar
+        </Link>
+        .
       </p>
       <Suspense fallback={null}>
         <CallbackError searchParams={searchParams} />
       </Suspense>
-      <div className="mt-8">
-        {configured ? (
-          <LoginForm />
-        ) : (
-          <div className="max-w-xl">
-            <Notice title="Portal belum tersambung ke database">
-              Isi NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY di file .env.local, lalu jalankan
-              ulang aplikasi. Langkah lengkapnya ada di README.
-            </Notice>
-          </div>
-        )}
+      <div className="mt-8">{configured ? <LoginForm /> : <NotConnected />}</div>
+      <div className="mt-6 max-w-xl">
+        <Notice title="Dulu masuk lewat tautan email?">
+          Akun Anda masih ada, tetapi belum punya kata sandi. Buat kata sandi satu kali lewat{" "}
+          <Link href="/lupa-sandi" className="underline">
+            Lupa kata sandi
+          </Link>
+          , lalu masuk seperti biasa.
+        </Notice>
       </div>
     </Container>
   );

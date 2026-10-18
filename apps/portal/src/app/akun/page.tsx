@@ -55,6 +55,9 @@ async function Accounts() {
               Admin lisensi
             </Link>
           )}
+          <Link href="/atur-sandi" className="underline">
+            Ganti kata sandi
+          </Link>
           <form action={signOut}>
             <button type="submit" className="underline">
               Keluar

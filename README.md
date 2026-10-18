@@ -6,7 +6,7 @@ Tiga situs dalam satu repo, memakai Next.js, TypeScript, Tailwind, dan Supabase 
 | --- | --- | --- |
 | `apps/edukasi` | Edukasi forex (domain 1) | Beranda, silabus 10 sesi, materi dan berita dari file Markdown |
 | `apps/toko` | Penjualan dan referral (domain 2) | Daftar produk, halaman produk, pencatatan kode referral |
-| `apps/portal` | Setup EA (subdomain domain 2) | Login email, data diri member, pendaftaran akun MT5, halaman admin lisensi, API lisensi untuk EA |
+| `apps/portal` | Setup EA (subdomain domain 2) | Login email dan kata sandi, data diri member, pendaftaran akun MT5, halaman admin lisensi, API lisensi untuk EA |
 | `packages/ui` | Tampilan bersama | Warna, huruf, kepala dan kaki halaman |
 | `packages/license` | Logika lisensi | Penentuan status, tanda tangan jawaban API, validasi formulir admin dan data diri member |
 | `packages/db` | Uji database | Menjalankan migrasi dan menguji aturan aksesnya |
@@ -39,10 +39,20 @@ Untuk dipakai orang luar, dua hal lagi perlu diatur di Supabase:
 - **Layanan email sendiri.** Email bawaan Supabase hanya untuk uji coba (beberapa email per jam, hanya ke anggota
   tim proyek). Di Authentication, Emails, SMTP Settings, sambungkan layanan email seperti Resend dengan domain
   pengirim yang sudah diverifikasi.
-- **Isi email.** Di Authentication, Emails, Templates, ganti isi "Confirm sign up" dan "Magic link" dengan
-  `supabase/templates/confirm-signup.html` dan `supabase/templates/magic-link.html`. Tautan di dalamnya menuju
-  `/auth/confirm` di portal, sehingga alamat tautan sama dengan domain pengirim dan login bisa diselesaikan di
-  perangkat mana pun.
+- **Isi email.** Di Authentication, Emails, Templates, ganti isi "Confirm sign up" dan "Reset password" dengan
+  `supabase/templates/confirm-signup.html` dan `supabase/templates/reset-password.html`. Tautan di dalamnya menuju
+  `/auth/confirm` di portal, sehingga alamat tautan sama dengan domain pengirim dan bisa dibuka di perangkat mana
+  pun. `supabase/templates/magic-link.html` hanya untuk tautan masuk lama dan tidak lagi dikirim portal.
+
+## Login member
+
+Member mendaftar di `/daftar` dengan email dan kata sandi (minimal 8 karakter), lalu masuk di `/masuk`. Email
+hanya dikirim dalam dua keadaan: satu kali untuk konfirmasi saat mendaftar, dan setiap kali member memakai `/lupa-sandi`.
+Member yang dulu masuk lewat tautan email membuat kata sandi pertamanya lewat `/lupa-sandi`. Kata sandi bisa
+diganti kapan saja di `/atur-sandi` (tautan "Ganti kata sandi" di halaman akun).
+
+Biarkan "Confirm email" di Authentication, Sign In / Providers, Email tetap aktif. Tanpa itu, siapa pun bisa
+mendaftar memakai email orang lain.
 
 ## Data diri member
 

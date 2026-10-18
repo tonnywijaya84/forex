@@ -141,3 +141,4 @@ export function expiryInputValue(expiresAt: string | null): string {
 }
 
 export { MINIMUM_AGE, normalizePhone, parseProfile, type Profile, type ProfileInput } from "./profile";
+export { checkNewPassword, normalizeEmail, PASSWORD_MAX_BYTES, PASSWORD_MIN_LENGTH } from "./credentials";
