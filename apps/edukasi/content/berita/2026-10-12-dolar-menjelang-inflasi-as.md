@@ -41,11 +41,13 @@ Tidak ada yang tahu ke arah mana harga bergerak setelah rilis. Yang bisa dipasti
 
 ## Sumber
 
-- [investingLive: Week ahead, US inflation and retail sales lead a busy economic calendar](https://investinglive.com/news/week-ahead-us-inflation-and-retail-sales-lead-a-busy-economic-calendar-be-aware/) (9 Oktober 2026)
-- [DailyForex: Pairs in Focus 12 to 16 October 2026](https://www.dailyforex.com/forex-technical-analysis/2026/10/weekly-pairs-in-focus-12th-to-16th-october-2026/250583) (11 Oktober 2026)
-- [Forex.com: US Dollar Price Action Setups](https://forex.com/en-us/news-and-analysis/us-dollar-price-action-setups-eur-usd-usd-jpy-gbp-usd-usd-cad-2026-10-09) (9 Oktober 2026)
-- [The Rio Times: Global Economy Briefing](https://riotimesonline.com/global-economy-briefing-october-10-2026) (10 Oktober 2026)
-- [Reuters lewat Investing.com: Dollar stays near 18-month high](https://investing.com/news/economy-news/dollar-stays-near-18month-high-as-mideast-conflict-inflation-data-in-focus-4942999) (12 Oktober 2026)
+Judul sumber berbahasa asing ditulis dalam terjemahan bahasa Indonesia; tautannya mengarah ke artikel asli.
+
+- [investingLive: Pekan depan, inflasi dan penjualan ritel AS memimpin kalender ekonomi yang padat](https://investinglive.com/news/week-ahead-us-inflation-and-retail-sales-lead-a-busy-economic-calendar-be-aware/) (9 Oktober 2026)
+- [DailyForex: Pasangan mata uang yang disorot, 12–16 Oktober 2026](https://www.dailyforex.com/forex-technical-analysis/2026/10/weekly-pairs-in-focus-12th-to-16th-october-2026/250583) (11 Oktober 2026)
+- [Forex.com: Peluang dari pergerakan harga dolar AS](https://forex.com/en-us/news-and-analysis/us-dollar-price-action-setups-eur-usd-usd-jpy-gbp-usd-usd-cad-2026-10-09) (9 Oktober 2026)
+- [The Rio Times: Ringkasan ekonomi global](https://riotimesonline.com/global-economy-briefing-october-10-2026) (10 Oktober 2026)
+- [Reuters lewat Investing.com: Dolar bertahan di dekat level tertinggi 18 bulan](https://investing.com/news/economy-news/dollar-stays-near-18month-high-as-mideast-conflict-inflation-data-in-focus-4942999) (12 Oktober 2026)
 
 _Koreksi 12 Oktober 2026: versi awal tulisan ini menyebut level tertinggi enam bulan. Yang benar, indeks dolar berada di dekat level tertinggi 18 bulan._
 

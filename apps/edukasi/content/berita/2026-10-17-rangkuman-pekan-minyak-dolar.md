@@ -43,7 +43,7 @@ Indeks dolar turun sekitar 0,5% sepekan ke sekitar 101,8. Ini penurunan mingguan
 
 Saham-saham terkait AI jatuh sepanjang pekan, dan S&P 500 turun sekitar 2,1%. Biasanya kejatuhan seperti itu mendorong orang membeli dolar sebagai aset aman. Kali ini yang dicari justru franc Swiss.
 
-Thierry Wizman dari Macquarie menilai yang bisa menekan dolar dan imbal hasil AS adalah "a reduction in the outlook for AI investment", yaitu turunnya prospek investasi AI. Logikanya, investasi AI yang melambat bisa memperlambat ekonomi AS, sehingga The Fed tidak perlu terlalu ketat.
+Thierry Wizman dari Macquarie menilai yang bisa menekan dolar dan imbal hasil AS adalah turunnya prospek investasi AI. Logikanya, investasi AI yang melambat bisa memperlambat ekonomi AS, sehingga The Fed tidak perlu terlalu ketat.
 
 Pejabat The Fed sendiri tidak sepakat soal waktu kenaikan berikutnya. Mary Daly menilai kenaikan suku bunga lagi kemungkinan perlu, tetapi tidak mendesak pada bulan Oktober. Pasar kini menghitung peluang 87% suku bunga tidak berubah pada rapat 27–28 Oktober.
 
@@ -64,10 +64,12 @@ Tidak semua analis melihat ini sebagai awal pelemahan panjang. Chris Turner dari
 
 ## Sumber
 
-- [BNN Bloomberg (Reuters): U.S. dollar heads for weekly fall as investors gauge AI selloff impact](https://www.bnnbloomberg.ca/markets/currencies/2026/10/16/us-dollar-heads-for-weekly-fall-as-investors-gauge-ai-selloff-impact/) (16 Oktober 2026)
-- [EnergyNow: Oil surges as Middle East supply fears push Brent near $110 and WTI above $100](https://energynow.com/2026/10/oil-surges-as-middle-east-supply-fears-push-brent-near-110-and-wti-above-100-both-post-strong-weekly-gains/) (16 Oktober 2026)
-- [BabyPips: Financial & Forex Weekly Recap, 12–16 Oktober](https://www.babypips.com/analysis/financial-forex-market-weekly-recap-october-16-2026) (16 Oktober 2026)
-- [FXStreet: US Dollar Weekly Forecast, down for the week but far from defeated](https://www.fxstreet.com/analysis/us-dollar-weekly-forecast-down-for-the-week-but-far-from-defeated-202610161908) (16 Oktober 2026)
-- [investingLive: Fed's Daly, more rate hikes likely needed, but no urgency to move in October](https://investinglive.com/central-banks/fed-s-daly-more-rate-hikes-likely-needed-but-no-urgency-to-move-in-october/) (15 Oktober 2026)
+Judul sumber berbahasa asing ditulis dalam terjemahan bahasa Indonesia; tautannya mengarah ke artikel asli.
+
+- [BNN Bloomberg (Reuters): Dolar AS menuju penurunan mingguan saat investor menimbang dampak aksi jual saham AI](https://www.bnnbloomberg.ca/markets/currencies/2026/10/16/us-dollar-heads-for-weekly-fall-as-investors-gauge-ai-selloff-impact/) (16 Oktober 2026)
+- [EnergyNow: Minyak melonjak karena kekhawatiran pasokan Timur Tengah, Brent dekat US$110 dan WTI di atas US$100](https://energynow.com/2026/10/oil-surges-as-middle-east-supply-fears-push-brent-near-110-and-wti-above-100-both-post-strong-weekly-gains/) (16 Oktober 2026)
+- [BabyPips: Rekap mingguan pasar keuangan dan forex, 12–16 Oktober](https://www.babypips.com/analysis/financial-forex-market-weekly-recap-october-16-2026) (16 Oktober 2026)
+- [FXStreet: Proyeksi mingguan dolar AS, turun sepekan tetapi belum kalah](https://www.fxstreet.com/analysis/us-dollar-weekly-forecast-down-for-the-week-but-far-from-defeated-202610161908) (16 Oktober 2026)
+- [investingLive: Daly dari The Fed, kenaikan suku bunga lagi kemungkinan perlu tetapi tidak mendesak di bulan Oktober](https://investinglive.com/central-banks/fed-s-daly-more-rate-hikes-likely-needed-but-no-urgency-to-move-in-october/) (15 Oktober 2026)
 
 Trading forex berisiko tinggi dan dapat menghabiskan seluruh modal. Tulisan ini merangkum berita untuk tujuan edukasi, bukan nasihat keuangan atau ajakan membuka posisi.

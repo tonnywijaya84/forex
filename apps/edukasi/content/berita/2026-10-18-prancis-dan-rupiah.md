@@ -27,7 +27,7 @@ Bagi pasar, yang lebih diperhatikan bukan kerusuhannya, melainkan dampaknya pada
 | Puncak selisih awal Oktober | sekitar 158 bp, tertinggi sejak 2011 |
 | EUR/USD penutupan Jumat | sekitar 1,1235 |
 
-**Selasa, 20 Oktober,** Majelis Nasional menggelar pemungutan suara pertama untuk anggaran 2027. Kerusuhan membuat penghematan makin sulit dijual ke publik, dan oposisi bisa makin keras menolaknya. Mujtaba Rahman dari Eurasia Group menulis, "France, truly, is on the brink."
+**Selasa, 20 Oktober,** Majelis Nasional menggelar pemungutan suara pertama untuk anggaran 2027. Kerusuhan membuat penghematan makin sulit dijual ke publik, dan oposisi bisa makin keras menolaknya. Mujtaba Rahman dari Eurasia Group menulis, "Prancis benar-benar berada di ambang krisis."
 
 Awal bulan ini, lonjakan selisih imbal hasil itu ikut menekan EUR/USD ke titik terendah 17 bulan. Bila anggaran gagal lolos, tekanan serupa bisa terulang. Bila lolos, tekanan itu bisa berkurang. Tetapi arah EUR/USD juga ditentukan dolar, The Fed (27–28 Oktober), dan ECB (29 Oktober).
 
@@ -68,11 +68,13 @@ Tetapi berita rupiah tetap relevan bagi trader di Indonesia, karena tiga hal.
 
 ## Sumber
 
-- [The Spokesman-Review (AP): Mass protests in France spiral into worst riots in years](https://www.spokesman.com/stories/2026/oct/16/mass-protests-in-france-spiral-into-worst-riots-in/) (17 Oktober 2026)
-- [CNN: Buildings torched and over 1,000 detained after half a million protesters sweep France](https://www.cnn.com/2026/10/17/europe/half-million-protesters-sweep-france-in-youth-unrest-latam-intl) (17 Oktober 2026)
-- [Fortune: 'France, truly, is on the brink' and just days away from a make-or-break moment in its debt crisis](https://fortune.com/2026/10/17/france-debt-crisis-budget-deficit-bond-yields-spread-protests-riots/) (17 Oktober 2026)
-- [Ideal Investisseur: OAT / Bund spread](https://www.ideal-investisseur.fr/en/markets/oat-bund-spread.html) (16 Oktober 2026)
-- [Briefs: MSCI warning puts Bank Indonesia under the microscope](https://www.briefs.co/news/msci-warning-puts-bank-indonesia-under-the-microscope/) (Oktober 2026)
+Judul sumber berbahasa asing ditulis dalam terjemahan bahasa Indonesia; tautannya mengarah ke artikel asli.
+
+- [The Spokesman-Review (AP): Protes besar di Prancis berubah menjadi kerusuhan terburuk dalam beberapa tahun](https://www.spokesman.com/stories/2026/oct/16/mass-protests-in-france-spiral-into-worst-riots-in/) (17 Oktober 2026)
+- [CNN: Gedung dibakar dan lebih dari 1.000 orang ditahan setelah setengah juta demonstran turun ke jalan di Prancis](https://www.cnn.com/2026/10/17/europe/half-million-protesters-sweep-france-in-youth-unrest-latam-intl) (17 Oktober 2026)
+- [Fortune: Prancis di ambang krisis, beberapa hari menjelang momen penentuan krisis utangnya](https://fortune.com/2026/10/17/france-debt-crisis-budget-deficit-bond-yields-spread-protests-riots/) (17 Oktober 2026)
+- [Ideal Investisseur: Selisih imbal hasil obligasi Prancis (OAT) dan Jerman (Bund)](https://www.ideal-investisseur.fr/en/markets/oat-bund-spread.html) (16 Oktober 2026)
+- [Briefs: Peringatan MSCI membuat Bank Indonesia jadi sorotan](https://www.briefs.co/news/msci-warning-puts-bank-indonesia-under-the-microscope/) (Oktober 2026)
 - [Okezone: IHSG Sesi I Anjlok 10,7 Persen ke 5.233 Usai Pengumuman MSCI](https://economy.okezone.com/read/2026/10/16/278/3248276/ihsg-sesi-i-anjlok-10-7-persen-ke-5-233-usai-pengumuman-msci) (16 Oktober 2026)
 - [Suara.com: Setelah Pengumuman MSCI, IHSG Dibuka Anjlok 8% dan Langsung Trading Halt](https://www.suara.com/bisnis/2026/10/16/091151/setelah-pengumuman-msci-ihsg-dibuka-anjlok-8-dan-langsung-trading-halt) (16 Oktober 2026)
 - [Okezone: Rupiah Kembali Melemah ke Rp18.000 per Dolar AS, BI Ungkap Biang Keroknya](https://economy.okezone.com/read/2026/10/16/278/3248242/rupiah-kembali-melemah-ke-rp18-000-per-dolar-as-bi-ungkap-biang-keroknya) (16 Oktober 2026)

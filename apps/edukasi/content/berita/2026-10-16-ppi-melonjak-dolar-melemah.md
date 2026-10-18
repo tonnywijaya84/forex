@@ -36,7 +36,7 @@ Tidak ada satu penyebab pasti. Beberapa hal yang disebut para analis:
 
 ## Jumat pagi: Warsh tidak memberi petunjuk
 
-Ketua The Fed Kevin Warsh berbincang dengan Direktur IMF Kristalina Georgieva di Bangkok. Ia menegaskan Fed akan menjaga stabilitas harga, tetapi tidak mau mendahului keputusan rapat: "I don't believe in pre-judging meetings." Keputusan akan diambil di rapat Oktober dan Desember.
+Ketua The Fed Kevin Warsh berbincang dengan Direktur IMF Kristalina Georgieva di Bangkok. Ia menegaskan Fed akan menjaga stabilitas harga, tetapi tidak mau mendahului keputusan rapat. "Saya tidak mau mendahului hasil rapat," katanya. Keputusan akan diambil di rapat Oktober dan Desember.
 
 Indeks dolar turun lagi ke sekitar 101,80, terendah dalam 10 hari. Ini salah satu kesempatan terakhir pejabat Fed berbicara sebelum masa tenang menjelang rapat 27–28 Oktober.
 
@@ -55,13 +55,15 @@ Indeks dolar turun lagi ke sekitar 101,80, terendah dalam 10 hari. Ini salah sat
 
 ## Sumber
 
-- [BabyPips: Financial & Forex Market Recap](https://www.babypips.com/news/financial-forex-market-recap-2026-10-15) (15 Oktober 2026)
-- [FXStreet: Forex Today, US Dollar erases CPI-inspired gains as bond yields slump](https://www.fxstreet.com/news/forex-today-us-dollar-erases-cpi-inspired-gains-as-bond-yields-slump-202610150744) (15 Oktober 2026)
-- [FXStreet: Fed's Warsh says he would deliver price stability, but won't pre-judge meetings](https://www.fxstreet.com/news/breaking-feds-warsh-says-he-would-deliver-price-stability-but-wont-pre-judge-meetings-202610160346) (16 Oktober 2026)
-- [FXStreet: US Dollar Index extends decline to near 101.80 after Fed Warsh's remarks](https://www.fxstreet.com/news/united-states-dollar-index-extends-decline-to-near-10180-after-fed-warshs-remarks-202610160403) (16 Oktober 2026)
-- [investingLive: Asia-Pacific market news, Warsh stays silent on rates](https://investinglive.com/news/investinglive-asia-pacific-market-news-warsh-stays-silent-on-rates/) (16 Oktober 2026)
-- [StoneX: EUR/USD Outlook, Can Hot CPI Sustain the Stretched US Dollar Rally?](https://www.stonex.com/en-gb/news-and-analysis/eur-usd-outlook-can-hot-cpi-sustain-the-stretched-us-dollar-rally-2026-10-14/) (14 Oktober 2026)
-- [Bloomberg: Inflation Raises Stakes for Warsh's Final Word in Bangkok](https://www.bloomberg.com/news/articles/2026-10-14/fed-s-warsh-to-get-final-word-in-bangkok-as-inflation-roars-back) (14 Oktober 2026)
-- [BigGo Finance: Dollar firm as Fed rate-hike bets weigh on euro](https://finance.biggo.com/news/7ad06e32-e8c0-4c3b-8967-05f19cefbeab) (12 Oktober 2026)
+Judul sumber berbahasa asing ditulis dalam terjemahan bahasa Indonesia; tautannya mengarah ke artikel asli.
+
+- [BabyPips: Rekap pasar keuangan dan forex](https://www.babypips.com/news/financial-forex-market-recap-2026-10-15) (15 Oktober 2026)
+- [FXStreet: Forex hari ini, dolar AS kehilangan kenaikan dari data inflasi saat imbal hasil obligasi merosot](https://www.fxstreet.com/news/forex-today-us-dollar-erases-cpi-inspired-gains-as-bond-yields-slump-202610150744) (15 Oktober 2026)
+- [FXStreet: Warsh dari The Fed akan menjaga stabilitas harga, tetapi tidak mau mendahului hasil rapat](https://www.fxstreet.com/news/breaking-feds-warsh-says-he-would-deliver-price-stability-but-wont-pre-judge-meetings-202610160346) (16 Oktober 2026)
+- [FXStreet: Indeks dolar AS turun ke dekat 101,80 setelah pernyataan Warsh](https://www.fxstreet.com/news/united-states-dollar-index-extends-decline-to-near-10180-after-fed-warshs-remarks-202610160403) (16 Oktober 2026)
+- [investingLive: Berita pasar Asia-Pasifik, Warsh tidak memberi petunjuk soal suku bunga](https://investinglive.com/news/investinglive-asia-pacific-market-news-warsh-stays-silent-on-rates/) (16 Oktober 2026)
+- [StoneX: Prospek EUR/USD, bisakah inflasi panas menopang kenaikan dolar AS yang sudah jauh?](https://www.stonex.com/en-gb/news-and-analysis/eur-usd-outlook-can-hot-cpi-sustain-the-stretched-us-dollar-rally-2026-10-14/) (14 Oktober 2026)
+- [Bloomberg: Inflasi membuat pernyataan terakhir Warsh di Bangkok makin ditunggu](https://www.bloomberg.com/news/articles/2026-10-14/fed-s-warsh-to-get-final-word-in-bangkok-as-inflation-roars-back) (14 Oktober 2026)
+- [BigGo Finance: Dolar kokoh karena perkiraan kenaikan suku bunga The Fed menekan euro](https://finance.biggo.com/news/7ad06e32-e8c0-4c3b-8967-05f19cefbeab) (12 Oktober 2026)
 
 Trading forex berisiko tinggi dan dapat menghabiskan seluruh modal. Tulisan ini merangkum berita untuk tujuan edukasi, bukan nasihat keuangan atau ajakan membuka posisi.

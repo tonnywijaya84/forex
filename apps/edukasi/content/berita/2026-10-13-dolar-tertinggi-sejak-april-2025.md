@@ -43,9 +43,11 @@ Semua gerakan ini terjadi saat AS (Columbus Day) dan Jepang (Hari Olahraga) libu
 
 ## Sumber
 
-- [FXStreet: Forex Today, US Dollar softens amid hopes of Russia-Ukraine energy ceasefire](https://www.fxstreet.com/news/forex-today-us-dollar-softens-amid-hopes-russia-ukraine-energy-ceasefire-202610120654) (12 Oktober 2026)
-- [FXStreet: FX Today, US Dollar at YTD high as safe-haven demand surges](https://fxstreet.com/news/fx-today-us-dollar-hits-17-month-high-rba-minutes-and-fed-speaking-up-next-202610121934) (12 Oktober 2026)
-- [Reuters lewat Investing.com: Dollar stays near 18-month high as Mideast conflict, inflation data in focus](https://investing.com/news/economy-news/dollar-stays-near-18month-high-as-mideast-conflict-inflation-data-in-focus-4942999) (12 Oktober 2026)
-- [DailyForex: Forex Today 12/10, Dollar Holds Near 18-Month High](https://www.dailyforex.com/forex-news/2026/10/forex-today-12-october-2026/250593) (12 Oktober 2026)
+Judul sumber berbahasa asing ditulis dalam terjemahan bahasa Indonesia; tautannya mengarah ke artikel asli.
+
+- [FXStreet: Forex hari ini, dolar AS melemah di tengah harapan gencatan senjata energi Rusia–Ukraina](https://www.fxstreet.com/news/forex-today-us-dollar-softens-amid-hopes-russia-ukraine-energy-ceasefire-202610120654) (12 Oktober 2026)
+- [FXStreet: Dolar AS di level tertinggi tahun ini karena permintaan aset aman melonjak](https://fxstreet.com/news/fx-today-us-dollar-hits-17-month-high-rba-minutes-and-fed-speaking-up-next-202610121934) (12 Oktober 2026)
+- [Reuters lewat Investing.com: Dolar bertahan di dekat level tertinggi 18 bulan, konflik Timur Tengah dan data inflasi jadi sorotan](https://investing.com/news/economy-news/dollar-stays-near-18month-high-as-mideast-conflict-inflation-data-in-focus-4942999) (12 Oktober 2026)
+- [DailyForex: Forex hari ini 12/10, dolar bertahan di dekat level tertinggi 18 bulan](https://www.dailyforex.com/forex-news/2026/10/forex-today-12-october-2026/250593) (12 Oktober 2026)
 
 Trading forex berisiko tinggi dan dapat menghabiskan seluruh modal. Tulisan ini merangkum berita untuk tujuan edukasi, bukan nasihat keuangan atau ajakan membuka posisi.
