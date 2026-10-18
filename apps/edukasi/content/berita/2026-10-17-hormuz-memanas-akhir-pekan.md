@@ -15,7 +15,7 @@ Pasar keuangan tutup pada akhir pekan, tetapi kabar dari Selat Hormuz terus berd
 
 ## Dua pihak, dua klaim
 
-Komandan CENTCOM Brad Cooper menegaskan, "The Strait of Hormuz is controlled by the United States and our regional partners, not Iran." Menurutnya, sekitar 400 kapal dan 100 juta barel minyak melintasi selat itu dalam sepekan terakhir.
+Komandan CENTCOM Brad Cooper menegaskan, "Selat Hormuz dikuasai oleh Amerika Serikat dan mitra-mitra kami di kawasan, bukan oleh Iran." Menurutnya, sekitar 400 kapal dan 100 juta barel minyak melintasi selat itu dalam sepekan terakhir.
 
 IRGC menyatakan selat tetap tidak aman bagi kapal yang tidak berkoordinasi dengan otoritas selat bentukan Iran, dan menyebut angka AS dilebih-lebihkan.
 
@@ -44,8 +44,10 @@ Pekan lalu, kenaikan minyak sempat tertahan oleh pelepasan cadangan darurat dari
 
 ## Sumber
 
-- [Al Jazeera: US and Iran both claim control of Strait of Hormuz amid attacks on vessels](https://www.aljazeera.com/news-analysis/2026/10/17/us-and-iran-both-claim-control-of-strait-of-hormuz-amid-attacks-on-vessels) (17 Oktober 2026)
-- [Izvestia: Tanker with 2 million oil hit by mine in Strait of Hormuz](https://en.iz.ru/en/2185863/2026-10-17/tanker-2-million-oil-hit-mine-strait-hormuz) (17 Oktober 2026)
-- [EnergyNow: Oil surges as Middle East supply fears push Brent near $110 and WTI above $100](https://energynow.com/2026/10/oil-surges-as-middle-east-supply-fears-push-brent-near-110-and-wti-above-100-both-post-strong-weekly-gains/) (16 Oktober 2026)
+Judul sumber berbahasa asing ditulis dalam terjemahan bahasa Indonesia; tautannya mengarah ke artikel asli.
+
+- [Al Jazeera: AS dan Iran sama-sama mengklaim menguasai Selat Hormuz di tengah serangan terhadap kapal](https://www.aljazeera.com/news-analysis/2026/10/17/us-and-iran-both-claim-control-of-strait-of-hormuz-amid-attacks-on-vessels) (17 Oktober 2026)
+- [Izvestia: Tanker bermuatan 2 juta barel minyak menabrak ranjau di Selat Hormuz](https://en.iz.ru/en/2185863/2026-10-17/tanker-2-million-oil-hit-mine-strait-hormuz) (17 Oktober 2026)
+- [EnergyNow: Minyak melonjak karena kekhawatiran pasokan Timur Tengah, Brent dekat US$110 dan WTI di atas US$100](https://energynow.com/2026/10/oil-surges-as-middle-east-supply-fears-push-brent-near-110-and-wti-above-100-both-post-strong-weekly-gains/) (16 Oktober 2026)
 
 Trading forex berisiko tinggi dan dapat menghabiskan seluruh modal. Tulisan ini merangkum berita untuk tujuan edukasi, bukan nasihat keuangan atau ajakan membuka posisi.

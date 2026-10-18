@@ -47,11 +47,13 @@ Selama selisih ini lebar, memegang dolar memberi imbal hasil jauh lebih besar da
 
 ## Sumber
 
-- [Bloomberg: Japan's Katayama Renews FX Warnings After US CPI Heats Up](https://www.bloomberg.com/news/articles/2026-10-15/japan-s-katayama-renews-warnings-on-yen-after-us-cpi-heats-up) (15 Oktober 2026)
-- [FXStreet: Yen slips to a three-week low on US CPI, then recovers it all](https://www.fxstreet.com/news/yen-slips-to-a-three-week-low-on-us-cpi-then-recovers-it-all-202610142330) (14 Oktober 2026)
-- [investingLive: US September CPI 3.7% vs 3.6% expected](https://investinglive.com/news/us-september-cpi-vs-3-6-expected-0/) (14 Oktober 2026)
-- [BabyPips: Financial & Forex Market Recap](https://babypips.com/news/financial-forex-market-recap-2026-10-14) (14 Oktober 2026)
-- [Mitrade: Yen inches toward 159 as Tokyo reopens](https://www.mitrade.com/insights/forex-analysis/jpy/yen-159-defense-line-g20-bangkok-20261013J1443) (13 Oktober 2026)
-- [Wikipedia: 2026 U.S.–Japan yen intervention](https://en.wikipedia.org/wiki/2026_U.S.%E2%80%93Japan_yen_intervention)
+Judul sumber berbahasa asing ditulis dalam terjemahan bahasa Indonesia; tautannya mengarah ke artikel asli.
+
+- [Bloomberg: Katayama kembali memperingatkan pasar valas setelah inflasi AS memanas](https://www.bloomberg.com/news/articles/2026-10-15/japan-s-katayama-renews-warnings-on-yen-after-us-cpi-heats-up) (15 Oktober 2026)
+- [FXStreet: Yen sempat turun ke titik terendah tiga pekan karena inflasi AS, lalu pulih sepenuhnya](https://www.fxstreet.com/news/yen-slips-to-a-three-week-low-on-us-cpi-then-recovers-it-all-202610142330) (14 Oktober 2026)
+- [investingLive: Inflasi AS September 3,7%, perkiraan 3,6%](https://investinglive.com/news/us-september-cpi-vs-3-6-expected-0/) (14 Oktober 2026)
+- [BabyPips: Rekap pasar keuangan dan forex](https://babypips.com/news/financial-forex-market-recap-2026-10-14) (14 Oktober 2026)
+- [Mitrade: Yen bergerak mendekati 159 saat pasar Tokyo kembali buka](https://www.mitrade.com/insights/forex-analysis/jpy/yen-159-defense-line-g20-bangkok-20261013J1443) (13 Oktober 2026)
+- [Wikipedia: Intervensi yen AS–Jepang 2026](https://en.wikipedia.org/wiki/2026_U.S.%E2%80%93Japan_yen_intervention)
 
 Trading forex berisiko tinggi dan dapat menghabiskan seluruh modal. Tulisan ini merangkum berita untuk tujuan edukasi, bukan nasihat keuangan atau ajakan membuka posisi.
