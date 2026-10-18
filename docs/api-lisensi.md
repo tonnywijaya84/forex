@@ -17,6 +17,16 @@ Content-Type: application/json
 | `server` | Nama server broker (`AccountInfoString(ACCOUNT_SERVER)`) |
 | `ea` | Kode EA, sama dengan kolom `code` di tabel `eas` |
 
+## Broker dan nama server
+
+Di portal, member memilih broker (saat ini hanya VT Markets), bukan mengetik nama server. Nama broker itulah yang
+disimpan. EA tetap mengirim nama server MT5 lengkap. API mencocokkannya ke broker lewat awalan nama server
+(`VTMarkets` untuk VT Markets, tanpa membedakan huruf besar dan kecil), sehingga satu pendaftaran berlaku di semua
+server broker itu, misalnya `VTMarkets-Live` dan `VTMarkets-Live 3`. Daftar broker dan awalannya ada di
+`packages/license/src/brokers.ts`.
+
+Akun yang didaftarkan sebelum ada pilihan broker masih dicocokkan dengan nama server persis.
+
 ## Jawaban
 
 ```json
