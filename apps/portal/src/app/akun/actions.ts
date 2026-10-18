@@ -2,7 +2,7 @@
 
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
-import { SERVER_PATTERN } from "@forex/license";
+import { findBroker } from "@forex/license";
 import type { FormState } from "@/lib/form-state";
 import { getSessionUser } from "@/lib/supabase/server";
 import { UUID_PATTERN } from "@/lib/uuid";
@@ -10,14 +10,14 @@ import { UUID_PATTERN } from "@/lib/uuid";
 /** Mendaftarkan satu akun MT5 untuk satu EA. Status awalnya selalu pending (diatur database). */
 export async function addAccount(_previous: FormState, formData: FormData): Promise<FormState> {
   const accountText = String(formData.get("account_number") ?? "").trim();
-  const server = String(formData.get("broker_server") ?? "").trim();
+  const broker = findBroker(formData.get("broker_server"));
   const eaId = String(formData.get("ea_id") ?? "");
 
   if (!/^[1-9]\d{0,14}$/.test(accountText)) {
     return { ok: false, message: "Nomor akun MT5 hanya berisi angka, misalnya 276170008." };
   }
-  if (!SERVER_PATTERN.test(server)) {
-    return { ok: false, message: "Tulis nama server persis seperti di MT5, misalnya Exness-MT5Real26." };
+  if (!broker) {
+    return { ok: false, message: "Pilih broker dari daftar." };
   }
   if (!UUID_PATTERN.test(eaId)) {
     return { ok: false, message: "Pilih EA yang ingin diaktifkan." };
@@ -28,7 +28,7 @@ export async function addAccount(_previous: FormState, formData: FormData): Prom
 
   const { error } = await user.supabase
     .from("mt5_accounts")
-    .insert({ ea_id: eaId, account_number: Number(accountText), broker_server: server });
+    .insert({ ea_id: eaId, account_number: Number(accountText), broker_server: broker.name });
 
   if (error) {
     // 23505 = unique_violation: kombinasi EA, nomor akun, dan server sudah ada.

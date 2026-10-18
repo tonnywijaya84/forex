@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { evaluateLicense, type StoredStatus } from "@forex/license";
 import { ButtonLink, Container, Notice } from "@forex/ui";
+import { BROKERS } from "@forex/license";
 import { AddAccountForm } from "@/components/add-account-form";
 import { dateFormat, stateLabel } from "@/lib/license-labels";
 import { supabaseEnv } from "@/lib/supabase/env";
@@ -78,7 +79,7 @@ async function Accounts() {
             <thead>
               <tr className="border-b border-ink">
                 <th className="py-2 pr-4 font-semibold">Nomor akun</th>
-                <th className="py-2 pr-4 font-semibold">Server</th>
+                <th className="py-2 pr-4 font-semibold">Broker</th>
                 <th className="py-2 pr-4 font-semibold">EA</th>
                 <th className="py-2 pr-4 font-semibold">Status</th>
                 <th className="py-2 pr-4 font-semibold">Berlaku sampai</th>
@@ -115,7 +116,9 @@ async function Accounts() {
 
       <h2 className="mt-12 text-2xl font-bold">Daftarkan akun baru</h2>
       <p className="mt-2 max-w-[60ch] text-ink-soft">
-        Nomor akun dan nama server terlihat di MetaTrader 5 pada menu File, lalu Login to Trade Account.
+        Nomor akun terlihat di MetaTrader 5 pada menu File, lalu Login to Trade Account. Saat ini akun yang bisa
+        didaftarkan hanya dari broker {BROKERS.map((broker) => broker.name).join(", ")}, dan lisensinya berlaku di semua
+        server broker tersebut.
       </p>
       <div className="mt-6">
         {needsProfile ? (
@@ -130,7 +133,7 @@ async function Accounts() {
         ) : eas.data.length === 0 ? (
           <Notice title="Belum ada EA yang bisa didaftarkan">Katalog EA masih kosong. Isi tabel eas di database lebih dulu.</Notice>
         ) : (
-          <AddAccountForm eas={eas.data as { id: string; name: string }[]} />
+          <AddAccountForm eas={eas.data as { id: string; name: string }[]} brokers={BROKERS.map((broker) => broker.name)} />
         )}
       </div>
     </>

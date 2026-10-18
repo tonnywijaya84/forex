@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { buildVerifyResponse, parseVerifyRequest, type LicenseRecord, type StoredStatus } from "@forex/license";
+import { buildVerifyResponse, parseVerifyRequest, serverCandidates, type LicenseRecord, type StoredStatus } from "@forex/license";
 import { supabaseEnv } from "@/lib/supabase/env";
 
 /**
@@ -27,17 +27,25 @@ export async function POST(request: Request) {
 
   // Tanpa sesi pengguna: fungsi verify_license hanya membuka status dan masa berlaku.
   const supabase = createClient(env.url, env.key, { auth: { persistSession: false, autoRefreshToken: false } });
-  const { data, error } = await supabase.rpc("verify_license", {
-    p_account: parsed.value.account,
-    p_server: parsed.value.server,
-    p_ea: parsed.value.ea,
-  });
-  if (error) {
-    return Response.json({ error: "Database lisensi tidak bisa dihubungi." }, { status: 502 });
-  }
 
-  const row = Array.isArray(data) ? (data[0] as { status: StoredStatus; expires_at: string | null } | undefined) : undefined;
-  const record: LicenseRecord | null = row ? { status: row.status, expiresAt: row.expires_at } : null;
+  // Akun didaftarkan dengan nama broker (VT Markets), sedangkan EA mengirim nama server (VTMarkets-Live 3).
+  // Nama broker dicari lebih dulu, lalu nama server persis untuk pendaftaran lama.
+  let record: LicenseRecord | null = null;
+  for (const server of serverCandidates(parsed.value.server)) {
+    const { data, error } = await supabase.rpc("verify_license", {
+      p_account: parsed.value.account,
+      p_server: server,
+      p_ea: parsed.value.ea,
+    });
+    if (error) {
+      return Response.json({ error: "Database lisensi tidak bisa dihubungi." }, { status: 502 });
+    }
+    const row = Array.isArray(data) ? (data[0] as { status: StoredStatus; expires_at: string | null } | undefined) : undefined;
+    if (row) {
+      record = { status: row.status, expiresAt: row.expires_at };
+      break;
+    }
+  }
 
   return Response.json(buildVerifyResponse(parsed.value, record, new Date(), secret), {
     headers: { "Cache-Control": "no-store" },
