@@ -4,10 +4,10 @@ import { Suspense } from "react";
 import { Button, Container, Notice } from "@forex/ui";
 import { confirmLogin } from "./actions";
 
-export const metadata: Metadata = { title: "Selesaikan masuk", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Satu langkah lagi", robots: { index: false, follow: false } };
 
 /**
- * Tujuan tautan di email login. Token baru ditukar setelah tombol ditekan, bukan saat halaman dibuka,
+ * Tujuan tautan di email konfirmasi dan Lupa kata sandi. Token baru ditukar setelah tombol ditekan, bukan saat halaman dibuka,
  * supaya pemindai email yang membuka tautan lebih dulu tidak menghabiskan tautan sekali pakai itu.
  */
 async function ConfirmForm({ searchParams }: { searchParams: PageProps<"/auth/confirm">["searchParams"] }) {
@@ -17,7 +17,7 @@ async function ConfirmForm({ searchParams }: { searchParams: PageProps<"/auth/co
       <div className="max-w-xl">
         <Notice title="Tautan tidak lengkap">
           Buka lagi tautan dari email Anda, atau{" "}
-          <Link href="/masuk" className="text-ink underline">
+          <Link href="/lupa-sandi" className="text-ink underline">
             minta tautan baru
           </Link>
           .
@@ -29,7 +29,7 @@ async function ConfirmForm({ searchParams }: { searchParams: PageProps<"/auth/co
     <form action={confirmLogin}>
       <input type="hidden" name="token_hash" value={tokenHash} />
       <input type="hidden" name="type" value={type} />
-      <Button type="submit">Masuk ke portal</Button>
+      <Button type="submit">{type === "recovery" ? "Lanjut atur kata sandi" : "Masuk ke portal"}</Button>
     </form>
   );
 }
@@ -37,8 +37,8 @@ async function ConfirmForm({ searchParams }: { searchParams: PageProps<"/auth/co
 export default function ConfirmPage({ searchParams }: PageProps<"/auth/confirm">) {
   return (
     <Container className="py-14">
-      <h1 className="text-4xl font-bold">Selesaikan masuk</h1>
-      <p className="mt-4 max-w-[56ch] text-ink-soft">Satu langkah lagi. Tekan tombol di bawah untuk masuk ke portal.</p>
+      <h1 className="text-4xl font-bold">Satu langkah lagi</h1>
+      <p className="mt-4 max-w-[56ch] text-ink-soft">Tekan tombol di bawah untuk melanjutkan.</p>
       <div className="mt-8">
         <Suspense fallback={null}>
           <ConfirmForm searchParams={searchParams} />

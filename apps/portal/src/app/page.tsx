@@ -1,7 +1,7 @@
 import { ButtonLink, Container } from "@forex/ui";
 
 const steps = [
-  { title: "Masuk dengan email", body: "Kami kirim tautan masuk ke email Anda. Tidak perlu kata sandi." },
+  { title: "Daftar dan masuk", body: "Buat akun dengan email dan kata sandi. Email konfirmasi hanya dikirim satu kali saat mendaftar." },
   { title: "Lengkapi data diri", body: "Isi nama, nomor telepon, dan data diri lain yang dipakai untuk memeriksa syarat lisensi." },
   { title: "Daftarkan akun MT5", body: "Isi nomor akun dan nama server broker, lalu pilih EA yang ingin diaktifkan." },
   { title: "Pasang EA setelah lisensi aktif", body: "EA memeriksa lisensi ke portal ini setiap kali dijalankan di akun tersebut." },
