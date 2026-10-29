@@ -7,6 +7,8 @@ summary: RBNZ menahan suku bunga di 2,75% lewat voting 4–3, padahal pasar hamp
 
 Rabu sore, 28 Oktober. Pagi tadi kami membahas [pemilu Israel yang buntu dan data AS yang menguat](/berita/2026-10-28-pemilu-israel-buntu), dan menyebut inflasi Australia serta keputusan RBNZ sebagai agenda sesi Asia. Keduanya sudah keluar, dan hasilnya bergerak ke arah berlawanan: Australia makin dekat ke kenaikan suku bunga, sedangkan Selandia Baru justru menunda.
 
+*Catatan: tulisan ini disusun Rabu sore, 28 Oktober, dan baru terbit Kamis pagi. Hasil keputusan The Fed dan Bank of Canada sudah dibahas di [berita Kamis pagi](/berita/2026-10-29-fed-tahan-kanada-naikkan).*
+
 ## Yang terjadi di sesi Asia
 
 - **RBNZ mengejutkan pasar.** Reserve Bank of New Zealand menahan suku bunga acuan (OCR) di 2,75% dengan voting 4–3. Gubernur Anna Breman, Carl Hansen, Rebecca Williams, dan Prasanna Gai memilih menahan, sedangkan Hayley Gourley, Paul Conway, dan Karen Silk memilih naik 25 basis poin ke 3,00% (interest.co.nz, investingLive). Sebelum keputusan, pasar memperkirakan peluang kenaikan sekitar 90% (investingLive).
